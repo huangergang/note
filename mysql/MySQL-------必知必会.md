@@ -221,3 +221,313 @@ where id not in (1,2); # 检索学号不为1，2的学生信息
 
 #### 8.1.1.% 通配符
 
+​	%表示任何字符出现任意次数。（0个，1个，多个）
+
+``` SQL
+select name from student
+where name like "f%"; # 检索以f开头的所有姓名
+```
+
+```SQL
+select name from student
+where name like "%nn%";  # 按中间字符检索，两端任意字符，任意长度
+```
+
+``` SQL
+select name from student
+where name like "s%k";  # 按两端字符检索，中间任意字符，任意长度
+```
+
+#### 8.1.2.下划线   _  通配符
+
+​		_ 表示单个任意字符。
+
+``` SQL
+select name from student
+where name like "张_";   # 检索张姓，并且两个字组成的人名 
+```
+
+## 9.正则表达式
+
+### 9.1.定义
+
+​	正则表达式是用来匹配文本 的特殊的串（字符集合）。
+
+### 9.2.MySQL正则表达式
+
+#### 9.2.1.基本字符
+
+```SQL
+select name from student
+where name regexp '伟'; # 检索名字里有‘伟’字的人名
+```
+
+#### 9.2.2.进行or匹配
+
+```SQL
+select name from student
+where name regexp '伟|一|佳' ;  # 检索名字里有‘伟’或者‘一’或者‘佳’字的人名
+```
+
+#### 9.2.3.匹配几个字符之一
+
+```SQL
+select grade from sc
+where grade regexp '[89]'; # 成绩里面有8有9的数据
+```
+
+```SQL
+select grade from sc
+where grade regexp '[^89]'; # 成绩里面没有8或9的数据
+```
+
+#### 9.2.4.配备范围
+
+```SQL
+[1-9] [6-9] [a-z]
+```
+
+#### 9.2.5.匹配特殊字符
+
+​	为了匹配特殊字符，必须用\\\为前导。\\\\\-表示查找-， \\\\.表示查找 . 。
+
+#### 9.2.6. 匹配字符类
+
+|     类     |                       说明                        |
+| :--------: | :-----------------------------------------------: |
+| [:alnum:]  |          任意字母和数字（同[a-zA-Z0-9]）          |
+| [:alpha:]  |              任意字符（同[a-zA-Z]）               |
+| [:blank:]  |               空格和制表（同[\\t]）               |
+| [:cntrl:]  |         ASCII控制字符（ASCII 0到31和127）         |
+| [:digit:]  |                任意数字（同[0-9]）                |
+| [:graph:]  |           与[:print:]相同，但不包括空格           |
+| [:lower:]  |              任意小写字母（同[a-z]）              |
+| [:print:]  |                  任意可打印字符                   |
+| [:punct:]  |    既不在[:alnum:]又不在[:cntrl:]中的任意字符     |
+| [:space:]  | 包括空格在内的任意空白字符（同[\\f\\n\\r\\t\\v]） |
+| [:upper:]  |              任意大写字母（同[A-Z]）              |
+| [:xdigit:] |         任意十六进制数字（同[a-fA-F0-9]）         |
+
+```SQL
+ select pwd from user
+ where pwd regexp "[:alpha:]";  # 检索密码为任意字符组成
+```
+
+#### 9.2.7.匹配多个实例
+
+| 元字符 |             说明             |
+| :----: | :--------------------------: |
+|   *    |        0个或多个匹配         |
+|   +    |  1个或多个匹配（等于{1,}）   |
+|   ？   |  0个或1个匹配（等于{0,1}）   |
+|  {n}   |         指定数目匹配         |
+|  {n,}  |      不少于指定数目匹配      |
+| {n,m}  | 匹配数目的范围（m不超过255） |
+
+```SQL
+select pwd from user
+where pwd regexp "[[:digit:]]{4}";  # 四个连起来的任意字符
+```
+
+#### 9.2.8.定位符
+
+| 元字符  |    说明    |
+| :-----: | :--------: |
+|    ^    | 文本的开始 |
+|    $    | 文本的结尾 |
+| [[:<:]] |  词的开始  |
+| [[:<:]] |  词的结尾  |
+
+## 10.创建计算字段
+
+### 10.2.拼接字段
+
+​	在MySQL的SELECT语句中，可使用 Concat()函数来拼接两个列。
+
+```SQL
+select Concat(name,"(",pwd,")") from user;
+```
+
+​	使用别名（AS）
+
+```SQL
+select Concat(name,"(",pwd,")") as name_pwd from user;
+```
+
+### 10.3.算数计算
+
+| 操作符 | 说明 |
+| :----: | :--: |
+|   +    |  加  |
+|   -    |  减  |
+|   *    |  乘  |
+|   /    |  除  |
+
+```SQL
+select duration/60*money as salarys from salary  where dated like "2021-11%";  # 查询11月的日薪
+```
+
+## 11.数据处理函数
+
+### 11.1.文本处理函数
+
+#### 11.1.1.Upper()将文本转换为大写
+
+```SQL
+select Upper(name) from user; # 将所有字母姓名转换为大写
+```
+
+#### 11.1.2.一些函数
+
+|    函数     |       说明        |
+| :---------: | :---------------: |
+|   Left()    | 返回串左边的字符  |
+|  Length()   |   返回串的长度    |
+|  Locate()   |     Locate()      |
+|   Lower()   |  将串转换为小写   |
+|   LTrim()   | 去掉串左边的空格  |
+|   Right()   | 返回串右边的字符  |
+|   RTrim()   | 去掉串右边的空格  |
+|  Soundex()  | 返回串的SOUNDEX值 |
+| SubString() |  返回子串的字符   |
+|   Upper()   |  将串转换为大写   |
+
+```SQL
+select left(name,1) from user; # 返回左边第一个字符
+```
+
+​	SOUNDEX是一个将任何文 本串转换为描述其语音表示的字母数字模式的算法。SOUNDEX考虑了类似 的发音字符和音节，使得能对串进行发音比较而不是字母比较。
+
+### 11.2.日期和时间处理函数
+
+#### 11.2.1.常用日期和时间处理函数
+
+|     函数      |              说明              |
+| :-----------: | :----------------------------: |
+|   AddDate()   |    增加一个日期（天、周等）    |
+|   AddTime()   |    增加一个时间（时、分等）    |
+|   CurDate()   |          返回当前日期          |
+|   CurTime()   |          返回当前时间          |
+|    Date()     |     返回日期时间的日期部分     |
+|  DateDiff()   |        计算两个日期之差        |
+|  Date_Add()   |     高度灵活的日期运算函数     |
+| Date_Format() |  返回一个格式化的日期或时间串  |
+|     Day()     |     返回一个日期的天数部分     |
+|  DayOfWeek()  | 对于一个日期，返回对应的星期几 |
+|    Hour()     |     返回一个时间的小时部分     |
+|   Minute()    |     返回一个时间的分钟部分     |
+|    Month()    |     返回一个日期的月份部分     |
+|     Now()     |       返回当前日期和时间       |
+|   Second()    |      返回一个时间的秒部分      |
+|    Time()     |   返回一个日期时间的时间部分   |
+|    Year()     |     返回一个日期的年份部分     |
+
+### 11.3.数值处理函数
+
+|  函数  |        说明        |
+| :----: | :----------------: |
+| Abs()  | 返回一个数的绝对值 |
+| Cos()  | 返回一个角度的余弦 |
+| Exp()  | 返回一个数的指数值 |
+| Mod()  |  返回除操作的余数  |
+|  Pi()  |     返回圆周率     |
+| Rand() |   返回一个随机数   |
+| Sin()  | 返回一个角度的正弦 |
+| Sqrt() | 返回一个数的平方根 |
+| Tan()  | 返回一个角度的正切 |
+
+## 12.汇聚数据
+
+### 12.1.聚合函数
+
+|  函数   |       说明       |
+| :-----: | :--------------: |
+|  AVG()  | 返回某列的平均值 |
+| COUNT() |  返回某列的行数  |
+|  MAX()  | 返回某列的最大值 |
+|  MIN()  | 返回某列的最小值 |
+|  SUM()  |  返回某列值之和  |
+
+#### 12.1.1.AVG()函数
+
+```SQL
+select avg(duration) from salary;
+```
+
+#### 12.1.2.count()函数
+
+COUNT()函数有两种使用方式。
+
+​	 1.使用COUNT(*)对表中行的数目进行计数，不管表列中包含的是空 值（NULL）还是非空值。 
+
+​	2.使用COUNT(column)对特定列中具有值的行进行计数，忽略 NULL值。
+
+#### 12.2. distinct 的使用
+
+​	对所有的行执行计算，指定ALL参数或不给参数（因为ALL是默认 行为）.
+
+​	 只包含不同的值，指定DISTINCT参数。
+
+```SQL
+select avg(distinct prod_price) as avg_price from products
+where vend_id= 1003;
+```
+
+## 13.分组数据
+
+### 13.1.创建分组
+
+​	分组是在SELECT语句的GROUP BY子句中建立的。
+
+​	具体使用GROUP BY子句前，需要知道一些重要的规定。 
+
+​		1.GROUP BY子句可以包含任意数目的列。这使得能对分组进行嵌套， 为数据分组提供更细致的控制。 
+
+​		2.如果在GROUP BY子句中嵌套了分组，数据将在最后规定的分组上进行汇总。换句话说，在建立分组时，指定的所有列都一起计算 （所以不能从个别的列取回数据）。
+
+​		3.GROUP BY子句中列出的每个列都必须是检索列或有效的表达式 （但不能是聚集函数）。如果在SELECT中使用表达式，则必须在 GROUP BY子句中指定相同的表达式。不能使用别名。
+
+​		4. 除聚集计算语句外，SELECT语句中的每个列都必须在GROUP BY子 句中给出。  如果分组列中具有NULL值，则NULL将作为一个分组返回。如果列 中有多行NULL值，它们将分为一组。
+
+​		 5. GROUP BY子句必须出现在WHERE子句之后，ORDER BY子句之前。
+
+### 13.2.过滤分组（HAVING）
+
+```SQL
+select id,count(*) as num from products
+group by id
+having num>2;   # 以id分组，显示id数量大于2的分组
+```
+
+### 13.3 select子句顺序
+
+```SQL
+select 
+from 
+where
+group by 
+having 
+order by 
+limit
+```
+
+## 14.子查询
+
+### 14.1.使用
+
+```SQL
+select name from student
+where id in (
+select stu_id from sc
+where grade > 80);
+# 查询sc表中成绩大于80的学号在student表中的姓名
+```
+
+### 14.2.作为计算字段使用子查询
+
+```SQL
+select name,(select count(*) from sc where stu_id=student.id) 选课数 from student;		# 查询学生选课数  
+```
+
+## 15.联结表（join）
+
