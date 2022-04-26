@@ -704,14 +704,14 @@ create table if not exists teather(
     name varchar(30) not null comment '老师的名字',
 	phone varchar(20) comment '电话号码',
     address varchar(100) default '暂时未知' comment '住址'
-    );
+    )engine=InnoDB;
 # id name phone address 字段
 # auto_increment 自动增长
 # primary key 主键 最重要的 唯一
 # comment SQL内注释
 ```
 
-### 21.2.操作表
+### 21.2.更新表
 
 ```SQL
 # 显示字段类型、默认值、null、、、等信息
@@ -727,4 +727,56 @@ alter table 表名 modify <字段> <新类型>;
 # 修改表名
 alter table <表名> rename to <新表名>;   
 ```
+
+## 22.使用视图
+
+### 22.1.视图
+
+​	视图是虚拟的表。与包含数据的表不一样，视图只包含使用时动态检索数据的查询。
+
+#### 22.1.1.为什么使用视图
+
+1. 重用SQL语句。 
+2. 简化复杂的SQL操作。在编写查询后，可以方便地重用它而不必 知道它的基本查询细节。
+3.  使用表的组成部分而不是整个表。
+4.  保护数据。可以给用户授予表的特定部分的访问权限而不是整个 表的访问权限。 
+5. 更改数据格式和表示。视图可返回与底层表的表示和格式不同的 数据
+
+### 22.2.使用视图
+
+#### 22.2.1.创建视图
+
+```SQL
+create view <视图名> as 
+select name,sex 
+from student; # 以姓名，性别创建一个视图
+```
+
+#### 22.2.2.查看视图创建信息
+
+```SQL
+show create view <视图名>;
+```
+
+#### 22.2.3.更新视图
+
+```SQL
+alter view <视图名> as 
+select name,sex 
+from student;
+```
+
+#### 22.2.4.删除视图
+
+```SQL
+drop view <视图名>;
+```
+
+### 22.3.视图算法
+
+**1.mergn**
+
+**2.temptable**
+
+## 23.存储过程
 
