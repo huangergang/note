@@ -133,4 +133,3 @@ create table <表名>(
 foreign key(字段) references 主表名(字段) on delete set null on update cascade);  
 # 在创建字段时，使其删除时置空,更新时级联.
 ```
-
