@@ -283,9 +283,9 @@ is_vip
 
 **7.长度较小的字符串类型用char类型。varchar为可变长字符串，当varchar长度超过5000，用text类型。**
 
-**8.一个表里必须有三个字段id，create_time, update_time。id类型为unsigend bigint。create_time和update_time类型必须为datetime。**
+**8.一个表里必须有三个字段id，create_time, update_time。*id类型为unsigned bigint。create_time和update_time类型必须为datetime*。**
 
-**9.当一个表是单表，不与其他表id绑定，id必须自增，步长为1。id为 unsigend bigint 类型。**
+**9.当一个表是单表，不与其他表id绑定，id必须自增，步长为1。*id为 unsigned bigint 类型*。**
 
 **10.单表超过500万行，数据库容量超过2G要分库分表。**
 
