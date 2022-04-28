@@ -34,7 +34,7 @@ git add .			# 把工作区的所有文件推到暂存区
 git status
 # 查看提交信息
 git log
-git log --pretty=online  # 提交信息只显示一行
+git log --pretty=oneline  # 提交信息只显示一行
 # 提交
 git commit -m "提交描述"
 git commit -am "提交描述"  # 直接提交所有文件
