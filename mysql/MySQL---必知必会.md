@@ -780,3 +780,75 @@ drop view <视图名>;
 
 ## 23.存储过程
 
+### 23.1.创建存储过程
+
+```SQL
+create procedure <命名>()
+begin
+	... # 执行语句
+	...
+	...
+end;
+```
+
+### 23.2.执行存储过程
+
+```SQL
+call <名> ;
+```
+
+### 23.3.删除存储过程
+
+```SQL
+drop procedure <名>;
+```
+
+### 23.4.使用参数
+
+```SQL
+delimiter //
+create procedure proc(
+	out min_n decimal(8,2)
+	out max_n decimal(8,2)
+)
+begin 
+	select min(grade) 
+	into min_n
+	from sc	;
+	select max(grade)
+	into max_n
+	from sc ;
+end;
+//
+delimiter ;
+```
+
+​	**MySQL支持IN（传递给存储过程）、OUT（从存 储过程传出，如这里所用）和INOUT（对存储过程传入和传出）类型的参 数。存储过程的代码位于BEGIN和END语句内。**
+
+#### 23.4.1.执行
+
+```SQL
+call proc(@min_number,@max_number);
+```
+
+#### 23.4.2.查询输出参数
+
+```SQL
+select @min_number;
+select @max_number;
+```
+
+### 23.5.检查存储过程
+
+```SQL
+show create procedure <名> ;
+```
+
+**为了获得包括何时、由谁创建等详细信息的存储过程列表，使用SHOW  PROCEDURE STATUS;**
+
+```SQL
+show procedure status like "proc" ;
+```
+
+## 24.使用游标
+
