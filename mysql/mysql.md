@@ -323,4 +323,5 @@ is_vip
 
 **1.orm框架查询时不能用*号**
 
-2.@Transactional
+**2.@Transactional**
+
