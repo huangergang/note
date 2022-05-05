@@ -80,3 +80,10 @@ git checkout -b <loc_name_branch> origin/name_branch			# 拉取指定远程分�
 git fetch    				# 获取远程最新状态
 ```
 
+## 强制推送远程（不建议）
+
+```bash
+git push -u  origin  master -f
+```
+
+ 
