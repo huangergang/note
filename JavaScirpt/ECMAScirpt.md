@@ -312,5 +312,113 @@ var arr = new Array(1,2,3);			// 直接实例化
 var arr = new Array(size);		//  创建数组并指定长度
 ```
 
+### 9.2.数组操作
 
+**数组的长度可以通过length属性获取，长度可以任意修改。**
+
+```JS
+var arr = [1,2];
+arr.length = 4;
+```
+
+**通过下标索引获取数组值，索引可以越界。**
+
+```JS
+var arr = [1,2];
+console.log(arr[3]);  // 打印undefinded
+```
+
+**下标任意。可以是任意字符，如果为非真正数，称之为属性。**
+
+```JS
+var arr = new Array(2);
+arr["name"] = "frank";
+console.log(arr["name"]);	// 打印frank
+```
+
+### 9.3.数组遍历
+
+```JS
+var arr = [1,2,3,4];
+for(var i =0; i<arr.length;i++){
+    console.log(arr[i]);
+}
+```
+
+```JS
+var arr = [1,2,3,4];
+for(var index in arr){
+    console.log(arr[index]);
+}
+```
+
+```JS
+var arr = [1,2,3,4];
+arr.forEach(function(element,index){
+    console.log(element);
+    console.log(index);
+})
+```
+
+### 9.4.数组方法
+
+**push			     	添加元素到最后**
+
+**unshift  	 	   	添加元素到最前**
+
+**pop			    		删除最后一项**
+
+**shift			  	 	删除第一项**
+
+**reverse		  		数组翻转**
+
+**join				 		数组转成字符串**
+
+**indexof		  		数组元素索引**
+
+**slice						截取数组**
+
+**splice			  		剪切数组，原数组变化**
+
+**concat					数组合并**
+
+## **10.函数**
+
+### 10.1.函数定义
+
+**普通定义，具有函数名提升的效果。**
+
+```JS
+function funName([参数列表]){
+    ...
+}
+```
+
+**匿名函数**
+
+```JS
+var fun = function([参数列表]){
+    ...
+}
+```
+
+**构造函数**
+
+```JS
+var fun = new Function("a","b","c","return(a+b+c)")
+```
+
+**注意：**
+
+**js中函数无重载，若函数名相同，会覆盖。**
+
+### 10.2.
+
+## 11.内置对象
+
+### 11.1.String
+
+### 11.2.Math
+
+### 11.3.Date
 
