@@ -389,6 +389,7 @@ arr.forEach(function(element,index){
 **普通定义，具有函数名提升的效果。**
 
 ```JS
+// 函数声明语句，可以先调用后声明
 function funName([参数列表]){
     ...
 }
@@ -397,6 +398,7 @@ function funName([参数列表]){
 **匿名函数**
 
 ```JS
+// 函数表达式，将一个匿名函数赋值给一个变量
 var fun = function([参数列表]){
     ...
 }
@@ -412,13 +414,175 @@ var fun = new Function("a","b","c","return(a+b+c)")
 
 **js中函数无重载，若函数名相同，会覆盖。**
 
-### 10.2.
+### 10.2.函数参数
+
+1. 实参可以省略，那对应的形参为undefinded。
+
+   ```JS
+   function fun1(str){
+   	console.log(str);
+   }
+   fun1();    // 打印undefinded
+   ```
+
+2. 若函数形参同名：在使用时以最后一个为准。
+
+   ```JS
+   function fun2(a,a,a){
+   	console.log(a,a,a);
+   }
+   fun2(1,2,3);    // 打印3，3，3
+   ```
+
+3. 可以给参数默认值。
+
+   ```JS
+   function fun1(a){
+   	a = a || 1;
+   console.log(a);
+   }
+   fun1();      // 设置a的默认值为1
+   ```
+
+4. 参数为值传递，传递副本；用对象实现引用传递。
+
+   ```JS
+   var obj = {
+   	name:"frank",
+   }
+   function fun1(o){
+   	o.name = "turing";
+   }
+   fun1(obj);
+   console.log(obj);
+   ```
+
+### 10.3.函数调用
+
+**普通调用函数**。
+
+```JS
+function fun1(){
+	...
+}
+fun1();
+```
+
+**函数调用模式，有返回值时。**
+
+```JS
+function fun(){
+    ...
+    return 2;
+}
+var n = fun();
+```
+
+**对象调用模式。**
+
+```JS
+var obj = {
+    test:function fun(){
+    ...
+	}
+}
+obj.test();
+```
+
+***return可以返回值也可以结束函数。***
+
+### 10.4.函数作用域
+
+**在js中只有函数有作用域。**
+
+**函数内没有用var修饰的变量是全局变量。**
+
+```JS
+var a  = 100;
+function fun(){
+    a = 10;
+}
+fun();			// a的值改为10;
+```
 
 ## 11.内置对象
 
 ### 11.1.String
 
+**charAt(idx)				返回指定位置的字符**
+
+**indexof(chr)				返回指定字串的位置，从左到右，找不到 返回-1**
+
+**substr(m,n)				返回从m位置开始的n个字符**
+
+**substring(m,n)			返回从m位置开始的n个字符，n可以省略**
+
+**toLowerCase()			大写转换**
+
+**toUpperCase()			小写转换**
+
 ### 11.2.Math
 
 ### 11.3.Date
 
+## 12.对象
+
+​	**js对象为json对象**
+
+### 12.1.创建对象
+
+1. 字面量创建
+
+   ```JS
+   var student = {};
+   student.name = "frank";
+   student.age = 12;
+   ```
+
+2. 创建并赋值
+
+   ```JS
+   var student = {
+       name : "frank",
+       age : 12
+   }
+   ```
+
+***对象中的键都是字符串，值可以是六种数据类型。***
+
+3. new obj
+
+   ```JS
+   var student = new Object();
+   ```
+
+4. Object.create(模板对象)
+
+   ```JS
+   var stu = new Object.create(student);
+   ```
+
+### 12.2.对象的序列化和反序列化
+
+#### 12.2.1.JSON.stringify()
+
+序列化对象，指将对象转换为字符串。
+
+```JS
+var student={
+    ...
+}
+var str = JSON.stringify(student);
+```
+
+#### 12.2.2.JSON.parse()
+
+反序列化，指将字符串转化为对象。
+
+```JS
+var stu = JSON.parse(str);
+```
+
+### 12.3.this
+
+**谁调用谁就是this。**
