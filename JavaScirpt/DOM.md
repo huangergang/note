@@ -45,3 +45,101 @@
 | appendChild()  | 向元素中添加新的子节点，作为最后一个子节点 |
 | insertBefore() | 向指定的已有的节点之前插入新的节点         |
 
+第一种
+
+```js
+// 获取html容器
+var div = document.getElementById("cont");
+// 创建p标签
+var p = document.createElement("p");
+// 创建文本
+var text = document.createTextNode("this is text");
+// 将文本添加到p标签内
+p.appendChild(txt);
+// 将p标签设置到div中
+div.appendChild(p);
+```
+
+第二种
+
+```JS
+// 获取html容器
+var div = document.getElementById("cont");
+// 创建p标签
+var p = document.createElementById("p");
+// 将文本添加到p标签内
+p.innerHTML = "this is text";
+// 将p标签设置到div中
+div.appendChild(p);
+```
+
+第三种
+
+```JS
+// 获取html容器
+var div = document.getElementById("cont");
+
+var p = "<p>this is text</p>";
+
+div.innerHTML += p;
+```
+
+**添加图片：**
+
+第一种
+
+```JS
+// 获取html容器
+var div = document.getElementById("cont");
+
+var img = document.createElement("img");
+img.src="url";
+img.width=100;
+img.height=100;
+
+div.appendChild(img);
+```
+
+第二种
+
+```JS
+// 获取html容器
+var div = document.getElementById("cont");
+
+var img = document.createElement("img");
+
+img.setAttribute("src","img/img1.jpg");
+
+div.appendChild(img);
+```
+
+第三种
+
+```JS
+// 获取html容器
+var div = document.getElementById("cont");
+
+var img = "<img src="url" />";
+div.innerHTML += img;
+```
+
+直接插入文本到HTML
+
+```JS
+document.write("");
+```
+
+### 3.3.间接查找节点
+
+| 方法           | 描述                       |
+| -------------- | -------------------------- |
+| childNodes     | 返回元素的一个子节点的数组 |
+| firstChild     | 返回元素的第一个子节点     |
+| lastChild      | 返回元素的最后一个子节点   |
+| nextSibing     | 返回元素的下一个兄弟节点   |
+| parentNode     | 返回元素的符节点           |
+| previousSibing | 返回元素的上一个兄弟节点   |
+
+### 3.4.删除节点
+
+removeChild()  从元素中山删除子节点。
