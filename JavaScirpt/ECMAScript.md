@@ -70,7 +70,7 @@ a = 1;
 
 **注意：**
 
-1. **当变量只声明未赋值时返回*undfinded***（未定义）
+1. **当变量只声明未赋值时返回*undefined***（未定义）
 
    ```JS
    var a;
@@ -132,15 +132,15 @@ var name = "frank";
 var is = true;
 ```
 
-### 5.4.undfinded
+### 5.4.undefined
 
 ​	表示未定义或不存在
 
-**出现undefinded的情况：**
+**出现undefined的情况：**
 
-1. **当声明了变量但未赋值时，变量值未undefinded。**
-2. **调用函数时，函数有形参，但未提供实参，则参数未undefinded。**
-3. **函数没有返回值时，默认返回为undefinded。**
+1. **当声明了变量但未赋值时，变量值未undefined。**
+2. **调用函数时，函数有形参，但未提供实参，则参数未undefined。**
+3. **函数没有返回值时，默认返回为undefined。**
 
 ### 5.5.Null
 
@@ -298,6 +298,9 @@ do {
 for(var a = 1;a <= 5; a++){
     ...
 }
+for(var i in arr){
+    ...
+}
 ```
 
 ## 9.数组
@@ -416,7 +419,7 @@ var fun = new Function("a","b","c","return(a+b+c)")
 
 ### 10.2.函数参数
 
-1. 实参可以省略，那对应的形参为undefinded。
+1. 实参可以省略，那对应的形参为undefined。
 
    ```JS
    function fun1(str){

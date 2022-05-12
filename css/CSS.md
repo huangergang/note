@@ -440,7 +440,9 @@ body{
 
 ​		  **ceparate（默认，单元边框独立）**
 
-  		**coolapse（单元格边框合并）**
+```CSS
+coolapse（单元格边框合并）
+```
 
 ```CSS
 #table1 {
