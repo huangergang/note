@@ -319,11 +319,29 @@ class取值为disabled            样式禁用
 
 ##### 4.2.2.1.水平表单
 
-```HTML
-```
+水平表单与其他表单不仅标记的数量上不同，而且表单的呈现形式也不同。如需创建一个水平布局的表单，请按下面的几个步骤进行：
+
+- 向父 <form> 元素添加 class *.form-horizontal*。
+- 把标签和控件放在一个带有 class *.form-group* 的 <div> 中。
+- 向标签添加 class *.control-label*。
 
 ### 4.3.缩略图
 
+大多数站点都需要在网格中布局图像、视频、文本等。Bootstrap 通过缩略图为此提供了一种简便的方式。使用 Bootstrap 创建缩略图的步骤如下：
 
+- 在图像周围添加带有 class **.thumbnail** 的 <a> 标签。
+- 这会添加四个像素的内边距（padding）和一个灰色的边框。
+- 当鼠标悬停在图像上时，会动画显示出图像的轮廓。
 
 ### 4.4.面板
+
+面板组件用于把 DOM 组件插入到一个盒子中。创建一个基本的面板，只需要向 <div> 元素添加 class **.panel** 和 class **.panel-default** 即可，如下面的实例所示：
+
+```HTML
+<div class="panel panel-default">
+    <div class="panel-body">
+        这是一个基本的面板
+    </div>
+</div>
+```
+

@@ -92,7 +92,7 @@
 > 种类格式：NTFS、ext、ext2、ext3、ext4、tmtps......
 
 ``` shell
-df -T  (查看文件格式)
+df -T   #  (查看文件格式)
 ```
 
 ### 005.GNU核心
@@ -189,24 +189,24 @@ https://wangchujiang.com/linux-command/
 > 没有盘符的概念    一切皆文件
 
  ``` shell
- cd                    (切换目录)
+ cd                 #   (切换目录)
  ```
 
 >  **/**      （正斜线）  表示最根目录
 
 ``` shell
-cd /                  (切换到根目录)
+cd /               #   (切换到根目录)
 ```
 
 
 
 ``` shell
-cd ..                 (返回到上一级目录)
+cd ..              #  (返回到上一级目录)
 ```
 
 **根目录解析**
 
-![image-20210826202041294](C:\Users\莫\AppData\Roaming\Typora\typora-user-images\image-20210826202041294.png)
+<img src="..\Linux\Linux目录.png" style="zoom:100%;" />
 
 * **/bin**    二进制文件目录，二进制文件可以直接运行，存放GNU工具，命令....
 * **/cdrom**  光盘
@@ -250,15 +250,16 @@ cd ..                 (返回到上一级目录)
 > 
 >
 > ``` shell
-> . 表示当前目录     ..  表示上上一层目录
+> #   . 表示当前目录     
+> #   ..  表示上上一层目录
 > 
-> cd ../..  返回上上一层目录
+> cd ../..  #   返回上上一层目录
 > ```
 >
 > 
 >
 > ``` shell
-> pwd   显示当前目录
+> pwd    # 显示当前目录
 > ```
 
 ### 007.ctrl
@@ -266,7 +267,7 @@ cd ..                 (返回到上一级目录)
 > 
 >
 > ``` shell
-> ctrl + c     强制退出
+> ctrl + c    # 强制退出
 > ```
 
 > Ctrl+ Shift+c     复制
@@ -281,22 +282,18 @@ cd ..                 (返回到上一级目录)
 
 > 相对当前目录的路径
 
- ### 010.XXXXXX
+ ### 010.gedit
 
-> 
->
 > ``` shell
-> gedit  路径   （打开文件）
+>gedit  路径      # （打开文件）
 > ```
 
 ### 011.练习
 
 ### 012. ls 
 
-> 
->
 > ``` shell
-> ls -F -R    (-F 区分文件)（-R 重新遍历）
+>ls -F -R              #  (-F 区分文件)（-R 重新遍历）
 > ```
 
 >
@@ -308,7 +305,7 @@ cd ..                 (返回到上一级目录)
 > ls 过滤文件
 >
 > ``` shell
-> ls -l wenjian_* .txt  (多个名子相似的文件，* 表示任意多个字符，？表示一个字符)
+> ls -l wenjian_* .txt       # (多个名子相似的文件，* 表示任意多个字符，？表示一个字符)
 > ```
 
 > 文件扩展匹配符过滤
@@ -323,7 +320,7 @@ cd ..                 (返回到上一级目录)
 >
 > ``` shell
 > ls -l f[a-z]ck.txt  
-> ls -l f[!a-z]ck.txt  (非)
+> ls -l f[!a-z]ck.txt    #  (非)
 > ```
 
 ### 013.touch
@@ -331,13 +328,13 @@ cd ..                 (返回到上一级目录)
 > 创建文件
 >
 > ``` shell
-> touch name.txt  (创建空文件并更新时间)
+> touch name.txt      #  (创建空文件并更新时间)
 > ```
 >
 > 组合命令
 >
 > ``` shell
-> cd ../ && ls   (切换目录并显示所有文件)
+> cd ../ && ls        #  (切换目录并显示所有文件)
 > ```
 
 ### 014.cp
@@ -347,7 +344,7 @@ cd ..                 (返回到上一级目录)
 > **cp   (源文件) （目标文件）**
 >
 > ``` shell
-> cp -i 1.txt 2.txt（-i 提示用户）
+> cp -i 1.txt 2.txt           # （-i 提示用户）
 > ```
 >
 > **把doc文件夹复制到Down下，-r表示连同文件夹一起复制，遍历**
@@ -359,8 +356,7 @@ cd ..                 (返回到上一级目录)
 > 
 >
 > ``` shell
-> cp -r 1.txt /home/turing/Download/
-> (把文件复制到文件夹)
+> cp -r 1.txt /home/turing/Download/               # (把文件复制到文件夹)
 > ```
 
 ### 015.cp练习
@@ -368,7 +364,7 @@ cd ..                 (返回到上一级目录)
 > 练习........................
 >
 > ``` shell
-> cd -   返回上一个操作目录
+> cd -                      # 返回上一个操作目录
 > ```
 
 ### 016.光标移动
@@ -442,7 +438,7 @@ cd ..                 (返回到上一级目录)
 > 
 >
 > ``` shell
-> cd !$  移动到上一个命令的最后一个路径
+> cd !$         # 移动到上一个命令的最后一个路径
 > ```
 
 ### 021.rm删除文件
@@ -456,13 +452,13 @@ cd ..                 (返回到上一级目录)
 > 
 >
 > ``` shell
-> rm -i <file>  (提醒你是否删除)
+> rm -i <file>      #   (提醒你是否删除)
 > ```
 
 **<font color="red">最危险命令</font>**
 
 > ``` shell
->rm -rf /*     (删除所有) 
+>rm -rf /*        #   (删除所有) 
 > ```
 
 ### 022.创建文件和删除文件
@@ -534,25 +530,25 @@ cd ..                 (返回到上一级目录)
 > 指定文件末尾若干行
 >
 > ``` shell
-> tail <file>   （显示最后10行）
+> tail <file>                   # （显示最后10行）
 > ```
 >
 > 
 >
 > ``` shell
-> tail -n <number> <file>   (显示最后number行)
+> tail -n <number> <file>          # (显示最后number行)
 > ```
 >
 > 指定文件开头若干行
 >
 > ``` shell
-> head <file>    (显示开头10行)
+> head <file>                      # (显示开头10行)
 > ```
 >
 > 
 >
 > ``` shell
-> head -n <number> <file>   (显示开头number行)
+> head -n <number> <file>         # (显示开头number行)
 > ```
 
 ## 5.更上一层Shell
@@ -578,7 +574,7 @@ cd ..                 (返回到上一级目录)
 > **Linux PID** ----> 进程ID
 >
 > ``` shell
-> ps -aux | grep named   #查看named进程详细信息 
+> ps -aux | grep named   # 查看named进程详细信息 
 > ```
 >
 > 
@@ -608,7 +604,7 @@ cd ..                 (返回到上一级目录)
 >
 > ``` shell
 > sudo mount 挂载点 目标挂载点  
-> sudo nmount 挂载点             （删除挂载点）
+> sudo nmount 挂载点            # （删除挂载点）
 > ```
 >
 > 挂载的是分区
@@ -624,13 +620,13 @@ cd ..                 (返回到上一级目录)
 > 
 >
 > ``` shell
-> df -h    (查询所有磁盘空间)
+> df -h   #  (查询所有磁盘空间)
 > ```
 >
 > 
 >
 > ``` shell
-> du -h    (当前目录磁盘使用情况)
+> du -h   #  (当前目录磁盘使用情况)
 > ```
 
 ### 008.sort file
@@ -638,31 +634,31 @@ cd ..                 (返回到上一级目录)
 > 
 >
 > ``` shell
-> sort   file   (按字符排序展示)
+> sort   file   #  (按字符排序展示)
 > ```
 >
 > 
 >
 > ``` shell
-> sore -n file （按数字大小排序）
+> sort -n file   #（按数字大小排序）
 > ```
 >
 > 
 >
 > ```shell
-> sort -nr  file（按数字大小倒序）
+> sort -nr  file   #（按数字大小倒序）
 > ```
 >
 > 
 >
 > ``` shell
-> sort -M   file.log (按月份正排序)
+> sort -M   file.log       #  (按月份正排序)
 > ```
 >
 > 
 >
 > ``` shell
-> sort -Mr  file.log (按月份倒序)
+> sort -Mr  file.log      #   (按月份倒序)
 > ```
 >
 > 
@@ -681,86 +677,62 @@ cd ..                 (返回到上一级目录)
 
 ### 010.压缩归档解压缩
 
-> 
-
 | 压缩软件 | 后缀 |
 | -------- | ---- |
 | gzip     | .gz  |
 | zip      | .zip |
 | bzip2    | .    |
 
-> 
->
 > ``` shell
-> tar  打包
+>tar     #    打包
+> ```
+> 
+> ``` shell
+>tar -zvcf <newname> 文件夹     #  (打包后，用gzip压缩)
 > ```
 >
-> 
->
 > ``` shell
-> tar -zvcf <newname> 文件夹       (打包后，用gzip压缩)
-> ```
->
-> 
->
-> ``` shell
-> tar -zxvf  file  (解压)
+> tar -zxvf  file      # (解压)
 > ```
 
 ## 6.父子Shell
 
 ### 001.父子shell
 
-> 
->
 > ``` shell 
-> bash  运行一个shell
+>bash       # 运行一个shell
 > ```
 
 ### 002.分号；的作用
 
->  
->
 >  ```shell
->  ls ; pwd ; cd /   (依次执行)
+>ls ; pwd ; cd /     # (依次执行)
+>  ```
+>  
+>  ``` shell
+>（ls ; pwd ; cd / ）        #  （创建一个子shell执行）
 >  ```
 >
->  
->
 >  ``` shell
->  （ls ; pwd ; cd / ）          （创建一个子shell执行）
->  ```
->
->  
->
->  ``` shell
->  echo $BASH_SUBSHELL   (查看是否创建了子shell)
+>  echo $BASH_SUBSHELL      #   (查看是否创建了子shell)
 >  ```
 
 ### 003.sleep和jobs
 
-> 
->
 > ```shell
-> sleep <number>   (延迟执行number秒)
+>sleep <number>    # (延迟执行number秒)
+> ```
+> 
+> ```shell
+>sleep number&    # (挂载后台)
 > ```
 >
-> 
->
 > ```shell
-> sleep number&    (挂载后台)
+> jods       #（查看后台进程）
 > ```
 >
-> 
->
-> ```shell
-> jods       （查看后台进程）
-> ```
->
-> 
->
-> ```sehll
-> jobs -l    （查看后台进程PID）
+> ```bash
+>jobs -l    #（查看后台进程PID）
 > ```
 
 ### 004.后台用法举例
@@ -769,42 +741,36 @@ cd ..                 (返回到上一级目录)
 
 创建子shell挂载
 
-> 
->
 > ```shell
-> coproc  turing { sleep 10; }
+>coproc  turing { sleep 10; }
 > ```
 
 ### 006.外部命令和内建命令
 
 > 有些命令不单独创建一个进程，有些则要创建一个进程。
 
-> 
->
 > ``` shell
-> ps -f
+>ps -f
 > ```
->
+> 
 > **PPID**  **基于谁创建的 PID**
 
 > 查看命令是否为外部命令或内建命令
 >
 > ```shell
-> type 命令  
+> type <命令>
 > ```
 
 ### 007.alias别名
 
-> 
->
 > ```shell
-> history   (查看历史命令)
+>history   # (查看历史命令)
 > ```
->
+> 
 > **所有历史命令保存在 ./bash_history/**
 >
 > ```shell
-> !number   (历史命令行号)
+>!number   # (历史命令行号)
 > ```
 
 > 修改命别名
@@ -837,21 +803,15 @@ Linux
 
 >  **全局变量： **
 
-> 
->
 > ```shell
-> printenv   (显示所有全局环境变量)
+>printenv  # (显示所有全局环境变量)
 > ```
->
 > 
->
 > ```shell
-> printenv  <环境变量>
+>printenv  <环境变量>
 > echo      <环境变量> 
-> ```
->
+>```
 > 
->
 > ```shell
 > $HOME=/home/user
 > ```
@@ -860,24 +820,20 @@ Linux
 
 ### 003.用户变量和局部变量的设定
 
-> 
->
 > ```shell
-> america="us"  (设定局部变量)
+>america="us"   #  (设定局部变量)
 > ```
->
+> 
 > 局部变量只能在所创建的shell中使用， 子shell中不可用，shell销毁则变量销毁。
 >
 > 全局变量用大写（单词之间用下划线隔开），局部变量、用户变量用小写。
 
 ### 004.定义全局变量
 
-> 
->
 > ```shell
-> export america="us"
+>export america="us"
 > ```
->
+> 
 > **shell销毁则销毁**
 
 > 销毁全局变量
@@ -894,12 +850,10 @@ Linux
 
 ### 006.设置系统路径
 
-> 
->
 > ```shell
-> PATH=:/home/user/Projext/
+>PATH=:/home/user/Projext/
 > ```
->
+> 
 > Project/下的所有软件都可以在Terminal中直接运行
 
 ### 007.永久配置系统变量
@@ -934,28 +888,20 @@ Linux
 
 ### 002.安装、更新、卸载
 
-> 
->
 > ```shell
-> apt  list  (查看安装软件)
+>apt  list    # (查看安装软件)
+> ```
+> 
+> ```shell
+>sudo apt update   #  （查询更新）
 > ```
 >
-> 
->
 > ```shell
-> sudo apt update  （查询更新）
+> sudo apt upgrade    #  (一键更新)
 > ```
 >
-> 
->
 > ```shell
-> sudo apt upgrade  (一键更新)
-> ```
->
-> 
->
-> ```shell
-> sudo apt remove <软件名>  （卸载软件）
+>sudo apt remove <软件名>  # （卸载软件）
 > ```
 
 ### 003.其他发行版
@@ -1018,16 +964,14 @@ Linux
 > sudo passwd <user>
 > ```
 >
-> 
->
 > ``` shell
-> chpasswd < passed.txt  (读txt文件设置密码)
+>chpasswd < passed.txt  (读txt文件设置密码)
 > ```
->
+> 
 > 设置其他参数
 >
 > ``` shell
-> chage 
+>chage 
 > ```
 
 ### 002.group组
@@ -1037,31 +981,23 @@ Linux
 > 组ID：GID
 >
 > ``` shell
-> tail /etc/group   (组文件)
+> tail /etc/group  # (组文件)
 > ```
->
-> 
 >
 > ```shell
-> sudo groupadd     (创建组)  
+>sudo groupadd    # (创建组)  
 > ```
->
 > 
+> ``` shell
+>usermod          #（添加进组）
+> ```
 >
 > ``` shell
-> usermod          （添加进组）
+> groupmod         # （修改组）
 > ```
->
-> 
->
-> ``` shell
-> groupmod         （修改组）
-> ```
->
-> 
 >
 > ```shell
-> groupdel          (删除组)
+>groupdel         #  (删除组)
 > ```
 
 ### 003.文件和文件夹权限
@@ -1082,12 +1018,10 @@ Linux
 
 ### 004.chmod修改权限
 
-> 
->
 > ```shell
-> chmod ugo-r file.txt
+>chmod ugo-r file.txt
 > ```
->
+> 
 > 百度学习 （0__0）
 >
 > 磁盘管理    (0__0)
@@ -1237,6 +1171,7 @@ touch .vimrc
 vim .vimrc
 ```
 
+```bash
 set syntax=on
 
 set tabstop=4
@@ -1248,9 +1183,10 @@ set number
 set enc=utf-8
 
 set showmatch
+```
 
 ``` shell
-source  .vimrc   更新配置
+source  .vimrc   # 更新配置
 ```
 
 行号+gg  跳跃
@@ -1262,7 +1198,7 @@ source  .vimrc   更新配置
 > 改镜像
 >
 > ```shell
-> ifconfig       （显示端口）
+> ifconfig       #  显示端口
 > ```
 >
 > 安装  ssh  连接
@@ -1273,4 +1209,3 @@ source  .vimrc   更新配置
 
 > Windows   WSL
 >
-> 
