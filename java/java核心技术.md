@@ -1,8 +1,8 @@
-# java核心技术
+# java核心技术1
 
 ## 主体内容
 
-<img src="..\java\目录结构.png" />
+<img src="..\java\img\目录结构.png" />
 
 ## 第一章
 
@@ -463,11 +463,449 @@ public class Test {
 
 ## 第五章
 
-## 第六章
+继承是基于已经存在的类构造一个新类，继承已经存在的类的方法和域。
+
+### 1.定义子类
+
+**extends**
+
+```JAVA
+class Student extends Person{}
+```
+
+### 2.override (覆盖)
+
+```JAVA
+// 覆盖（重写）超类的equals方法，super隐式参数可以调用父类方法。
+class Student {
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+}
+// 子类不能直接访问超类的私有域，必须提供访问接口。
+```
+
+### 3.super调用构造器
+
+```JAVA
+class Student {
+  Student(String name,String sex,String stuID){
+      super(name,sex);			//  默认调用super();
+      this.stuID = stuID;
+  }
+}
+```
+
+**如果子类的构造器没有显示地调用超类的构造器，则默认调用超类的无参构造器。**
+
+### 4.多态（polymorphism）
+
+超类引用变量可以引用任意一个子类对象。
+
+```JAVA
+Person person = new Student();
+```
+
+不能将一个超类的引用赋给子类变量。（必须进行类型转换）
+
+```JAVA
+Student stu = new Person();      // Error 
+```
+
+```JAVA
+Student stu = (Student) new Person();  
+```
+
+类型转换的唯一原因：在暂时忽略对象的实际类型后，使用对象的全部功能。
+
+### 5.继承层次
+
+由一个公共类派生出来的所有类的集合称为继承层次，从某个特定的类到其祖先的路径称为该类的继承链。
+
+图为Collection集合继承链：
+
+<img src="..\java\img\AbstractCollection继承层次.png" />
+
+**java不支持多继承。**
+
+### 6.阻断继承：final类和方法
+
+不允许扩展的类称为**final**类。如果将一个类声明为final，其中的方法自动成为final，不包括域。
+
+```JAVA
+public final class Student{};
+```
+
+**子类不能覆盖超类中的final方法。**
+
+**将方法或类声明为final主要目的是：确保它们不会在子类中改变语义。**
+
+### 7.instanceof
+
+在将超类转换成子类之前，应当用instanceof运算符检查是否可以进行类型转换。
+
+```JAVA
+Person p= new Person();
+boolean b = p instanceof Student;  // b值为Error
+```
+
+### 8.抽象类
+
+在继承层次上层的类更具有通用性，可以更加抽象。
+
+包含一个或多个抽象方法的类必须声明为抽象类。
+
+```JAVA
+abstract class Human{ 
+    public void get();   // 抽象方法不需要实现
+};
+```
+
+类即使不含抽象方法，也可以将类声明为抽象类。
+
+抽象类不能实例化。但是可以定义一个抽象类的对象引用，而它只能引用非抽象子类的对象。
+
+### 9.受保护访问
+
+#### 1.构造方法前的访问修饰符
+
+| **public**    | **所有类可以 new**      |
+| :------------ | :---------------------- |
+| **private**   | **自己可new(单类模式)** |
+| **default**   | **同一包内可new**       |
+| **protected** | **对同一包内的类**      |
+
+#### 2.访问修饰符
+
+| **public**    | **所有类**                   | 类、变量、方法、接口     |
+| :------------ | :--------------------------- | ------------------------ |
+| **private**   | **自己**                     | **变量、方法**           |
+| **default**   | **同一包内**                 | **类、变量、方法、接口** |
+| **protected** | **对同一包内的类和所有子类** | **变量、方法**           |
+
+### 10.Object
+
+Object是所有类的超类。Object类型的变量可以引用任何类型的对象。
+
+### 11.equals方法
+
+**Object中的equals方法。用于检测一个对象是否等于另一个对象。**
+
+特性：
+
+1. 自反性
+
+   ```JAVA
+   x.equals(x); // 返回true
+   ```
+
+2. 对称性
+
+   ```JAVA
+   x.equals(y);
+   y.equals(x);      // 返回值相同
+   ```
+
+3. 传递性
+
+   ```JAVA
+   x.equals(y);    // true
+   y.equals(z);    // true
+   
+   x.equals(z);    // 应当返回true
+   ```
+
+4. 一致性
+
+   如果x和y的引用对象未发生变化，反复调用equals方法返回值应当相同。
+
+5. 对于任意的对象，x.equals(null)返回false。
+
+***Arrays类提供的equals方法用于检测两个数组是否相等。***
+
+```JAVA
+static Boolean equals(type[] a,type[] b);    // 如果两个数组长度相同，并且对应位置上的元素也均相同，将返回true
+```
+
+### 12.hashCode方法
+
+散列码（hash code）是对象导出的一个整型值。
+
+```JAVA
+// String 类的hashCode计算算法，字符串的散列码由内容导出
+int hash = 0;
+for (int i = 0;i<length();i++){
+    hash = 31*hash + charAt(i);
+}
+```
+
+**如果重新定义equals方法，就必须重新定义hashCode方法。**
+
+### 13.toString方法
+
+返回表示对象值的字符串
+
+```JAVA
+ @Override
+public String toString() {
+}
+```
+
+### 14.泛型数组列表
+
+java提供ArrayList用于动态创建泛型数组。
+
+### 15.包装器与自动装箱
+
+包装器类为final类。在作用算时自动拆箱或装箱。
+
+包装类对象可以与 基本数据类型直接用运算符进行运算，运算时自动拆箱为基本数据类型。
+
+| 基本类型 | 包装器类  |
+| -------- | --------- |
+| int      | Integer   |
+| boolean  | Boolean   |
+| long     | Long      |
+| float    | Float     |
+| short    | Short     |
+| double   | Double    |
+| byte     | Byte      |
+| char     | Character |
+
+**当Integer中存储的数位于-128到127之间的short和int被包装到固定的对象中。如果通过自动装箱并且是范围在-128到127之间得到的Integer对象指向该固定的对象。通过 `new` 运算符一定是新建立的对象。**
+
+### 16.参数可变的方法
+
+```JAVA
+System.out.printf("%d",number);
+System.out.printf("%d %f",number,number2);
+```
+
+### 17.反射
+
+能够分析类能力的程序称为反射（reflective）。
+
+<h3><a href="..\java\java反射.md">java反射.md</a></h3>
+
+### 18.枚举类
+
+<h3><a href="..\java\java枚举.md">java枚举.md</a></h3>
+
+### 19.继承设计技巧
+
+1. 将公共操作和域放在超类
+2. 不要使用受保护的域
+3. 使用继承实现“is-a”关系
+4. 除非所有继承的方法都有意义，否则不要使用继承
+5. 在覆盖方法时，不要改变预期的行为
+6. 使用多态，而非类型信息
+7. 不要过多的使用反射
+
+## **第六章**
+
+### 1.接口概念
+
+接口不是类，而是对类的一组需求的描述。
+
+一个类可以实现一个或多个接口。
+
+```JAVA
+// Student类实现Desc、Comparable接口
+interface Desc{
+    String desc();
+}
+class Student implements Desc,Comparable{
+    @Override
+    public String desc() {
+        return null;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        return 0;
+    }
+}
+```
+
+接口中的所有方法自动地都属于public，不需用提供public关键字。
+
+接口不能含有实例域。
+
+### 2.比较器接口
+
+#### 2.1.Comparable
+
+Comparable接口的compareTo方法返回一个整型数值。如果两个对象不相等，则返回一个正值或负值。在想使用Arrays类的数组排序方法时，必须要实现Comparable接口。排序的规则可以通过对象的属性来指定。
+
+```JAVA
+// 通过实现compareTo方法实现以学生学号比较两个学生
+class Student implements Comparable{
+    @Override
+     public int compareTo(Object o) {
+         Student other = (Student) o;
+         return this.getId()-other.getId();
+     }
+}
+```
+
+#### 2.2.Comparator
+
+Comparable是排序接口，若一个类实现了Comparable接口，就意味着“该类支持排序”。而Comparator是比较器，我们若需要控制某个类的次序，可以建立一个“该类的比较器”来进行排序。
+
+Comparable相当于“内部比较器”，而Comparator相当于“外部比较器”。
+
+```JAVA
+//实现比较器接口以学生ID排序
+new Comparator<Student>() {  
+            @Override
+            public int compare(Student o1, Student o2) {
+                return o1.getId()- o2.getId();
+            }
+}
+```
+
+### 3.接口特性
+
+1. 不能实例化一个接口
+2. 可以声明接口变量
+3. 接口变量必须引用实现了接口的类对象
+4. 接口中的域自动设为`public static final`
+5. 每个类只能继承一个超类，却可以实现多个接口
+
+### 4.接口的静态方法
+
+javaSE 8中，允许在接口中增加静态方法。
+
+### 5.默认方法
+
+可以为接口提供一个默认实现，必须用default修饰符修饰。
+
+```JAVA
+interface Comparable<T>{
+    default int compareTo(T other){
+        return 0;
+    }
+}
+```
+
+### 6.对象克隆
+
+如果希望建议一个新对象，它的初始状态与已经创建的某个对象相同，但之后会有各自的状态，就可以使用clone方法。
+
+Object类提供了浅拷贝的clone方法。
+
+#### 6.1.浅拷贝
+
+只拷贝基本类型的数据域，不会拷贝引用的对象。
+
+```JAVA
+ protected Test clone() throws CloneNotSupportedException {
+        return this;
+ }
+```
+
+#### 6.2.深拷贝
+
+```JAVA
+protected Test clone() throws CloneNotSupportedException {
+        return new Test(id,name);
+}
+```
+
+### 7.lamba表达式
+
+**形式：**
+
+**参数，箭头(->)以及一个表达式。**
+
+```JAVA
+ new TreeSet<>((Student o1,Student o2)-> o1.getId()-o2.getId());
+```
+
+无需指定lambda表达式的返回类型，lambda表达式总是会由上下文推导得出。
+
+### 8.函数式接口
+
+对于只有一个抽象方法的接口，需要这种接口的对象时，就可以提供一个lambda表达式。这种接口称为函数式接口。
+
+### 9.常用函数式接口
+
+### 10.内部类
+
+内部类是定义在另一个类中的类。
+
+使用内部类的原因：
+
+1. 内部类方法可以访问该类定义所在的作用域中的数据，包括私有数据。
+2. 内部类可以对同一包中的其他类隐藏起来。
+3. 当想要定义一个回调函数且不想编写大量代码时，使用匿名内部类比较便捷。
 
 ## 第七章
 
+### 1.异常分类
+
+![](..\java\img\java异常层次简化.png)
+
+Error类层次结构描述了java运行时系统的内部错误和资源耗尽错误。
+
+由程序错误导致的异常属于RuntimeException。
+
+几种RuntimeException情况：
+
+* 错误的类型转换
+* 数组访问越界
+* 访问null指针
+
+不是派生于RuntimeException的异常包括：
+
+* 试图在文件尾部后读取数据
+* 试图打开一个不存在的文件
+* 试图根据给定的字符串查找Class对象，而这个字符串表示的类并不存在
+
+**Java语言规法将派生于Error类或RuntimeException类的所有异常称为<font color="red">非受查异常</font>，所有其他异常称为<font color="red">受查异常</font>。**
+
+### 2.throw
+
+throw关键字用于抛出一个受查异常。
+
+```JAVA
+throw new ClassCastException();
+```
+
+### 3.捕获异常
+
+```JAVA
+try{
+    // 捕获代码
+}catch(Exception e){
+    // 抛出异常
+}finally{
+    // 关闭资源
+}
+```
+
+try语句可以只有finally子句，而没有catch子句。
+
+### 4.使用断言
+
+两种形式：
+
+assert   条件；
+
+assert    条件:表达式；
+
+### 5.三种处理错误的机制
+
+1. 抛出一个异常
+2. 日志
+3. 使用断言
+
+### 6.记录日志
+
 ## 第八章
+
+
 
 ## 第九章
 
