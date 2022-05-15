@@ -905,19 +905,611 @@ assert    条件:表达式；
 
 ## 第八章
 
+### 1.泛型类
 
+泛型（Generic Programming）的实质是类型参数化。
+
+类型参数使程序具有更好的可读性和安全性。
+
+泛型类就是具有一个或多个类型变量的类。
+
+```JAVA
+public class Pair<T> {
+    private T First;
+    private T Second;
+
+    public Pair() {
+        this.First = null;
+        this.Second = null;
+    }
+
+    public Pair(T First, T Second) {
+        this.First = First;
+        this.Second = Second;
+    }
+}
+
+```
+
+泛型类可以有多个参数
+
+```JAVA
+class Test<T, U> {
+    private T one;
+    private U two;
+}
+```
+
+### 2.泛型方法
+
+泛型方法可以定义在普通类中，也可以定义在泛型类中。
+
+类型的变量放在修饰符的后面，放回类型的前面。
+
+```JAVA
+class ArrayAlg {
+    
+    public static <T> T minmax(T[] a) {
+        return a[a.length/2];
+    }
+}
+```
+
+### 3.类型变量的限定
+
+```JAVA
+public static <T extends Comparable> Pair<T> minmax(T[] a) {}
+```
+
+T表示是Comparable的子类型，T和绑定类型可以是类，也可以是接口。
+
+一个类型变量或通配符可以有多个限定。限定类型用  &  隔开。
+
+```JAVA
+T extends Comparable & Serializable
+```
+
+### 4.泛型代码与虚拟机
+
+虚拟机没有泛型类型对象，所有的类都属于普通类。
+
+#### 4.1.类型擦除
+
+在进入jvm之前，泛型会被擦除，变为原始类型。
+
+原始类型用第一个限定的类型变量来替换，如果没有给定限定就用Object替换。
+
+#### 4.2.Java泛型转换的事实
+
+* 虚拟机中没有泛型，只有普通的类和方法
+* 所有的类型参数都用它们的限定类型替换
+* 桥方法被合成来保持多态
+* 为保持类型的安全性，必要时插入强制类型转换
+
+### 5.约束与局限型
+
+不能用基本数据类型实例化类型参数。
+
+不能实例化参数化类型的数组。java不支持泛型类型数组。
+
+不能实例化类型变量。
+
+```JAVA
+new T(),new T[]
+```
+
+不能抛出或捕获泛型类的实例。
+
+### 6.泛型类型继承规则
+
+泛型类可以扩展或实现其他泛型类。
+
+### 7.通配符类型
+
+```JAVA
+Pair<? extends Employee>
+```
+
+表示任何泛型的Pair类型。
+
+### 8.Class
+
+### 9.注意
+
+1. 在java库中，E表示集合的元素类型，K和V分别表示表的关键字和值得类型。T、U、S表示任意类型。
+
+2. 从泛型类派生子类
+
+   * 子类也是泛型类，子类和父类的泛型类型要一致
+
+     ```JAVA
+     class Child<T> extends Parent<T>      
+     ```
+
+   * 子类不是泛型类，父类要明确泛型的参数类型
+
+     ```JAVA
+     class Child   extends Parent<String>
+     ```
+
+3. 类型擦除
+
+   泛型是java1.5版本引进的概念，为了与之前的版本的代码兼容，泛型信息只存在于代码的编译阶段，在进入JVM之前，与泛型相关的信息会被擦除。
 
 ## 第九章
 
+### 1.集合接口
+
+![](C:\Users\莫\Desktop\note\java\img\集合接口继承层次.png)
+
+### 2.实现类
+
+#### 2.1.AbstractCollection
+
+![](..\java\img\AbstractCollection继承层次.png)
+
+#### 2.2.AbstractMap
+
+![](..\java\img\AbstractMap.png)
+
+### 3.具体集合
+
+#### 3.1.ArrayList
+
+**ArrayList，一种可以动态增长和缩减的索引序列。**
+
+**由数组实现，扩容为原来的1.5倍，初始大小为10。特点：查询快，增删慢。**
+
+```JAVA
+add(int index, E element)
+
+addAll(Collection<? extends E> c)
+
+boolean b = arrayList.addAll(arrayList2);
+
+addAll(int index, Collection<? extends E> c)
+    
+arrayList.addAll(2, arrayList2);
+
+clear()
+
+clone()
+
+contains(Object o)  
+
+ensureCapacity(int minCapacity);
+
+forEach(Consumer<? super E> action) //  函数式接口
+arrayList.forEach((T) -> System.out.print(T+" "));
+
+get(int index)  // 返回此列表中指定位置的元素。
+
+indexOf(Object o)  // 返回此列表中指定元素第一次出现的索引，如果此列表不包含该元素，则返回 -1。
+
+isEmpty()   //  如果此列表不包含任何元素，则返回 true。
+
+Iterator<E>	iterator()   // 以正确的顺序返回此列表中元素的迭代器。
+//        for (Iterator<String> iterator = arrayList.iterator(); iterator.hasNext();) {
+//            System.out.println(iterator.next());
+//        }
+
+int lastIndexOf(Object o)  // 返回此列表中指定元素最后一次出现的索引，如果此列表不包含该元素，则返回 -1
+
+ListIterator<E>	listIterator()  // 返回此列表中元素的列表迭代器（以正确的顺序）
+//        ListIterator<String> iterator = arrayList.listIterator();
+//        for (; iterator.hasNext(); ) {
+//            System.out.println(iterator.next());
+//        }
+//        System.out.println("---------------");
+//        for (; iterator.hasPrevious(); ) {
+//            System.out.println(iterator.previous());
+//        }
+
+ListIterator<E>	listIterator(int index)   // 返回此列表中元素的列表迭代器（以正确的顺序），从列表中的指定位置开始。
+//        ListIterator<String> iterator = arrayList.listIterator(4);
+//        for (; iterator.hasNext(); ) {
+//            System.out.println(iterator.next());
+//        }
+
+E remove(int index)                   // 移除此列表中指定位置的元素。
+boolean	remove(Object o)              //从此列表中删除第一次出现的指定元素（如果存在）。
+boolean	removeAll(Collection<?> c)    // 从此列表中删除包含在指定集合中的所有元素。
+protected void	removeRange(int fromIndex, int toIndex)   // 从此列表中删除索引在 fromIndex（包括）和 toIndex（不包括）之间的所有元素。
+boolean	retainAll(Collection<?> c)    // 仅保留此列表中包含在指定集合中的元素。
+E	set(int index, E element)         // 将此列表中指定位置的元素替换为指定元素。
+Spliterator<E>	spliterator()         // 在此列表中的元素上创建一个后期绑定和快速失败的拆分器。
+List<E>	subList(int fromIndex, int toIndex)   // 返回此列表在指定的 fromIndex（包括）和 toIndex（不包括）之间的部分的视图。
+Object[]	toArray()  			      // 以正确的顺序（从第一个元素到最后一个元素）返回包含此列表中所有元素的数组。
+<T> T[]	toArray(T[] a)  	     	  // 以正确的顺序（从第一个元素到最后一个元素）返回一个包含此列表中所有元素的数组；返回数组的运行时类型是指定数组的运行时类型。
+void	trimToSize()                  // 将此 ArrayList 实例的容量修剪为列表的当前大小。
+```
+
+#### 3.2.LinkedList
+
+**LinkedList，一种可以在任意位置进行高效插入和删除操作的有序序列。**
+
+**有双向链表实现，方法ListIterator可以从前后两个方向遍历、添加、删除元素。特点：查询慢，增删快。**
+
+```JAVA
+// void	add(int index, E element)   在此列表中的指定位置插入指定元素。
+        // boolean	add(E e)    将指定元素附加到此列表的末尾。
+        // boolean	addAll(int index, Collection<? extends E> c)   将指定集合中的所有元素插入此列表，从指定位置开始。
+        // boolean	addAll(Collection<? extends E> c)  按照指定集合的迭代器返回的顺序，将指定集合中的所有元素附加到此列表的末尾。
+        // void	addFirst(E e)   在此列表的开头插入指定元素。
+        // void	addLast(E e)    将指定元素附加到此列表的末尾。
+        // void	clear()         从此列表中删除所有元素。
+        // Object	clone()     返回此 LinkedList 的浅表副本。
+        // boolean	contains(Object o)   如果此列表包含指定元素，则返回 true。
+        // Iterator<E>	descendingIterator()    以相反的顺序返回此双端队列中元素的迭代器。
+//        for (Iterator<String> iterator = list2.descendingIterator();iterator.hasNext();)
+//            System.out.println(iterator.next());
+
+        // E	element()   检索但不删除此列表的头部（第一个元素）。
+        // E	get(int index)  返回此列表中指定位置的元素。
+        // int	indexOf(Object o)      返回此列表中指定元素第一次出现的索引，如果此列表不包含该元素，则返回 -1。
+        // int	lastIndexOf(Object o)  返回此列表中指定元素最后一次出现的索引，如果此列表不包含该元素，则返回 -1。
+        // ListIterator<E>	listIterator(int index)        返回此列表中元素的列表迭代器（以正确的顺序），从列表中的指定位置开始
+        // boolean	offerLast(E e)    在此列表的末尾插入指定的元素。
+        // E	peek()          检索但不删除此列表的头部（第一个元素）。
+        // E	peekLast()      检索但不删除此列表的最后一个元素，如果此列表为空，则返回 null。
+        // E	poll()          检索并删除此列表的头部（第一个元素）
+        // E	pollFirst()     检索并删除此列表的第一个元素，如果此列表为空，则返回 null。
+        // E	pollLast()      检索并删除此列表的最后一个元素，如果此列表为空，则返回 null。
+        // E	pop()           从此列表表示的堆栈中弹出一个元素。
+        // void	push(E e)       将元素推送到此列表表示的堆栈上。
+        // E	remove()        检索并删除此列表的头部（第一个元素）。
+        // E	remove(int index)   移除此列表中指定位置的元素。
+        // E	removeFirst()       从此列表中删除并返回第一个元素。
+        // boolean	removeFirstOccurrence(Object o)     删除此列表中第一次出现的指定元素（从头到尾遍历列表时）。
+        // E	removeLast()    移除并返回此列表中的最后一个元素。
+        // boolean	removeLastOccurrence(Object o)      删除此列表中指定元素的最后一次出现（从头到尾遍历列表时）
+        // E	set(int index, E element)               将此列表中指定位置的元素替换为指定元素。
+        // int	size()          返回此列表中的元素数。
+        // Spliterator<E>	spliterator()       在此列表中的元素上创建一个后期绑定和快速失败的拆分器。
+        // Object[]	toArray()       以正确的顺序（从第一个元素到最后一个元素）返回包含此列表中所有元素的数组。
+        // <T> T[]	toArray(T[] a)  以正确的顺序（从第一个元素到最后一个元素）返回一个包含此列表中所有元素的数组；返回数组的运行时类型是指定数组的运行时类型。
+
+//        for (String s :
+//                list) {
+//            System.out.print(s + "  ");
+//        }
+```
+
+#### 3.3.ArrayDeque
+
+**ArrayDeque，一种用循环数组实现的双端队列。**
+
+```JAVA
+        // boolean	add(E e)    在此双端队列的末尾插入指定的元素。
+        // boolean	addAll(Collection<? extends E> c)   将指定集合中的所有元素添加到此双端队列的末尾，就像在每个元素上调用 addLast(E) 一样，按照集合的迭代器返回的顺序。
+        // void	addFirst(E e)   在此双端队列的前面插入指定元素。
+        // void	addLast(E e)    在此双端队列的末尾插入指定的元素。
+        // void	clear()         从此双端队列中删除所有元素。
+        // ArrayDeque<E>	clone()         返回此套牌的副本。
+        // E	element()       检索但不删除此双端队列表示的队列的头部。
+        // void	forEach(Consumer<? super E> action)     对 Iterable 的每个元素执行给定的操作，直到处理完所有元素或该操作引发异常。
+//        list.forEach((x) -> System.out.print(x+" "));
+
+        // E	getFirst()      检索但不删除此双端队列的第一个元素。
+        // E	getLast()       检索但不删除此双端队列的最后一个元素。
+//        System.out.println(list.getFirst().equals(list.getLast()));
+
+        // boolean	isEmpty()   如果此双端队列不包含任何元素，则返回 true。
+        // Iterator<E>	iterator()      返回此双端队列中元素的迭代器。
+        // boolean	offer(E e)          在此双端队列的末尾插入指定的元素。
+        // boolean	offerFirst(E e)     在此双端队列的前面插入指定元素。
+        // boolean	offerLast(E e)      在此双端队列的末尾插入指定的元素。
+        // E	peek()                  检索但不删除此双端队列表示的队列的头部，如果此双端队列为空，则返回 null。
+        // E	poll()                  检索并删除此双端队列表示的队列的头部（换句话说，此双端队列的第一个元素），如果此双端队列为空，则返回 null。
+        // E	pop()                   从这个双端队列表示的堆栈中弹出一个元素。
+        // void	push(E e)               将元素推送到此双端队列表示的堆栈上.
+        // E	remove()                检索并删除此双端队列表示的队列的头部。
+        // boolean	remove(Object o)    从此双端队列中移除指定元素的单个实例。
+        // boolean	removeAll(Collection<?> c)      移除此集合的所有也包含在指定集合中的元素（可选操作）。
+        // E	removeFirst()           检索并删除此双端队列的第一个元素。
+        // boolean	removeFirstOccurrence(Object o)     删除此双端队列中第一次出现的指定元素（从头到尾遍历双端队列时）。
+        // E	removeLast()            检索并删除此双端队列的最后一个元素。
+        // boolean	removeLastOccurrence(Object o)      删除此双端队列中最后一次出现的指定元素（从头到尾遍历双端队列时）。
+        // boolean	retainAll(Collection<?> c)          仅保留此集合中包含在指定集合中的元素（可选操作）。
+        // int	size()                  返回此双端队列中的元素数。
+        // Spliterator<E>	spliterator()               在此双端队列中的元素上创建一个后期绑定和快速失败的拆分器。
+        // Object[]	toArray()           以正确的顺序（从第一个元素到最后一个元素）返回包含此双端队列中所有元素的数组。
+        // <T> T[]	toArray(T[] a)      以正确的顺序（从第一个元素到最后一个元素）返回包含此双端队列中所有元素的数组；返回数组的运行时类型是指定数组的运行时类型。
+```
+
+#### 3.4.HashSet
+
+**HashSet，一种没有重复元素的无序集合。**
+
+```JAVA
+ // boolean	add(E e)        如果指定的元素尚不存在，则将其添加到此集合中。
+        // void	clear()             从此集合中移除所有元素。
+        // Object	clone()             返回此 HashSet 实例的浅表副本：元素本身未被克隆。
+        // boolean	contains(Object o)         如果此集合包含指定的元素，则返回 true。
+        // boolean	isEmpty()       如果此集合不包含任何元素，则返回 true。
+        // Iterator<E>	iterator()  返回此集合中元素的迭代器。
+        // boolean	remove(Object o)    如果存在，则从此集合中删除指定的元素。
+        // int	size()              返回此集合中的元素数（其基数）。
+        // Spliterator<E>	spliterator()   在此集合中的元素上创建一个后期绑定和快速失败的拆分器。
+
+//        set.forEach((x) -> System.out.println(x));
+
+//        Object[] objects = set.toArray();
+//        for (Object object : objects) {
+//            System.out.println(object);
+//        }
+```
+
+#### 3.5.TreeSet
+
+**TreeSet，一种有序集。**
+
+```JAVA
+
+        // boolean	add(E e)        如果指定的元素尚不存在，则将其添加到此集合中。
+        // boolean	addAll(Collection<? extends E> c)       将指定集合中的所有元素添加到此集合中。
+        // E	ceiling(E e)        返回此集合中大于或等于给定元素的最小元素，如果没有这样的元素，则返回 null。
+        // void	clear()             从此集合中移除所有元素。
+        // Object	clone()         返回此 TreeSet 实例的浅表副本
+        // boolean	contains(Object o)      如果此集合包含指定的元素，则返回 true。
+        // Iterator<E>	descendingIterator()    按降序返回此 set 中元素的迭代器。
+        // E	first()             返回此集合中当前的第一个（最低）元素。
+        // E	floor(E e)          返回此集合中小于或等于给定元素的最大元素，如果没有这样的元素，则返回 null。
+        // SortedSet<E>	headSet(E toElement)    返回此集合中元素严格小于 toElement 的部分的视图。
+        // NavigableSet<E>	headSet(E toElement, boolean inclusive)     返回此集合中元素小于（或等于，如果 inclusive 为真）toElement 的部分的视图。
+        // E	higher(E e)         返回此集合中严格大于给定元素的最小元素，如果没有这样的元素，则返回 null。
+        // boolean	isEmpty()       如果此集合不包含任何元素，则返回 true。
+        // Iterator<E>	iterator()  按升序返回此 set 中元素的迭代器。
+        // E	last()              返回此集合中当前的最后一个（最高）元素。
+        // E	lower(E e)          返回此集合中严格小于给定元素的最大元素，如果没有这样的元素，则返回 null。
+        // E	pollFirst()         检索并删除第一个（最低）元素，如果此集合为空，则返回 null。
+        // E	pollLast()          检索并删除最后一个（最高）元素，如果此集合为空，则返回 null。
+        // boolean	remove(Object o)    如果存在，则从此集合中删除指定的元素。
+        // int	size()              返回此集合中的元素数（其基数）。
+        // Spliterator<E>	spliterator()   在此集合中的元素上创建一个后期绑定和快速失败的拆分器。
+        // NavigableSet<E>	subSet(E fromElement, boolean fromInclusive, E toElement, boolean toInclusive)      返回此集合的一部分的视图，其元素范围从 fromElement 到 toElement。
+        // SortedSet<E>	tailSet(E fromElement)  返回此集合中元素大于或等于 fromElement 的部分的视图。
+        // NavigableSet<E>	tailSet(E fromElement, boolean inclusive)       返回此集合中元素大于（或等于，如果 inclusive 为真）fromElement 的部分的视图。
+
+//        set.forEach((x) -> System.out.println(x.getName() +"  "+ x.getGrade()));
+//        System.out.println("----------------------------");
+//        set2.forEach((x) -> System.out.println(x.getName() +"  "+ x.getGrade()));
+
+//        for (Child c :
+//                set) {
+//            System.out.println(c.getName() + "  " + c.getGrade());
+//        }
+```
+
+#### 3.6.HashMap
+
+**HashMap，一种存储键/值关联的数据结构。**
+
+```JAVA
+        // void	clear()         从此地图中删除所有映射。
+        // Object	clone()     返回此 HashMap 实例的浅表副本：键和值本身没有被克隆。
+        // V	compute(K key, BiFunction<? super K,? super V,? extends V> remappingFunction)       尝试计算指定键及其当前映射值的映射（如果没有当前映射，则为 null）。
+        // V	computeIfAbsent(K key, Function<? super K,? extends V> mappingFunction)             如果指定的键尚未与值关联（或映射为 null），则尝试使用给定的映射函数计算其值并将其输入到此映射中，除非为 null。
+        // boolean	containsKey(Object key)          如果此映射包含指定键的映射，则返回 true。
+        // boolean	containsValue(Object value)      如果此映射将一个或多个键映射到指定值，则返回 true。
+        // Set<Map.Entry<K,V>>	entrySet()           返回此映射中包含的映射的 Set 视图。
+        // V	get(Object key)                      返回指定键映射到的值，如果此映射不包含映射，则返回 null
+        // boolean	isEmpty()                        如果此映射不包含键值映射，则返回 true。
+        // Set<K>	keySet()                         返回此映射中包含的键的 Set 视图。
+        // V	merge(K key, V value, BiFunction<? super V,? super V,? extends V> remappingFunction)        如果指定的键尚未与值关联或与 null 关联，则将其与给定的非 null 值关联。
+        // V	put(K key, V value)                  将指定的值与此映射中的指定键相关联。
+        // void	putAll(Map<? extends K,? extends V> m)     将所有映射从指定映射复制到此映射。
+        // V	remove(Object key)                   如果存在，则从此映射中删除指定键的映射。
+        // int	size()                               返回此映射中键值映射的数量。
+        // Collection<V>	values()                 返回此映射中包含的值的集合视图。
+
+//        map.forEach((k, v) -> System.out.println(k +"  "+ v));
+```
+
+#### 3.7.TreeMap
+
+**TreeMap，一种键/值有序排列的映射表。**
+
+```JAVA
+   // Map.Entry<K,V>	ceilingEntry(K key)         返回与大于或等于给定键的最小键关联的键值映射，如果没有这样的键，则返回 null。
+        // K	ceilingKey(K key)                       返回大于或等于给定键的最小键，如果没有这样的键，则返回 null。
+        // void	clear()                                 从此地图中删除所有映射。
+        // Object	clone()                             返回此 TreeMap 实例的浅表副本。
+        // boolean	containsKey(Object key)             如果此映射包含指定键的映射，则返回 true。
+        // NavigableSet<K>	descendingKeySet()          返回此映射中包含的键的逆序 NavigableSet 视图。
+        // NavigableMap<K,V>	descendingMap()         返回此映射中包含的映射的逆序视图。
+        // Map.Entry<K,V>	firstEntry()                返回与此映射中的最小键关联的键值映射，如果映射为空，则返回 null。
+        // K	firstKey()                              返回此映射中当前的第一个（最低）键。
+        // K	floorKey(K key)                         返回小于或等于给定键的最大键，如果没有这样的键，则返回 null。
+        // V	get(Object key)                         返回指定键映射到的值，如果此映射不包含该键的映射，则返回 null。
+        // SortedMap<K,V>	headMap(K toKey)            返回此映射部分的视图，其键严格小于 toKey。
+        // NavigableMap<K,V>	headMap(K toKey, boolean inclusive)         返回此映射部分的视图，其键小于（或等于，如果 inclusive 为真）toKey。
+        // K	higherKey(K key)                        返回此地图部分的视图，其键小于（或等于，如果 inclusive 为真）toKey
+        // Set<K>	keySet()                            返回此映射中包含的键的 Set 视图。
+        // Map.Entry<K,V>	lastEntry()                 返回与此映射中最大键关联的键值映射，如果映射为空，则返回 null。
+        // K	lastKey()                               返回此映射中当前的最后一个（最高）键。
+        // Map.Entry<K,V>	lowerEntry(K key)           返回与严格小于给定键的最大键关联的键值映射，如果没有这样的键，则返回 null。
+        // Map.Entry<K,V>	pollFirstEntry()            移除并返回与此映射中最小键关联的键值映射，如果映射为空，则返回 null。
+        // V	put(K key, V value)                     将指定的值与此映射中的指定键相关联。
+        // void	putAll(Map<? extends K,? extends V> map)        将所有映射从指定映射复制到此映射。
+        // V	remove(Object key)                      如果存在，则从此 TreeMap 中删除此键的映射。
+        // int	size()                                  返回此映射中键值映射的数量。
+        // NavigableMap<K,V>	subMap(K fromKey, boolean fromInclusive, K toKey, boolean toInclusive)          返回此映射部分的视图，其键范围从 fromKey 到 toKey。
+        // SortedMap<K,V>	subMap(K fromKey, K toKey)      返回此映射部分的视图，其键范围从 fromKey（包括）到 toKey（不包括）。
+        // SortedMap<K,V>	tailMap(K fromKey)              返回此地图部分的视图，其键大于或等于 fromKey。
+        // NavigableMap<K,V>	tailMap(K fromKey, boolean inclusive)       返回此映射部分的视图，其键大于（或等于，如果 inclusive 为真）fromKey。
+        // Collection<V>	values()                    返回此映射中包含的值的集合视图。
+
+//        treeMap.forEach((k, y) -> System.out.println(k +"   " + y));
+```
+
+### 4.注意
+
+* List是一个有序集合。元素会增加到容器的特定位置。可以采用两种方式访问元素：1. 迭代器。2.整数索引。
+
+* java语言中，所有的链表实际上都是双向链表
+
+* 迭代器规范
+  * 可以根据需要给容器附加许多迭代器，这些迭代器只能读取类表
+  * 单独附加一个既能读又能写的迭代器
+  
+* 散列表为每一个对象计算一个整数，称为散列码。散列码是对象实例域产生的一个整数
+
+* java中散列表用链表数组实现
+
+* javaSE 8中，桶满时会从链表变成平衡二叉树
+
+* 散列表太满，就需要再散列。装填因子决定何再散列。装填因子为0.75，表示75%的位置满了，就需要再散列。HashSet和HashMap可以在创建构造器时指定装填因子。
+
+* 树集，必须是可以比较的元素类型
+  * 元素类型自身实现Comparable接口
+  * 为树集构造器提供一个比较器----------Comparator
+  
+* 树的排序必须是全序-------任意两个元素完全可比
+
+* 双端队列不能在中间添加、删除元素，只能在头部和尾部。
+
+* 优先队列（PrioityQueue），元素可以按任意顺序插入，按排列顺序检索
+
+* HashMap、TreeMap散列和比较只能作用与键
+
+* 键必须是唯一的，不能对一个键存放两个值。
+
+* IdentityHashMap，键的散列值不是由hashcode函数计算，在两个对象进行比较时用==，而不是equals
+
+* 类库设计者使用视图机制确保集合的线程安全，而不是实现线程安全的集合
+
+* 视图有局限性，即可能只可以读，无法改变大小，只支持删除，而不支持插入
+
+* 数组转集合
+
+  ```JAVA
+  HashSet<String> set = new HashSet<>(Arrays.asList(array));
+  ```
+
+* 集合转数组
+
+  ```JAVA
+  Object[] arr = set.toArray();
+  ```
+
+* Collections为集合操作实现了很多算法
+
 ## 第十章
+
+<h3><a href="../java/java swing.md">java swing</a></h3>
 
 ## 第十一章
 
+<h3><a href="../java/java swing.md">java swing</a></h3>
+
 ## 第十二章
+
+<h3><a href="../java/java swing.md">java swing</a></h3>
 
 ## 第十三章
 
+TODO
+
 ## 第十四章
 
+### 1.进程与线程
 
+进程拥有自己的一整套变量，而线程则共享数据。
+
+### 2.创建线程
+
+1. 实现Runable接口，并把它丢到Thread构造器内
+
+   ```JAVA
+   Thread t1 = new Thread(() -> {
+   	int number = 0;
+   	while (true) {
+   		System.out.println(Thread.currentThread().getName() + "-----" + number++);
+   		}
+   },"frank");
+   t1.start();
+   ```
+
+2. 继承Thread类并重写run方法
+
+   ```JAVA
+   class MyThread extends Thread {
+       @Override
+       public void run() {
+           int number = 0;
+           while (true) {
+               System.out.println(Thread.currentThread().getName() + "-----" + number++);
+           }
+       }
+   
+       public static void main(String[] args) {
+           Thread t2 = new MyThread();
+           t2.setName("turing");
+           t2.start();
+       }
+   }
+   ```
+
+3. 实现Callable接口
+
+   ```JAVA
+   class MyCall implements Callable<String>{
+       @Override
+       public String call() throws Exception {
+           int number = 0;
+               System.out.println(Thread.currentThread().getName() + "-----" + number++);
+           return "success";
+       }
+   
+       public static void main(String[] args) {
+           new Thread(new FutureTask<String>(new MyCall()),"bob").start();
+       }
+   }
+   ```
+
+### 3.中断线程
+
+**当线程的run方法执行方法体最后一条语句后，并经由执行return语句返回时，或者出现了方法中没有捕获的异常时，线程终止。**
+
+interrupt方法可以用来请求终止线程。
+
+静态的Thread.currentThread方法获取当前线程，然后调用isInterrupt方法判断线程是否中断。
+
+如果线程阻塞，就无法检测中断状态。
+
+### 4.线程状态
+
+#### 4.1.线程6态
+
+- New（新创建）
+- Runable（可运行）
+- Blocked（被阻塞）
+- Waiting（等待）
+- Time Waiting（计时等待）
+- Terminated（被终止）
+
+一个可运行的线程可能正在运行也可能没有运行，这取决于OS给线程提供的时间。
+
+线程调度的细节依赖与OS。
+
+当线程处于被阻塞或等待状态时，它暂时不活动。它不运行任何代码且消耗最少的资源。直到线程调度器重新激活它。细节取决于它是怎么达到非活动状态的。
+
+![](..\java\img\线程转换.png)
+
+### 5.线程属性
+
+#### 5.1.优先级
+
+java语言中，每个线程都有一个优先级。默认境况下，一个线程继承它父线程的优先级。
+
+使用setPriority方法设置优先级（1~10）。
+
+线程的优先级高度依赖与操作系统。
+
+#### 5.2.守护线程
+
+守护线程的唯一用途是为其他线程提供服务。当只剩下守护线程时，虚拟机就退出了。
+
+### 6.同步
 
