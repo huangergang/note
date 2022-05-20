@@ -325,3 +325,7 @@ is_vip
 
 **2.@Transactional**
 
+### 14.mysql数据类型与java数据类型对应表
+
+<img src="..\mysql\image\mysql数据类型域java对应.png">
+

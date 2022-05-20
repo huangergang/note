@@ -1208,4 +1208,3 @@ source  .vimrc   # 更新配置
 > ssh user @IP
 
 > Windows   WSL
->
