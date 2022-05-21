@@ -206,7 +206,7 @@ cd ..              #  (返回到上一级目录)
 
 **根目录解析**
 
-<img src="..\Linux\Linux目录.png" style="zoom:100%;" />
+<img src="..\Frank_linux\img\Linux目录.png" style="zoom:100%;" />
 
 * **/bin**    二进制文件目录，二进制文件可以直接运行，存放GNU工具，命令....
 * **/cdrom**  光盘
