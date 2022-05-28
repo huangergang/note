@@ -146,3 +146,16 @@ $ mvn exec:java -Dexec.mainClass="com.xxx.demo.Test"
 
 > 注意：运行maven命令的时候，首先需要定位到maven项目的目录，也就是项目的
 
+### 3.2.命令参数
+
+#### 3.2.1.  -D传入属性参数
+
+比如：
+
+```bash
+$ mvn exec:java -Dexec.mainClass="com.xxx.demo.Test"
+```
+
+#### 3.2.2.  -P 使用指定的Profile配置
+
+## 4.
