@@ -108,3 +108,148 @@ Stream<BigInteger> integerStream = Stream.iterate(BigInteger.ZERO, n -> n.add(Bi
 
 ### 3.filter、map、flatmap
 
+filter转换会产生一个流，它的元素与某种条件向匹配。filter的引元是Predicate<T>，从T到boolean的函数。
+
+```java
+Stream<String> stream = Stream.of("a","b","c","d");
+stream.filter(s->s.hashCode()>97).forEach(System.out::println);
+```
+
+map会有一个函数应用到每个元素上，返回一个流。
+
+```java
+Stream<String> stream = Stream.of("a","b","c","d");
+stream.map(String::toUpperCase).forEach(System.out::println);
+```
+
+flatMap可以将流合并。如有一个stream字符串流，对他使用letters方法可以将字符串拆解为单个字符流，而对一个字符串流使用letters方法会产生一个字符串流的流，为了避免这种情况，可以使用flatMap方法直接生成完整的字符流。
+
+```java
+public static Stream<String> letters(String s) {
+    List<String> result = new ArrayList<>();
+    for (int i = 0; i < s.length(); i++) {
+        result.add(s.substring(i, i + 1));
+    }
+    return result.stream();
+}
+
+public static void main(String[] args) throws IOException{
+    
+    Stream<String> stream = Stream.of("ABC","EFG","HIG");
+    Stream<Stream<String>> streamStream = stream.map(w -> letters(w));
+    streamStream.forEach(w->{
+        System.out.print("[");
+        w.forEach(System.out::print);
+        System.out.print("]");
+    });
+    
+}
+```
+
+```java
+stream.flatMap(w->letters(w)).forEach(System.out::print);
+```
+
+### 4.抽取和连接
+
+>```java
+>Stream<T> limit(long maxSize)    // 产生一个流，从开始到maxSize结束，如果maxSize大于流内元素的长度，则返回全部元素组成的流
+>```
+>
+>```java
+>Stream<T> skip(long n)           // 产生一个流，它的元素是当前流中出出了前n个元素之外的所有元素
+>```
+>
+>```java
+>static <T> Stream<T> concat(Stream<? extends T> a,Stream<? extends T> b)  // 产生一个流，它的元素是a的元素后跟b的元素 
+>```
+
+### 5.流的转换
+
+>```java
+>Stream<T> distinct()   // 产生一个流，包含当前流的不同元素
+>```
+>
+>```java
+>Stream<T> sorted()     // 产生一个流，对元素进行排序，要求元素类型实现了Comparable接口
+>Stream<T> sorted(Comparator<? super T) comparator)   // 产生一个流，按比较器的方式排序
+>```
+>
+>```java
+>Stream<T> peek(Consumer<? super T> action)         // 产生一个流，它与当前流中的元素相同，在获取其中每个元素时，会将其传递给action
+>```
+
+排序翻转
+
+```java
+List<String> list = List.of("jack", "frank", "aim", "bob");
+list.stream()
+    .sorted(Comparator.comparing(String::length).reversed())
+    .forEach(System.out::println);
+```
+
+### 6.简单约简
+
+这些操作都是终结操作。
+
+```java
+Optional<T> max(Comparator<? super T> comparator)  // 产生流的最大元素，返回Optional包装随想对象，若流为空，产生一个空的Optional对象
+Optional<T> min(Comparator<? super T> comparator)  // 产生流的最小元素，返回Optional包装随想对象，若流为空，产生一个空的Optional对象
+```
+
+```java
+List<String> list = List.of("jack", "frank", "aim", "bob");
+Optional<String> max = list.stream()
+    .max(Comparator.comparing(String::length));
+Optional<String> min = list.stream()
+    .min(Comparator.comparing(String::length));
+System.out.println(max);
+System.out.println(min);
+```
+
+```java
+Optional<T> finalFirst()      // 产生流的第一个元素，若流为空，产生一个空的Optional对象
+Optional<T> finalAny()        // 产生流的任意一个元素，若流为空，产生一个空的Optional对象
+```
+
+```java
+boolean anyMatch(Predicate<? super T> predicate)    // 流中任意元素匹配时，返回true
+boolean allMatch(Predicate<? super T> predicate)    // 流中全部元素匹配时，返回true
+boolean noneMatch(Predicate<? super T> predicate)   // 流中没有任何元素匹配时，返回true
+```
+
+List中存在一个以a开头的人名。
+
+```java
+List<String> list = List.of("jack", "frank", "aim", "bob");
+System.out.println(list.stream().anyMatch(s -> s.startsWith("a")));
+
+//true
+```
+
+List中都是以a开头的人名。
+
+```java
+List<String> list = List.of("jack", "frank", "aim", "bob");
+System.out.println(list.stream().allMatch(s -> s.startsWith("a")));
+
+// false
+```
+
+List中全都是在不以a开头的人名。
+
+```java
+List<String> list = List.of("jack", "frank", "aim", "bob");
+System.out.println(list.stream().noneMatch(s -> s.startsWith("a")));
+
+// false
+```
+
+### 7.Optional
+
+Optional是一种包装器对象，要么包装了T类型的对象，要么没有包装任何对象。Optional<T>类型被当作一种更安全的方式，来替代类型T的引用，这种引用要么引用某个对象，要么为null。
+
+有效的使用Optional的关键是要使用这样的方法：它的值不存在的情况下产生一个可替代物，而只有在值 存在的情况下才会使用这个值。
+
+
+
