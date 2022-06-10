@@ -686,11 +686,62 @@ System.out.printf("%d %f",number,number2);
 
 能够分析类能力的程序称为反射（reflective）。
 
-<h3><a href="..\java\java反射.md">java反射.md</a></h3>
+> 反射机制可以用来：
+>
+> * 在运行时分析类的能力
+> * 在运行时查看对象
+> * 实现通用的数组操作代码
+> * 利用Method对象
+
+#### 17.1.Class类
+
+ 
 
 ### 18.枚举类
 
-<h3><a href="..\java\java枚举.md">java枚举.md</a></h3>
+枚举类都继承自Enum类，每个枚举值都是一个实例。
+
+```java
+public enum Size{ SMALL, MEDIUM, LARGE, EXTRA, EXTRA_LARGE};
+```
+
+枚举的比较用==号。
+
+Enum类的toString方法可以将实例的类名转换为String。
+
+```java
+System.out.println(Size.SMALL.toString);
+```
+
+使用Enum类的valueOf反向生成枚举实例。
+
+```java
+Size size = Size.valueOf(Size.class, "SMALL");
+```
+
+枚举类型静态的values方法返回一个包含全部枚举值的数组。
+
+```java
+Size[] values = Size.values();
+```
+
+> java.lang.Enum<E> 5.0
+>
+> * static Enum valueOf(Class enumClass, String name)
+>
+>   返回指定名字、给定类的枚举常量
+>
+> * String toString()
+>
+>   返回枚举常量值
+>
+> * int  ordinal()
+>
+>   返回枚举常量在enum声明中的位置，位置从0开始计数
+>
+> * int compareTo(E  other)
+>
+>   如果枚举常量出现在other之前，则返回一个负值；如果this==other，则返回0；否则，返回正值。枚举常量的出现次序在enum声明中给出。
 
 ### 19.继承设计技巧
 
