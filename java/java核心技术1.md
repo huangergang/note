@@ -693,9 +693,173 @@ System.out.printf("%d %f",number,number2);
 > * 实现通用的数组操作代码
 > * 利用Method对象
 
-#### 17.1.Class类
+**java.lang.reflect**包中有三个类**Field**、**Method**和**Constructor**分别用于描述类的**public**域、方法和构造器。
 
- 
+#### 17.1.Class
+
+ java运行时系统为所有的对象维护一个被称为运行时的类型标识，java的Class保存了每个类型的信息。
+
+Object的get.Class()方法返回一个Class实例。
+
+>  获取Class对象的三种方法：
+>
+> 1. 通过已经创建的实例
+>
+>     ```JAVA
+>     Print p = new Print("print1");   // Print是一个普通类
+>     Class<?> cls1 = p.getClass();
+>     ```
+>
+> 2. 通过Class静态方法*forName()*
+>
+>    ```java
+>    String classString = "test.com.javaSE1.fifthUnit.Print";   // classString为类的完全限定名
+>    Class<?> cls2 = Class.forName(classString);
+>    ```
+>
+> 3. 通过T.Class
+>
+>    ```java
+>    Class<?> cls3 = Print.class;
+>    ```
+
+> java.lang.Class 1.0
+>
+> * Filed[]   getFields()
+>
+>   返回一个包含Field对象的数组，每个对象记录了这个类或超类的共有域。
+>
+> * Field[]   getDeclaredFields()
+>
+>   返回一个包含Field对象的数组，每个对象记录了这个类的全部域。
+>
+> * Method[]  getMethods()
+>
+>   返回包含Method对象的数组，包含所有公有方法，包括从超类继承的公有方法。
+>
+> * Method[]  getDeclaredMethods()
+>
+>   包含这个类或接口的全部方法，不包括由超类继承的方法。
+>
+> * Constructor[]  getConstructors()
+>
+>   返回包含Constructor的数组，包含了Class对象描述类的所有公有构造器。
+>
+> * Constructor[]  getDeclaredConstructor()
+>
+>   返回所有构造器。
+
+#### 17.2.Field
+
+> getName会返回属性名
+>
+> getType会返回属性类型（完全限定名）
+
+```java
+Class<?> cls1 = Double.class;
+
+Field[] fields = cls1.getFields();   // 获取Field数组
+for (Field field : fields) {
+    System.out.printf("Name: %-20s", field.getName());
+    System.out.printf("Type: %-20s", field.getType());
+    System.out.println();
+}
+```
+
+#### 17.3.Method
+
+> getName返回方法名
+>
+> getParameters返回方法的参数列表
+
+```java
+Class<?> cls1 = Double.class;
+
+Method[] methods = cls1.getMethods();
+for (Method method : methods) {
+    System.out.printf("Name: %-22s", method.getName());
+    Parameter[] parameters = method.getParameters();
+    AnnotatedType annotatedReturnType = method.getAnnotatedReturnType();
+    for (Parameter p : parameters) {
+        System.out.printf("Parameter: %-22s ", p);
+    }
+    System.out.printf("ReturnType: %44s", annotatedReturnType);
+    System.out.println();
+}
+```
+
+#### 17.4.Constructor
+
+构造一个对象
+
+```java
+Class<Print> printClass = Print.class;
+Print print = printClass
+    .getDeclaredConstructor(String.class)
+    .newInstance("print1");
+
+print.print();
+```
+
+Print类
+
+```java
+public class Print {
+    private String name;
+    
+    public Print(String name) {
+        this.name = name;
+    }
+
+    public void print() {
+        System.out.println(name + " ...");
+    }
+}
+```
+
+#### 17.5.Modifier
+
+Field、Method、Constructor三个类有一个getModifiers的方法，它返回一个整数值。Modifier类的静态方法用来判断修饰符的类型。
+
+> java.lang.reflect.Modifier 1.1
+>
+> * static String toString(int  modifiers)
+>
+>   返回对应modifiers中对应的修饰符的字符串表示
+>
+> * static boolean isAbstract(int  modifiers)
+>
+> * static boolean isFinal(int  modifiers)
+>
+> * static boolean isInterface(int  modifiers)
+>
+> * static boolean isNative(int  modifiers)
+>
+> * static boolean isPrivate(int  modifiers)
+>
+> * static boolean isPublic(int  modifiers)
+>
+> * static boolean isProtected(int  modifiers)
+>
+> * static boolean isStatic(int  modifiers)
+>
+> * static boolean isStrict(int  modifiers)
+>
+> * static boolean isSynchronized(int  modifiers)
+>
+> * static boolean isVolatile(int  modifiers)
+
+对包装类Double方法的修饰符显示
+
+```java
+Method[] methods = Double.class.getMethods();
+for (Method m :
+     methods) {
+    System.out.printf("Name: %-22s",m.getName());
+    System.out.printf("Modifier: %-22s",Modifier.toString(m.getModifiers()));
+    System.out.println();
+}
+```
 
 ### 18.枚举类
 
