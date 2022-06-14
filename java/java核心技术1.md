@@ -677,9 +677,28 @@ java提供ArrayList用于动态创建泛型数组。
 
 ### 16.参数可变的方法
 
+这里的参数实际上是一个数组。
+
 ```JAVA
 System.out.printf("%d",number);
 System.out.printf("%d %f",number,number2);
+```
+
+使用可变参数设计一个筛选名字长度大于5字符的姓名。
+
+```java
+public class Test {
+
+    public static List<String> of(String... strings) {
+        return Arrays.stream(strings).filter(s -> s.length() > 5).collect(Collectors.toList());
+    }
+
+    public static void main(String[] args) {
+
+        List<String> list = Test.of("Turing", "Flank", "Bob", "Aim", "Alexander");
+        list.forEach(System.out::println);
+    }
+}
 ```
 
 ### 17.反射
