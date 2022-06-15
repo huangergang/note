@@ -1,4 +1,4 @@
-# Spring IOC
+#### Spring IOC
 
 ## 1.Spring框架
 
@@ -474,12 +474,306 @@ public class Service {
 
 ##### 5.1.1.2常用对象和基本类型
 
+必须提供set方法。
 
+```XML
+
+<!-- value : 具体的值，String ， int ， ... List, map ... -->
+
+<bean id="service" class="com.xxxx.service.Service">
+        <property name="host" value="127.0.0.1"/>
+    	 <property name="port" value="8080"/>
+</bean>
+```
 
 ##### 5.1.1.3.集合类型和属性对象 
 
+1. List：
 
+```XML
+<bean id="service" class="com.xxxx.service.Service">
+    <property name="list">
+        <list>
+        <value>上海</value>
+        <value>北京</value>
+        <value>杭州</value>
+        </list>
+    </property>
+</bean>
+```
+
+2. set：
+
+```XML
+<bean id="service" class="com.xxxx.service.Service">
+    <property name="set">
+        <set>
+        <value>上海</value>
+        <value>北京</value>
+        <value>杭州</value>
+        </set>
+    </property>
+</bean>
+```
+
+3. map：
+
+```XML
+<bean id="service" class="com.xxxx.service.Service">
+    <property name="map">
+        <map>
+       		<entry>
+                <key>美国</key>
+                <value>华盛顿</value>
+            </entry>
+            <entry>
+                <key>中国</key>
+                <value>北京</value>
+            </entry>
+            <entry>
+                <key>巴西</key>
+                <value>巴西利亚</value>
+            </entry>
+        </map>
+    </property>
+</bean>
+```
+
+4. properties:
+
+```XML
+<bean id="service" class="com.xxxx.service.Service">
+    <property name="properties">
+        <props>
+             <prop key="BJ">北京</prop>
+             <prop key="SH">上海</prop>
+             <prop key="HZ">杭州</prop>
+        </props>
+    </property>
+</bean>
+```
+
+#### 5.1.2.构造器注入
+
+注：
+
+* 提供带参构造
+
+##### 5.1.2.1.单个Bean对象作为参数
+
+```XML
+<bean id="dao" class="com.xxxx.dao.Dao"></bean>
+    
+
+<bean id="service" class="com.xxxx.service.Service">
+    <constructor-arg name="dao" ref="dao"></constructor-arg>
+</bean>
+```
+
+##### 5.1.2.2.多个Bean对象作为参数
+
+```XML
+<bean id="dao" class="com.xxxx.dao.Dao"></bean>
+<bean id="student" class="com.xxxx.dao.Student"></bean>
+
+<bean id="service" class="com.xxxx.service.Service">
+    <constructor-arg name="dao" ref="dao"></constructor-arg>
+    <constructor-arg name="student" ref="student"></constructor-arg>
+</bean>
+```
+
+##### 5.1.2.3.常用类型作为参数
+
+```XML
+<bean id="dao" class="com.xxxx.dao.Dao"></bean>
+<bean id="student" class="com.xxxx.dao.Student"></bean>
+
+<bean id="service" class="com.xxxx.service.Service">
+    <constructor-arg name="dao" ref="dao"></constructor-arg>
+    <constructor-arg name="student" ref="student"></constructor-arg>
+    <constructor-arg name="uname" value="turing"></constructor-arg>
+</bean>
+```
+
+##### 5.1.2.4.循环依赖的问题
+
+两个Bean对象的实例化相互依赖。
+
+如果出现循环依赖，需要通过set注入解决。
+
+#### 5.1.3.静态工厂注入
+
+```XML
+<bean id="student" class="com.xxxx.factory.StudentFactory" factory-method="createStudent"></bean>
+```
+
+#### 5.1.4.实例化工厂注入
+
+```XML
+<bean id="person" factory-bean="personFactory" factory-method="creatPerson">
+</bean>
+```
+
+#### 5.1.5.注入方式的选择
+
+​	开发中首选set方式注入
+
+
+
+**p名称空间的使用**
+
+1. 属性字段提供set方法
+
+```java
+package com.xxxx.dao;
+
+public class UserService {
+    private Dao dao;
+
+    public void setDao(Dao dao) {
+        this.dao = dao;
+    }
+
+    
+    private String host;
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+}
+
+```
+
+2. 在配置文件中引入p名称空间
+
+```XML
+xmlns:p="http://www.springframework.org/schema/p"
+```
+
+```XML
+<bean id="userService" class="com.xxxx.dao.UserService"
+      p:dao-ref="dao"
+      p:host="127.0.0.1
+              ">
+</bean>
+```
+
+### 5.2.Spring IOC自动装配（注入）
+
+通过注解和反射简化配置文件的繁琐。
+
+#### 5.2.1.准备环境
+
+1. 修改XML
+
+```XML
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+```
+
+2. 开启自动化注入
+
+```XML
+<!-- 开启自动化注入 -->
+<context:annotation-config/>
+
+<bean id="dao" class="com.xxxx.dao.Dao"></bean>
+
+</bean>
+
+```
+
+3. 给注入的bean对象添加注解
+
+4. pom.xml引入javax.annotation环境
+
+```XML
+<!-- https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api -->
+<dependency>
+    <groupId>javax.annotation</groupId>
+    <artifactId>javax.annotation-api</artifactId>
+    <version>1.3.2</version>
+</dependency>
+```
+
+#### 5.2.2.@Resource
+
+可以实现自动注入（反射）
+
+* 属性字段与bean字段一致
+* 如果属性字段与bean字段不一致，则通过类型去查找
+* 属性字段可以提供set方法，也可以不提供
+* 注解可以声明在属性字段上，也可以在set方法上
+* 注解可以设置name属性，name属性值与bean的id一致，使用name查找bean
+* 注入接口（只有一个实现类）时可以正常注入，当有多个实现类时必须使用name。
+
+#### 5.2.3.@Autowired
+
+@Autowired实现自动化注入
+
+* 默认通过（Class类型）查找bean对象，与属性名称无关
+* 属性字段可以提供set方法，也可以不提供
+* 注解可以声明在属性字段上，也可以在set方法上
+* 没有name字段，若想使用name查找bean，可以提供一个@Qualifier（value=“da”）
 
 ## 6.Spring IOC 扫描器
 
+简化自动化注入，无需手动配置bean标签
+
+```md
+1. 设置自动化扫描的范围
+	如果bean对象未在指定包范围，即使声明了注解也无法实例化
+2. 使用指定的注解（声明在类级别）
+	Dao层：
+		@Repository
+	Service层：
+		@Service
+	Controller层
+		@Contorller
+	任意类
+		@Component
+```
+
+1. 设置自动化扫描范围
+
+```XML
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+
+    
+    <!-- 扫描范围的配置 -->
+    <context:component-scan base-package="com.xxxx"/>
+
+
+</beans>
+```
+
+2. 在需要实例化的类上添加指定注解
+
+```java
+@Repository
+public class Dao {
+
+    public void test(){
+        System.out.println("Dao...");
+    }
+}
+```
+
+
+
 ## 7.Bean的作用域和生命周期
+
+### 7.1.Bean的所用域
+
