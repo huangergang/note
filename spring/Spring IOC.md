@@ -771,8 +771,6 @@ public class Dao {
 }
 ```
 
-
-
 ## 7.Bean的作用域和生命周期
 
 ### 7.1.Bean的所用域
