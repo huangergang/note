@@ -1653,3 +1653,59 @@ $ date ; who
 
 ### 11.2.shell脚本
 
+创建shell脚本文件，一般以.sh作为文件结尾。
+
+文件的第一行，指明使用何种shell运行。
+
+```bash
+#!/bin/bash
+date +"%Y-%m-%d  %p  %H:%M:%S"
+```
+
+运行方式：
+
+1. 直接将文件传递给bash
+
+```bash
+$ bash test.sh
+```
+
+2. chmod命令赋予文件可执行权
+
+```bash
+$ chmod u+x test.sh     # 赋予test.sh文件属主可执行权
+
+$./test.sh              # 执行
+```
+
+
+
+**要让shell找到test脚本的两种做法：**
+
+1. **将shell脚本文件所处的目录添加到PATH环境变量中**
+2. **在提示符中使用绝对路径或相对路径来引用shell脚本文件**   （./ 是相对路径）
+
+### 11.3.显示消息
+
+echo命令输出含单引号的字符。
+
+```bash
+$ echo " you're apple "
+```
+
+echo命令输出含$符号的字符。$符前叫\转义，不然shell会找$符引用的变量。
+
+```bash
+$ echo " you're apple is \$5 "
+```
+
+echo命令的-n参数会让输出不换行。
+
+```bash
+$ echo -n "Hello "; echo "World"
+```
+
+echo命令可以写进shell脚本中。
+
+### 11.4.使用变量
+

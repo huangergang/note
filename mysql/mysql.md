@@ -329,3 +329,10 @@ is_vip
 
 <img src="..\mysql\image\mysql数据类型域java对应.png">
 
+### 15.删除记录后主键自增不连续问题
+
+```sql
+delete from studentinfo where stuno =5010;
+alter table studentinfo AUTO_INCREMENT=5006; 		# 设置从多少开始自增 
+```
+
