@@ -1985,21 +1985,286 @@ exit $var
 
 ## 12.使用结构化命令
 
+### 12.1.if-then语句
 
+> 格式：
+>
+> ```bash
+> if  command
+> then
+> 	commands
+> fi
+> ```
 
+如果，if后面的命令的退出码是0（命令成功执行），位于then后的命令就会被执行。如果该命令的退出码是其他值，then后的命令就不会执行。fi语句表示if-then语句到此结束。
 
+在then部分可以使用不止一条命令。
 
+### 12.2.if-then-else
 
+> 格式：
+>
+> ```bash
+> if command
+> then 
+> 	commands
+> else
+> 	commands
+> fi
+> ```
 
+当if语句中的命令返回值退出状态码为0时，then部分的命令会被执行。当if语句中的命令返回非零状态码时，shell会执行else部分中的命令。
 
+### 12.3.嵌套if
 
+嵌套的if-then语句位于if-then-else语句中的else代码块中。
 
+> 格式：
+>
+> ```bash
+> if command1
+> then
+> 	commands
+> else
+> 	commands
+> 	if command2
+> 	then
+> 		commands
+> 	else
+> 		commands
+> 		...
+> 	fi
+> fi	
+> ```
 
+> 另一种格式：
+>
+> ```bash
+> if command1
+> then
+>  	commands
+> elif command2
+> then 
+> 	commands
+> fi
+> ```
 
+### 12.4.test命令
 
+if-then语句不能测试命令退出状态码之外的条件。test命令提供了在if-then语句中测试不同条件的途径。如果test命令中列出的条件成立，test命令就会退出并返回退出状态码0。如果条件不成立，test命令就会退出并返回非零的退出状态码。**test命令可以用方括号代替。条件两端必须留有空格。**
 
+> 格式：
+>
+> ```bash
+> test condition   
+> 
+> [ condition ]  
+> ```
 
+如果不写condition部分，它会以非零的退出状态码退出，并执行else语句块。
 
+```bash
+#!/bin/bash
+if test # [  ]
+then 
+	echo "test return is 0"
+else
+	echo "test return don't  0"
+fi
+```
+
+<img src="..\Linux命令行与shell脚本大全\img\test-null.png">
+
+<hr>
+
+可以使用test命令确认变量中是否有值。
+
+```bash
+#!/bin/bash
+var=1
+
+if [ $var ]
+then 
+	echo "test return is 0"
+else
+	echo "test return don't  0"
+fi
+```
+
+<img src="..\Linux命令行与shell脚本大全\img\test-full.png">
+
+<hr>
+**test命令可以判断三类条件：**
+
+* **数值比较**
+* **字符串比较**
+* **文件比较**
+
+#### 12.4.1.数值比较
+
+| 比较              | 描述                   |
+| ----------------- | ---------------------- |
+| n1   -eq    n2    | 检查n1是否与n2相等     |
+| n1   -ge    n2    | 检查n1是否大于或等于n2 |
+| n1   -gt     n2   | 检查n1是否大于n2       |
+| n1    -le     n2  | 检查n1是否小于或等于n2 |
+| n1    -lt      n2 | 检查n1是否小于n2       |
+| n1    -ne    n2   | 检查n1是否不等于n2     |
+
+数值条件可以用在数字和变量上。可以使用数学符号或者上述比较符。
+
+```bash
+1	#!/bin/bash
+2	var1=1
+3	var2=2
+4	#
+5	if test $var1 -eq $var2
+6	then 
+7		echo "var1 = var2"
+8	else
+9		echo "var1 != var2"
+10	fi
+11	
+12	#
+13	if test $var2 > 4
+14	then
+15		echo "var2 > 4"
+16	else
+17		echo "var2 < 4"
+18	fi
+```
+
+运行结果
+
+<img src="..\Linux命令行与shell脚本大全\img\var1比较var2.png">
+
+**使用比较test功能的符号时，不能比较浮点值。使用数学比较符时可以正常比较。**
+
+<img src="..\Linux命令行与shell脚本大全\img\f-sh2.png">
+
+<img src="..\Linux命令行与shell脚本大全\img\f-sh1.png">
+
+#### 12.4.2.字符串比较
+
+| 比较            | 描述                   |
+| --------------- | ---------------------- |
+| str1   =   str2 | 检查str1是否和str2相同 |
+| str1   !=  str2 | 检查str1是否和str2不同 |
+| str1   <   str2 | 检查str1是否比str2小   |
+| str1   >   str2 | 检查str1是否比str2大   |
+| -n   str1       | 检查str1的长度是否非0  |
+| -z   str1       | 检查str1的长度是否为0  |
+
+1. 字符串相等性
+2. 字符串顺序
+   * 大于号和小于号必须转义（否则shell会当成重定向符）
+   * 大于和小于顺序和sort命令采取的不同
+
+​		比较使用的标准是ASCII顺序，根据每个字符的ASCII数值来决定排序的结果。
+
+3. 字符串大小
+
+​	-n和-z可以检查一个变量是否含有数据。
+
+#### 12.4.3.文本比较
+
+| 比较                 | 描述                                     |
+| -------------------- | ---------------------------------------- |
+| -d      *file*       | 检查file是否存在并是一个目录             |
+| -e      *file*       | 检查file是否存在                         |
+| -f      *file*       | 检查file是否存在并是一个文件             |
+| -r      *file*       | 检查file是否存在并可读                   |
+| -s      *file*       | 检查file是否存在并非空                   |
+| -w      *file*       | 检查file是否存在并可写                   |
+| -x      *file*       | 检查file是否存在并可执行                 |
+| -O      *file*       | 检查file是否存在并属当前用户所有         |
+| -G      *file*       | 检查file是否存在并且默认组与当前用户相同 |
+| file1   -nt    file2 | 检查file1是否比file2新                   |
+| file1   -ot    file2 | 检查file1是否比file2旧                   |
+
+### 12.5.复合条件测试
+
+> [ condition1 ]  && [ condition2 ] 
+>
+> [ condition1 ]  ||  [ condition2 ] 
+
+### 12.6.if-then的高级特性
+
+1. 用于数学表达式的双括号
+2. 用于高级字符串处理功能的双方括号
+
+#### 12.6.1.双括号
+
+> 格式：
+>
+> (( expression ))
+
+expression可以是任意的数学赋值或比较表达式。
+
+双括号支持的一些运算符。
+
+| 符号  | 描述     |
+| ----- | -------- |
+| val++ | 后增     |
+| val-- | 后减     |
+| ++val | 先增     |
+| --val | 先减     |
+| !     | 逻辑取反 |
+| ~     | 位取反   |
+| **    | 幂运算   |
+| <<    | 位左移   |
+| >>    | 位右移   |
+| &     | 位布尔和 |
+| \|    | 位布尔或 |
+| &&    | 逻辑和   |
+| \|\|  | 逻辑或   |
+
+#### 12.6.2.双方括号
+
+> 格式：
+>
+> [[  expreession  ]]
+
+双方括号里的expression使用了test命令中采用的标准字符比较，并且支持模式匹配。在模式匹配中，可以定义一个正则表达式。
+
+```bash
+if [[ $USER == r* ]]
+```
+
+### 12.7.case命令
+
+case命令采用列表格式来检查单个变量的多个值。竖线操作符在一行中分隔出多个模式。星号会捕获所有与已知模式不匹配的值。
+
+> 格式：
+>
+> ```bash
+> case var in
+> pattren1 | pattern2)
+> 	command1;;
+> pattern3)
+> 	command2;;
+> *) default commands;;
+> esac
+> ```
+
+```bash
+1	# /bin/bash
+2	#
+3	#
+4	
+5	case $HOME in
+6	rich)
+7		echo "user is rich";;
+8	turing)
+9		echo "user is turing";;
+10	*)
+11		echo "user is others ";;
+12	esac
+```
+
+## 13.更多结构化命令
+
+### 13.1.for命令
 
 
 
