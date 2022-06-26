@@ -1070,6 +1070,8 @@ $ which -a echo
 $ alias li="ls -li"
 ```
 
+**在用户目录的.bashrc中设置，实现永久配置。**
+
 ## 6.Linux环境变量
 
 ### 6.1.什么是环境变量
@@ -2266,5 +2268,158 @@ case命令采用列表格式来检查单个变量的多个值。竖线操作符�
 
 ### 13.1.for命令
 
+> 格式：
+>
+> ```bash
+> for var in list
+> do 
+> 	conmands
+> done
+> ```
 
+var变量每次迭代list中的一个值，用$var可以取到每个值。do和done之间的命令可以是一条或多个bash shell命令。
 
+> ```bash
+> for var in list ; do   # 另一种写法
+> ```
+
+#### 13.1.1.读取列表中的值
+
+for命令最基本的用法就是遍历for命令自身定义的一系列值。
+
+```bash
+1	#!/bin/bash
+2	#
+3	#
+4	for var in Aim Frank Tom Bob Gio
+5	do
+6		echo -n "Hi $var"
+7		echo ", are you ok?"
+8	done
+```
+
+执行结果：
+
+<img src="..\Linux命令行与shell脚本大全\img\for.png">">
+
+#### 13.1.2.读取列表中的复杂值
+
+**当列表字符中包含单引号时，使用：**
+
+* **使用转义字符（反斜线）将单引号转义**
+* **使用双引号来定义用到的单引号的值**
+
+**for循环假定每个值都是用空格来分隔的。**
+
+**若有包含空格的数据，使用双引号把值包裹起来。**
+
+#### 13.1.3.从变量读取列表
+
+从list变量中读取人名。
+
+```bash
+1	#!/bin/bash
+2	#
+3	#
+4	list="Aim Frank Tom Bob Gio"
+5	
+6	for var in $list
+7	do
+8		echo -n "Hi $var"
+9		echo ", are you ok?"
+10	done
+```
+
+#### 13.1.4.从命令中读取值
+
+可以使用命令来替换执行任何能产生输出的命令，然后在for命令中使用该命令的输出。
+
+<img src="..\Linux命令行与shell脚本大全\img\for2.png">
+
+#### 13.1.5.更改字段分隔符
+
+默认情况下，bash shell会将以下字符当作字段分隔符：
+
+* 空格
+* 制表符
+* 换行符
+
+可以在shell脚本中临时更改IFS环境变量来限制被bash shell当作字段分隔符的字符。
+
+<img src="..\Linux命令行与shell脚本大全\img\for3.png">
+
+**需要指定多个IFS字符。**
+
+```bash
+IFS=$'\n':;"  # 使用换行符、冒号、分号和双引号分隔
+
+IFS=:         # 使用冒号分隔
+```
+
+#### 13.1.6.用通配符读取目录
+
+```bash
+1	#!/bin/bash
+2	
+3	for file in /root/*
+4	do
+5		if [ -d "$file" ]
+6		then 
+7			echo "$file is a directory"
+8		elif [ -f "$file" ]
+9		then
+10			echo "$file is a file"
+11		fi
+12	done
+```
+
+当目录或者文件名中包含空格时，需要将$file变量用双引号括起来。
+
+**还可以在in后面有多个模式匹配。**
+
+### 13.2.C语言风格的for命令
+
+#### 13.2.1.格式
+
+bash shell支持一种C语言风格类似的for循环。
+
+> 格式：
+>
+> ```bash
+> for( ( variable  assignment ; condition ; iteration process ) )
+> ```
+
+```bash
+1	#!/bin/bash
+2	
+3	
+4	# C风格的for循环
+5	
+6	for (( a = 1 ; a < 10 ; a++ ))
+7	do
+8		echo "The number is $a "
+9	done
+```
+
+#### 13.2.2.使用多个变量
+
+```bash
+1	#!/bin/bash
+2	
+3	for (( a = 1, b = 10; a<=10 && b>0; a++, b--))
+4	do
+5		echo "The a is $a , b is $b"
+6	done
+7	
+```
+
+### 13.3.while命令
+
+> 格式：
+>
+> ```bash
+> while test command
+> do
+> 	commands
+> done
+> ```
