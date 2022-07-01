@@ -63,6 +63,12 @@ alter table <表名> character set utf8;
 alter table <表名> modify column <字段名> <字段类型> character set utf8;
 ```
 
+#### 3.4.一次性设置一张表的所有字段编码
+
+```sql
+alter table <表名> convert to character set utf8; 
+```
+
 ### 4.主键
 
 #### **4.1.为字段添加primary key;**
