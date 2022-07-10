@@ -2423,3 +2423,324 @@ bash shell支持一种C语言风格类似的for循环。
 > 	commands
 > done
 > ```
+
+```bash
+1	#!/bin/bash
+2	
+3	a=10
+4	
+5	while [ $a -gt 0 ]
+6	do
+7		echo "a is $a"
+8		a=$[ $a - 1 ]
+9	done
+```
+
+<img src="..\Linux命令行与shell脚本大全\img\while.png">
+
+#### 13.3.2.使用多个测试命令
+
+while命令允许在while语句行定义多个test命令。只有最后一个测试命令的退出状态码会被用来决定什么时候结束循环。
+
+如：
+
+```bash
+1	#!/bin/bash
+2	
+3	a=10
+4	b=5
+5	
+6	while [ $a \> 0 ]
+7		  [ $b \> 0 ]    # 根据此条件决定循环次数
+8	do
+9		echo "a = $a , b = $b"
+10		a=$[ $a - 1 ]
+11		b=$[ $b - 1 ]
+12	done
+```
+
+根据b的输出5行。
+
+<img src="..\Linux命令行与shell脚本大全\img\while1.png">
+
+### 13.4.until命令
+
+until命令和while命令相反，until命令要求指定一个返回非零退出状态码的测试命令。
+
+> 格式：
+>
+> ```bash
+> until  test  commands
+> do
+> 	other  commands
+> done
+> ```
+
+和while一样until也可以允许有多个test命令，最后一个命令的退出状态码决定循环次数。
+
+```bash
+1	#!bin/bash
+2	
+3	a=10
+4	b=5
+5	
+6	until [ $a -eq 0 ]
+7		  [ $b -eq 0 ]
+8	do
+9		echo "a = $a , b = $b"
+10		a=$[ $a - 1 ]
+11		b=$[ $b - 1 ]
+12	done
+```
+
+<img src="..\Linux命令行与shell脚本大全\img\until.png">
+
+### 13.5.嵌套循环
+
+for、while、until循环可以相互嵌套使用。
+
+如九九乘法表。
+
+```bash
+1	#!/bin/bash
+2	
+3	#定义起始
+4	a=1
+5	b=1
+6	
+7	while (( $a < 10 ))
+8	do
+9		while (( $b <= $a ))
+10		do
+11			res=$[ $a * $b ]
+12			echo -n " $b * $a = $res "
+13			b=$[ $b + 1 ]
+14		done
+15		a=$[ $a+1 ]
+16		b=1
+17		echo 
+18	done
+```
+
+### 13.6.处理文件数据
+
+```bash
+1	#!bin/bash
+2	
+3	IFSOLD=$IFS
+4	IFS=$'\n'
+5	
+6	for entry in $(cat /etc/passwd)
+7	do
+8		echo "Value in $entry - "
+9		IFS=:
+10		for value in $entry
+11		do
+12			echo "        $value"
+13		done
+14	done
+```
+
+>  所使用技术：
+>
+> * 使用嵌套循环
+> * 修改IFS环境变量
+
+效果如下：
+
+<img src="..\Linux命令行与shell脚本大全\img\数据循环处理.png">
+
+### 13.7.控制循环
+
+>  两个控制循环内部情况命令：
+>
+> * break 命令
+> * contiune 命令
+
+#### 13.7.1.break命令
+
+break命令用于跳出任意类型的循环。包括while和until。
+
+当break作用于嵌套循环中的内层循环时，默认只结束所在层的循环。
+
+如果在内层循环想结束外部循环时，break命令接受单个命令行参数值：
+
+```bash
+break n   # n为数字 n值为多少表示要跳出多少的循环层数
+```
+
+#### 13.7.2.contiune命令
+
+contiune命令可以终止当此循环，整个循环继续进行。
+
+和break命令一样，接受单个命令行参数值：
+
+```bash
+contiune n   # n为数字
+```
+
+### 13.8.循环输出
+
+可以利用管道将循环处理的结果输出到文件中。只需要在done后跟上管道符和文件名。
+
+如：
+
+```bash
+1	#!bin/bash
+2	
+3	for (( a=10 ; a>0 ; a-- ))
+4	do
+5		echo "a is $a"
+6		if [ $a -eq 5 ]
+7		then 
+8			break
+9		fi
+10	done > file4.txt
+```
+
+### 13.9.实例
+
+#### 13.9.1.查找可执行文件
+
+```bash
+1	#!/bin/bash
+2	# finding files in the PATH
+3	
+4	IFS=:
+5	for folder in $PATH
+6	do
+7		echo " $folder: "
+8		for file in $folder/*
+9		do
+10			if [ -x $file ]
+11			then
+12				echo "    $file"
+13			fi
+14		done
+15	done
+```
+
+#### 13.9.2.创建多个用户账户
+
+```bash
+1	#!/bin/bash
+2	# process new user accounts
+3	
+4	input="users.csv"
+5	while IFS=',' read -r userid name
+6	do
+7		echo "adding $userid"
+8		useradd -c "$name" -m $userid
+9	done < "$input"
+```
+
+users.csv文件
+
+```bash
+1	rich,Richard Blum
+2	tim,Timothy Breanahan
+3	barbara,Barbara Blum
+4	christine,Christine Bresnahan
+```
+
+## 14.处理用户输入
+
+### 14.1.命令行参数
+
+向shell脚本传递数据的最基本的方法是使用命令行参数。脚本会通过特殊的变量来处理命令行参数。
+
+#### 14.1.1.读取参数
+
+bash shell接受位置参到脚本中，位置参数是标准的数字：$0是程序名，$1是第一个参数，$2是第二个参数...一直到第九个参数$9。变量之间用空格分隔。
+
+传递的参数可以是字符串，当字符串中包含空格时，需要将字符串用单双引号括起来。
+
+当传递的参数超过9个后必须在变量数字的周围加上花括号，如${10}。
+
+```bash
+1	#!/bin/bash
+2	
+3	sum=$[ ${10} * ${11} ]
+4	echo "{10} is ${10}"
+5	echo "{11} is ${11}"
+6	echo "{10} * {11} is $sum"
+```
+
+<img src="..\Linux命令行与shell脚本大全\img\传递多参数.png">
+
+#### 14.1.2.读取脚本名
+
+$0参数可以获取shell脚本在命令行启动的脚本名。<img src="..\Linux命令行与shell脚本大全\img\脚本名.png">
+
+当使用另一种方式启动脚本时，会将命令也打印出来。
+
+<img src="..\Linux命令行与shell脚本大全\img\脚本名2.png">
+
+还有当传递给$0变量的实际字符串不仅仅是脚本名，而是完整脚本路径时，变量$0会使用整个路径。
+
+>  解决方法：
+>
+> 命令basename会返回不包含路径的脚本名。
+
+```bash
+1	#!/bin/bash
+2	
+3	name=$( basename $0)
+4	echo "The script name is : $name"
+```
+
+#### 14.1.3.测试参数
+
+当脚本中引用了命令行参数，但运行脚本时不提供时，bash会报语法错误。
+
+可以使用-n测试来检测命令行参数$1中是否有数据。
+
+```bash
+1	#/bin/bash
+2	
+3	if [ -n "$1" ]
+4	then
+5		echo Hello $1, glad to meet you.
+6	else 
+7		echo "Sorry, you did not identify yourself."
+8	fi
+```
+
+<img src="..\Linux命令行与shell脚本大全\img\测试参数.png">
+
+### 14.2.特殊参数变量
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
