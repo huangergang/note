@@ -2710,6 +2710,151 @@ $0参数可以获取shell脚本在命令行启动的脚本名。<img src="..\Lin
 
 ### 14.2.特殊参数变量
 
+bash shell中有些特殊变量，会记录命令行参数。
+
+#### 14.2.1.参数统计
+
+特殊变量$#用来统计命令行输入了多少个参数。
+
+```bash
+1	#!/bin/bash
+2	
+3	echo "This params is $#"    # 打印命令行参数个数 
+```
+
+配合test命令来检查参数个数。
+
+```bash
+1	#!/bin/bash
+2	
+3	if [ $# -ne 2 ]              # 检查入参个数
+4	then
+5		echo "参数个数因为2!"      # 入参个数有误时输出提示信息
+6	else 
+7		echo "sum = $[ $1 + $2 ]"
+8	fi
+```
+
+$#变量含有参数的总数，当$#表示代表了最后一个命令行参数的变量，当没有参数时，$#代表脚本名。
+
+```bash
+1	#!/bin/bash
+2	
+3	params=$#         
+4	echo "the params is $params"
+5	echo "the script name is ${!#}"     #花括号中不能出现美元符，用！号代替
+```
+
+#### 14.2.2.抓取所有参数
+
+$*和$@变量可以访问所有参数。
+
+```bash
+1	#!/bin/bash
+2	
+3	echo "Using the \$* method: $*"
+4	echo "Using the \$@ method: $@"
+```
+
+运行结果：
+
+<img src="..\Linux命令行与shell脚本大全\img\抓取所有数据.png">
+
+> $* 变量将所有参数当作一个单词保存，$*会将这些参数视为一个整体，而不是多个个体
+>
+> $@变量会将所有参数当做同一字符中的多个独立的单词，可以用for对其进行遍历
+
+```bash
+1	#!/bin/bash
+2	
+3	echo 
+4	count=1
+5	
+6	for param in "$@"
+7	do
+8		echo "\$@ Parpameter #$count = $param"
+9		count=$[ $count + 1 ]
+10	done
+```
+
+运行结果：
+
+<img src="..\Linux命令行与shell脚本大全\img\抓取所有数据2.png">
+
+### 14.3.移动变量
+
+shift命令会根据他们的相对位置来移动命令行参数。
+
+默认情况下它会将每个参数变量向左移动一个位置。所以变量$3的值会移动到$2中，$2的值移动到$1中，变量$1的值会被删除，$0的变量值保持不变。
+
+shift命令可以轻松跳过不需要的参数。
+
+```bash
+1	#!/bin/bash
+2	
+3	while [ -n "$1" ]
+4	do
+5		echo "param is $1"
+6		shift
+7	done
+```
+
+<img src="..\Linux命令行与shell脚本大全\img\shift.png">
+
+一次移动多位
+
+```bash
+shift number  
+```
+
+### 14.4.处理选项
+
+#### 14.4.1.查找选项
+
+1. 处理简单选项
+
+提取单个参数时，用case语句。
+
+```bash
+1	#!/bin/bash
+2	echo
+3	
+4	while [ -n "$1" ]
+5	do
+6		case "$1" in  
+7				-a) echo "Found the -a option" ;;       #  以后可以替换成相应的操作
+8				-b) echo "Found the -b option" ;;
+9				-c) echo "Found the -c option" ;;
+10				*) echo "$1 is not an option" ;;
+11		esac
+12		shift
+13	done
+```
+
+2. 分离参数和选项
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
