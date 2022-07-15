@@ -1,4 +1,4 @@
-#### Spring IOC
+# Spring IOC
 
 ## 1.Spring框架
 
@@ -34,11 +34,14 @@
         https://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <!-- 
+
+配置javabean对象映射：
+
 		bean标签的作用是映射JavaBean对象
   			id: 是类的类名（首字母小写）
 			class: 是类的全限定名
 -->
-    
+
     <bean id="user" class="com.xxxx.dao.User"></bean>
     <bean id="userService" class="com.xxxx.service.UserService"></bean>
 
@@ -157,7 +160,10 @@ import org.dom4j.io.SAXReader;
 
 public class MyApplicationContext implements BeanFactory {
 
-    private Map map = new HashMap();
+    // 存放bean的id和实例化好的bean实例
+    private Map<String, Object> map = new HashMap();
+
+    // 存放从xml中解析到的类名和类的class值
     private List<MyBean> list;
 
 
@@ -170,22 +176,40 @@ public class MyApplicationContext implements BeanFactory {
     // 解析配置文件
     private void parseXML(String fileName) {
 
+
+        // 解析器
         SAXReader saxReader = new SAXReader();
+
+        // 获取文件路径
         URL url = this.getClass().getClassLoader().getResource(fileName);
 
-        
-		// 用XPATH的语法解析bean.xml，获取其中的id和class
+
         try {
+
+            // 文档对象
             Document document = saxReader.read(url);
+
+            // XPath解析语法
             XPath xPath = document.createXPath("beans/bean");
+
+            // 获取Element元素集合
             List<Element> elements = xPath.selectNodes(document);
 
             list = new ArrayList<>();
+
             if (elements != null && elements.size() > 0) {
                 for (Element e : elements) {
+
+                    // 获取id对映的value值
                     String id = e.attributeValue("id");
+
+                    // 获取class对映的value值
                     String clazz = e.attributeValue("class");
+
+                    // 实例化对象
                     MyBean bean = new MyBean(id, clazz);
+
+                    // 添加到list中
                     list.add(bean);
                 }
             }
@@ -196,12 +220,15 @@ public class MyApplicationContext implements BeanFactory {
     }
 
 
-    // 通用反射的方式创建Bean对象，并存储在map中
+    // 实例化Bean，并且存放到map
     private void instanceBean() {
         if (list.size() > 0 && list != null) {
             for (MyBean b : list) {
                 try {
+
+                    // 将类名和类的实例存放进map
                     map.put(b.getId(), Class.forName(b.getClazz()).getDeclaredConstructor().newInstance());
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -210,13 +237,13 @@ public class MyApplicationContext implements BeanFactory {
 
     }
 
-
     @Override
     public Object getBean(String id) {
         Object object = map.get(id);
         return object;
     }
 }
+
 ```
 
 ### 2.6.测试模拟的IOC容器
@@ -228,8 +255,8 @@ import com.xxxx.spring.MyApplicationContext;
 
 public class Test {
     public static void main(String[] args) {
-        MyApplicationContext factory = new MyApplicationContext("bean.xml");
-        User user = (User) factory.getBean("user");
+        MyApplicationContext ac = new MyApplicationContext("bean.xml");
+        User user = (User) ac.getBean("user");
         user.test();
     }
 }
@@ -291,8 +318,7 @@ ApplicationContext ac = new ClassPathXmlApplicationContext("spring.xml","bean.xm
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         https://www.springframework.org/schema/beans/spring-beans.xsd">
-
-    
+ 
     <!--加载多个被配置文件-->
     <import resource="spring.xml"/>
     <import resource="bean.xml"/>
@@ -303,9 +329,9 @@ ApplicationContext ac = new ClassPathXmlApplicationContext("spring.xml","bean.xm
 
 ### 4.1.构造器实例化
 
-IOC默认使用空构造器实例化。
+**IOC默认使用空构造器实例化。**
 
-Bean对象必须有空构造器。
+**Bean对象必须有空构造器。**
 
 ### 4.2.静态工厂实例化
 
@@ -319,9 +345,13 @@ Bean对象必须有空构造器。
 ```java
 package com.xxxx.factory;
 
+
+/* 定义静态工厂类，用来实例化Student类 */
 public class StudentFactory {
 
     public static Student createStudent() {
+        
+        // 返回Student实例
         return new Student();
     }
 }
@@ -359,8 +389,10 @@ public class StudentFactory {
 ```java
 package com.xxxx.factory;
 
+/* 定义实例化工厂 */
 public class PersonFactory {
 
+    // 方法是成员方法
     public Person creatPerson() {
         return new Person();
     }
@@ -379,12 +411,17 @@ public class PersonFactory {
 
     <!--  实例化工厂实例化  -->
 
+    <!-- 定义工厂bean  -->
    <bean id="personFactory" class="com.xxxx.factory.PersonFactory" ></bean>
+    
+    <!-- 指定实例化bean的工厂方法  -->
     <bean id="person" factory-bean="personFactory" factory-method="creatPerson"></bean>
 </beans>
 ```
 
 ### 4.4.三种方式的比较
+
+**三种实例化bean都是单例模式。**
 
 * 方式一：通过bean默认的构造器创建，当各个bean的业务逻辑相比较独立的时候或者和外界关联较少的时候可以使用。
 * 方式二：利用静态factory方式创建，可以同一管理各个bean的创建，如各个bean在创建之前需要相同的初始化处理，则可用factory方法进行同一的处理等。
@@ -393,6 +430,8 @@ public class PersonFactory {
 **开发中一般使用第一种方式实例化bean。交给Spring托管。另外两种了解即可。**
 
 ## 5.Spring IOC 注入
+
+**注入是指在其他类中依赖其他类的实例 。**
 
 ### 问题的产生
 
@@ -618,8 +657,6 @@ public class Service {
 
 ​	开发中首选set方式注入
 
-
-
 **p名称空间的使用**
 
 1. 属性字段提供set方法
@@ -773,5 +810,126 @@ public class Dao {
 
 ## 7.Bean的作用域和生命周期
 
-### 7.1.Bean的所用域
+### 7.1.Bean的作用域
+
+**默认情况下，从spring容器中拿到的对象均为单例。**
+
+#### 7.1.1.singleton作用域
+
+默认在spring容器启动时，单例已经加载到单例缓存池中了，可以在xml配置时，对bean标签使用lazy-init属性，其意为是否在spring容器启动时实例化bean。当lazy-init=“true”，表示在spring容器启动时不会实例化bean，而是在程序调用时才会实例化。默认为false。
+
+```xml
+<bean id="user" class="com.xxxx.dao.User" lazy-init="true"></bean>
+```
+
+#### 7.1.2.prototype作用域
+
+spring IOC容器在启动时，不会将bean对象的实例化设置到单例缓存池中。
+
+每次实例化一个新的实例。非单例。
+
+在bean配置中设置scope属性为prototype。
+
+```xml
+<bean id="user" class="com.xxxx.dao.User" scope="prototype"></bean>
+```
+
+#### 7.1.3.Web应用中的作用域
+
+1. **request作用域**
+
+
+
+2. **session作用域**
+
+3. **globalSession作用域**
+
+### 7.2.Bean的生命周期
+
+​	**在spring中，Bean的生命周期包含Bean的定义、初始化、使用和销毁4个阶段。**
+
+
+
+#### 7.2.1.Bean的定义
+
+​	在spring中，通常通过配置文档（xml）的方式来定义Bean。
+
+​	在一个配置文夹中可以定义多个Bean。
+
+#### 7.2.2.Bean的初始化
+
+​	默认在IOC容器加载时，实例化对象。
+
+Sping bean初始化的两种方式：
+
+​	**方式一：**在配置文档中通过指定init-method属性来完成。
+
+ ```java
+ public class User {
+ 
+     public void init(){
+         System.out.println("User init ...");
+     }
+     
+ }
+ ```
+
+```XML
+<bean id="user" class="com.xxxx.dao.User" scope="prototype" init-method="init"></bean>
+```
+
+​	**方式二：**实现org.springframework.factory.InitializingBean接口
+
+```java
+import org.springframework.beans.factory.InitializingBean;
+
+public class User implements InitializingBean {
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        System.out.println("User init ...");
+    }
+}
+```
+
+#### 7.2.3.Bean的使用
+
+有两种
+
+**方式一：**ApplicationContext获取
+
+```java
+// 获取上下文环境
+ApplicationContext ac = new ClassPathXmlApplicationContext("spring.xml");
+User user = (User) ac.getBean("user");
+```
+
+**方式二：**BeanFactory获取
+
+```java
+// 获取上下文环境
+BeanFactory ac = new ClassPathXmlApplicationContext("spring.xml");
+User user = (User) ac.getBean("user");
+```
+
+#### 7.2.4.Bean的销毁
+
+​	实现销毁方法。
+
+​	**步骤一：**实现销毁方式
+
+```xml
+<bean id="user" class="com.xxxx.dao.User" scope="prototype" destroy-method="destroy"></bean>
+```
+
+​	**步骤二：**调用close方法实现bean的销毁
+
+```java
+AbstractApplicationContext ac = new ClassPathXmlApplicationContext("spring.xml");
+ac.close();
+```
+
+
+
+
 
