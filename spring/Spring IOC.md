@@ -4,7 +4,7 @@
 
 ### 1.1.引入依赖
 
-在maven仓库中找到spring的依赖jar包，放到项目中。或者在maven项目中的XML中直接添加依赖。
+​	在maven仓库中找到spring的依赖jar包，放到项目中。或者在maven项目中的XML中直接添加依赖。
 
 ```XML
 <!-- 引入Spring依赖   -->
@@ -18,13 +18,13 @@
 
 ### 1.2.创建配置文件
 
-在maven目录结构中的main目录下，创建与java目录同级的resources目录标记为资源目录。
+​	在maven目录结构中的main目录下，创建与java目录同级的resources目录标记为资源目录。
 
 <img src="..\spring\img\resources.png">
 
-该目录下放置XML映射。
+​	该目录下放置XML映射。
 
-可以新建一个配置文件，文件格式需遵守spring配置文件的XML格式。
+​	可以新建一个配置文件，文件格式需遵守spring配置文件的XML格式。
 
 ```XML
 <?xml version="1.0" encoding="UTF-8"?>
@@ -304,7 +304,7 @@ ApplicationContext ac = new ClassPathXmlApplicationContext("spring.xml");
 
 #### 3.2.1.可变参数
 
-有两个配置文件spring.xml和bean.xml
+​	有两个配置文件spring.xml和bean.xml
 
 ```java
 ApplicationContext ac = new ClassPathXmlApplicationContext("spring.xml","bean.xml");  // ClassPathXmlApplicationContext支持可变参数
@@ -329,9 +329,9 @@ ApplicationContext ac = new ClassPathXmlApplicationContext("spring.xml","bean.xm
 
 ### 4.1.构造器实例化
 
-**IOC默认使用空构造器实例化。**
+​	**IOC默认使用空构造器实例化。**
 
-**Bean对象必须有空构造器。**
+​	**Bean对象必须有空构造器。**
 
 ### 4.2.静态工厂实例化
 
@@ -427,11 +427,11 @@ public class PersonFactory {
 * 方式二：利用静态factory方式创建，可以同一管理各个bean的创建，如各个bean在创建之前需要相同的初始化处理，则可用factory方法进行同一的处理等。
 * 方式三：利用实例化factory方法创建，即将factory方法也作为业务bean来控制，1可用于集成其他框架的bean创建管理方法，2可以使bean和factory的角色互换。
 
-**开发中一般使用第一种方式实例化bean。交给Spring托管。另外两种了解即可。**
+​	**开发中一般使用第一种方式实例化bean。交给Spring托管。另外两种了解即可。**
 
 ## 5.Spring IOC 注入
 
-**注入是指在其他类中依赖其他类的实例 。**
+​	**注入是指在其他类中依赖其他类的实例 。**
 
 ### 问题的产生
 
@@ -452,7 +452,7 @@ public class UserService {
 
 ```
 
-在一个类中需要为作为类属性的其他类使用set方法完成实例化，从外部传参进行的实例化称为注入。
+​	在一个类中需要为作为类属性的其他类使用set方法完成实例化，从外部传参进行的实例化称为注入。
 
 ### 5.1.Spring IOC 手动装配（注入）
 
@@ -513,7 +513,7 @@ public class Service {
 
 ##### 5.1.1.2常用对象和基本类型
 
-必须提供set方法。
+​	必须提供set方法。
 
 ```XML
 
@@ -636,9 +636,9 @@ public class Service {
 
 ##### 5.1.2.4.循环依赖的问题
 
-两个Bean对象的实例化相互依赖。
+​	两个Bean对象的实例化相互依赖。
 
-如果出现循环依赖，需要通过set注入解决。
+​	如果出现循环依赖，需要通过set注入解决。
 
 #### 5.1.3.静态工厂注入
 
@@ -697,7 +697,7 @@ xmlns:p="http://www.springframework.org/schema/p"
 
 ### 5.2.Spring IOC自动装配（注入）
 
-通过注解和反射简化配置文件的繁琐。
+​	通过注解和反射简化配置文件的繁琐。
 
 #### 5.2.1.准备环境
 
@@ -812,11 +812,11 @@ public class Dao {
 
 ### 7.1.Bean的作用域
 
-**默认情况下，从spring容器中拿到的对象均为单例。**
+​	**默认情况下，从spring容器中拿到的对象均为单例。**
 
 #### 7.1.1.singleton作用域
 
-默认在spring容器启动时，单例已经加载到单例缓存池中了，可以在xml配置时，对bean标签使用lazy-init属性，其意为是否在spring容器启动时实例化bean。当lazy-init=“true”，表示在spring容器启动时不会实例化bean，而是在程序调用时才会实例化。默认为false。
+​	默认在spring容器启动时，单例已经加载到单例缓存池中了，可以在xml配置时，对bean标签使用lazy-init属性，其意为是否在spring容器启动时实例化bean。当lazy-init=“true”，表示在spring容器启动时不会实例化bean，而是在程序调用时才会实例化。默认为false。
 
 ```xml
 <bean id="user" class="com.xxxx.dao.User" lazy-init="true"></bean>
@@ -824,11 +824,11 @@ public class Dao {
 
 #### 7.1.2.prototype作用域
 
-spring IOC容器在启动时，不会将bean对象的实例化设置到单例缓存池中。
+​	spring IOC容器在启动时，不会将bean对象的实例化设置到单例缓存池中。
 
-每次实例化一个新的实例。非单例。
+​	每次实例化一个新的实例。非单例。
 
-在bean配置中设置scope属性为prototype。
+​	在bean配置中设置scope属性为prototype。
 
 ```xml
 <bean id="user" class="com.xxxx.dao.User" scope="prototype"></bean>
