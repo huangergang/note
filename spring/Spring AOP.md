@@ -315,7 +315,208 @@ proxy.doSomething();
 
 ​	在不修该原有应用程序代码的情况下，在程序运行期为类动态添加方法或者字段的过程称为引入
 
-### 4.3.AOP 实现
+## 5.Spring AOP的实现
+
+### 5.1.环境搭建
+
+#### 5.1.1.坐标依赖引入
+
+```XML
+<dependency>
+    <groupId>org.aspectj</groupId>
+    <artifactId>aspectjweaver</artifactId>
+    <version>1.9.9.1</version>
+</dependency>
+```
+
+#### 5.1.2.添加spring.xml的配置
+
+添加命令空间
+
+```xml
+xmlns:aop="http://www.springframework.org/schema/aop"
+```
+
+```xml
+http://www.springframework.org/schema/aop 
+https://www.springframework.org/schema/aop/spring-aop.xsd
+```
+
+### 5.2.注解实现
+
+#### 5.2.1.定义切面
+
+```java
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.*;
+import org.springframework.stereotype.Component;
+
+@Component
+@Aspect   // 声明这是一个切面
+public class LogCut02 {
+
+    /**
+     * 切入点
+     * 		定义要拦截哪些类的哪些方法
+     * 		匹配规则，拦截什么方法
+     * 
+     * 定义切入点
+     * 
+     *	@Pointcut("匹配规则") AOP切入点表达式
+     *      1. 所有公共方法
+     *        execution(public *(..))
+     *      2. 任意的set方法
+     *        execution(* set*(..))
+     *      3. 设置指定包下的任意类的任意方法
+     *        execution(* com.xxx.service.*.*(..))
+     *      4. 设置指定包及其子包下的任意类的任意方法
+     *        execution(* com.xxx.service..*.*(..))
+     */
+
+    @Pointcut("execution(* com.summer.service..*.*(..))")
+    public void cut() {
+
+    }
+    
+	// 前置通知
+    @Before(value = "cut()")
+    public void before() {
+        System.out.println("before...");
+    }
+
+
+	// 返回通知（方法正常执行无异常）
+    @AfterReturning(value = "cut()")
+    public void afterReturn() {
+        System.out.println("afterReturning...");
+    }
+
+    // 异常通知（方法抛出无异常）
+    @AfterThrowing(value = "cut()")
+    public void afterThrow() {
+        System.out.println("afterThrow...");
+    }
+
+	// 最终通知 (方法是否抛出异常都会执行)
+    @After(value = "cut()")
+    public void after() {
+        System.out.println("after...");
+    }
+
+	// 环绕通知 
+    @Around(value = "cut()")
+    public Object around(ProceedingJoinPoint pjp) {
+        
+        //环绕通知-前置通知
+        System.out.println("around-Before...");
+
+        Object o = null;
+
+        try {
+
+            // 显示调用对应方法
+            o = pjp.proceed();
+            System.out.println(pjp.getTarget());
+            
+            //环绕通知-返回通知
+            System.out.println("around-AfterReturning...");
+        }catch (Throwable throwable){
+            throwable.printStackTrace();
+                        
+            //环绕通知-异常通知
+            System.out.println("around-AfterThrowing...");
+        }
+
+         //环绕通知-最终通知
+        System.out.println("around-after...");
+
+        return o;
+    }
+}
+```
+
+### 5.3.XML实现
+
+xml配置
+
+```XML
+
+<aop:config>
+    <!-- aop 切面  -->
+    <aop:aspect ref="logCut03">
+        <!-- 切入点-->
+        <aop:pointcut id="cut" expression="execution(* com.summer.service..*.*(..))"/>
+        <!-- 前置通知   -->
+        <aop:before method="before" pointcut-ref="cut"/>
+        <!-- 返回通知   -->
+        <aop:after-returning method="afterReturn" pointcut-ref="cut"/>
+        <!-- 异常通知   -->
+        <aop:after-throwing method="afterThrow" pointcut-ref="cut"/>
+        <!-- 最终通知   -->
+        <aop:after method="after" pointcut-ref="cut"/>
+        <!-- 环绕通知   -->
+        <aop:around method="around" pointcut-ref="cut"/>
+    </aop:aspect>
+</aop:config>
+```
+
+定义类
+
+```java
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.AfterThrowing;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.stereotype.Component;
+
+@Component
+public class LogCut03 {
+
+
+    public void cut() {
+
+    }
+
+    public void before() {
+        System.out.println("before...");
+    }
+
+
+    public void afterReturn() {
+        System.out.println("afterReturning...");
+    }
+
+    public void afterThrow() {
+        System.out.println("afterThrow...");
+    }
+
+
+    public void after() {
+        System.out.println("after...");
+    }
+
+
+    public Object around(ProceedingJoinPoint pjp) {
+        System.out.println("around-Before...");
+
+        Object o = null;
+
+        try {
+            // 显示调用对应方法
+            o = pjp.proceed();
+            System.out.println(pjp.getTarget());
+            System.out.println("around-AfterReturning...");
+        }catch (Throwable throwable){
+            throwable.printStackTrace();
+            System.out.println("around-AfterThrowing...");
+        }
+
+        System.out.println("around-after...");
+
+        return o;
+    }
+}
+```
 
 
 
