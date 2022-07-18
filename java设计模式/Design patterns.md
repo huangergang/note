@@ -81,8 +81,6 @@ public class Singleton1 {
 2. 懒汉式，线程不安全
 
 ```java
-package test.单例;
-
 public class Singleton2 {
 
     private Singleton2(){}
@@ -173,8 +171,6 @@ public class Singleton3 {
 5. 枚举单例
 
 ```java
-package test.单例;
-
 public enum Singleton8 {
 
     INSTANCE;
