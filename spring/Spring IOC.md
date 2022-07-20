@@ -365,11 +365,11 @@ public class StudentFactory {
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-        https://www.springframework.org/schema/beans/spring-beans.xsd">
+                           https://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    
+
     <!--  静态工厂实例化  -->
-    
+
     <bean id="student" class="com.xxxx.factory.StudentFactory" factory-method="createStudent"></bean>
 
 </beans>
@@ -494,15 +494,15 @@ public class Service {
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-        https://www.springframework.org/schema/beans/spring-beans.xsd">
+                           https://www.springframework.org/schema/beans/spring-beans.xsd">
 
 
     <bean id="dao" class="com.xxxx.dao.Dao"></bean>
-    
-    
+
+
     <!-- peoperty标签 
-			name：代表bean对象中的属性字段名称
-			ref：代表bean标签中的id值
+   name：代表bean对象中的属性字段名称
+   ref：代表bean标签中的id值
 -->
     <bean id="service" class="com.xxxx.service.Service">
         <property name="dao" ref="dao"/>
@@ -708,9 +708,9 @@ xmlns:p="http://www.springframework.org/schema/p"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-        https://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.springframework.org/schema/context
-        http://www.springframework.org/schema/context/spring-context.xsd">
+                           https://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context.xsd">
 ```
 
 2. 开启自动化注入
@@ -784,11 +784,11 @@ xmlns:p="http://www.springframework.org/schema/p"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-        https://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.springframework.org/schema/context
-        http://www.springframework.org/schema/context/spring-context.xsd">
+                           https://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context.xsd">
 
-    
+
     <!-- 扫描范围的配置 -->
     <context:component-scan base-package="com.xxxx"/>
 
