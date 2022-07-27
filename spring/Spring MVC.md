@@ -434,13 +434,6 @@ public ModelAndView test06() {
 设置data.jsp
 
 ```jsp
-<%--
-    Created by IntelliJ IDEA.
-    User: Turing
-        Date: 2022/6/28
-            Time: 9:37
-                To change this template use File | Settings | File Templates.
-                --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
 String path = request.getContextPath();
@@ -611,7 +604,7 @@ public ModelAndView data05(String name,
      * 数组类型
      *      一个名字对应多个值
      *      发送的请求
-     *          http://localhost:8080/springmvc/data06?hobbies=sing&hobbies=jump&hobbies=rap&hobbies=basketball
+     *          http://localhost:8080/springmvc/data06?			    hobbies=sing&hobbies=jump&hobbies=rap&hobbies=basketball
      * @return
      */
 @RequestMapping(value = "/data06")
@@ -647,7 +640,7 @@ public class User {
     private String name;
 
 
-    User() {
+    public User() {
     }
 
     @Override
@@ -1201,7 +1194,7 @@ public class JSONController {
 
     @RequestMapping("/json01") 
     @ResponseBody
-    public  User json01() { 
+    public User json01() { 
         User user = new User();
         user.setId("007");
         user.setName("张有志");
@@ -1278,6 +1271,7 @@ Controller层方法
 public @ResponseBody User json03() {
 
     return  new User("0101", "赵小嗨");
+    
 }
 ```
 
@@ -1342,7 +1336,7 @@ jsp页面
 
 ## 1.拦截器
 
-
+什么是拦截器
 
 
 
