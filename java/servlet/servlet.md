@@ -26,7 +26,7 @@ tomcat是一个servlet容器。封装了request和response对象。通过这两�
 
 #### 1.2.4.检验是否启动成功
 
-浏览器地址栏输入<"http://localhost:8080">，tomcat默认端口为8080，改端口在conf目录下的server.xml文件中修改。
+浏览器地址栏输入<http://localhost:8080>，tomcat默认端口为8080，改端口在conf目录下的server.xml文件中修改。
 
 #### 1.2.5.引入
 

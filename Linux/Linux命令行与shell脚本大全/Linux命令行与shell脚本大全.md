@@ -1729,14 +1729,14 @@ echo $HOME
 
 ​	变量声明规则，“变量名=值” 。自定义变量的生命周期只在存在脚本运行的过程中。
 
-    ```bash
-    #/bin/bash
-    
-    var1=100
-    var2=-57
-    var3=hello
-    var4="This piece is \$5"
-    ```
+```shell
+#/bin/bash
+
+var1=100
+var2=-57
+var3=hello
+var4="This piece is \$5"
+```
 
 ### 11.5.命令替换
 
@@ -1851,7 +1851,7 @@ $ expr 3 \* 5
 
 #### 11.8.2.脚本中的数学运算
 
-在bash中，在将一个数学运算结果赋给某个变量时，可以用美元符和方括号（$[  option]）将数学表达式围起来。
+​		**在bash中，在将一个数学运算结果赋给某个变量时，可以用美元符和方括号（$[  option]）将数学表达式围起来。**
 
 ```bash
 $ var=$[1 + 5]
@@ -1891,7 +1891,7 @@ bash计算器支持变量
 
 ##### 2.在脚本中使用bc
 
-可以使用命令替换运行的bc命令。option允许设置变量，如果不止一个变量，可以用分号分隔。expression参数定义了通过bc执行的数学表达式。
+​		可以使用命令替换运行的bc命令。option允许设置变量，如果不止一个变量，可以用分号分隔。expression参数定义了通过bc执行的数学表达式。
 
 >  格式：
 >
@@ -1902,7 +1902,7 @@ bash计算器支持变量
 ```bash
 #!/bin/bash
 target=3.44
-var=$(echo "scale=4; $target / 5" | bc)
+var=$(echo "scale=4; $target / 5" | bc)  			# scale变量是结果值的位数
 
 echo $var
 ```
@@ -1998,7 +1998,7 @@ exit $var
 > fi
 > ```
 
-如果，if后面的命令的退出码是0（命令成功执行），位于then后的命令就会被执行。如果该命令的退出码是其他值，then后的命令就不会执行。fi语句表示if-then语句到此结束。
+如果，**if后面的命令的退出码是0（命令成功执行），位于then后的命令就会被执行。如果该命令的退出码是其他值，then后的命令就不会执行。**fi语句表示if-then语句到此结束。
 
 在then部分可以使用不止一条命令。
 
@@ -2067,7 +2067,7 @@ if-then语句不能测试命令退出状态码之外的条件。test命令提供
 
 ```bash
 #!/bin/bash
-if test # [  ]
+if test   # [  ]
 then 
 	echo "test return is 0"
 else
@@ -2096,7 +2096,9 @@ fi
 <img src="..\Linux命令行与shell脚本大全\img\test-full.png">
 
 <hr>
+
 **test命令可以判断三类条件：**
+
 
 * **数值比较**
 * **字符串比较**
