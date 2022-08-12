@@ -37,10 +37,18 @@ tomcat是一个servlet容器。封装了request和response对象。通过这两�
 ### 2.1.继承HttpServlet
 
 ```JAVA
+
 public class HelloServlet extends HttpServlet {
     
 }
 ```
+
+### 2.2.重写service方法
+
+```java
+```
+
+
 
 ## 3.HttpServletRequset
 
