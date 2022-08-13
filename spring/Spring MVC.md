@@ -1336,7 +1336,565 @@ jsp页面
 
 ## 1.拦截器
 
-什么是拦截器
+### 1.1. 基本概念
+
+​		SpringMVC中的Interceptor拦截器是相当重要和有用的，它的主要主用是拦截用户的请求进行相应的处理。比如通过它来进行权限验证，或者是来判断是否登录等操作。对于SpringMVC拦截器的定义方式有两种：
+
+​		实现接口：org.springframework.web.servlet.HandlerInterceptor
+
+​		继承适配器：
+
+### 1.2. 拦截器实现
+
+#### 1.2.1.实现接口
+
+```java
+package com.xxxx.interceptor;
+
+import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class Interceptor01 implements HandlerInterceptor {
+
+
+    @Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        
+        System.out.println("preHandle.....");
+
+        return true;   // 返回true时拦截器生效，flase失效
+    }
+
+    @Override
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+
+        System.out.println("postHandle.....");
+
+
+    }
+
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+        
+        System.out.println("afterCompletion.....");
+
+    }
+
+
+}
+```
+
+​		在servlet-context.xml中配置拦截器
+
+```xml
+<!--配置拦截器-->
+<mvc:interceptors>
+
+    <!--    可以定义多个拦截器，拦截的顺序     -->
+    <mvc:interceptor>
+
+        <!-- 拦截项目中的所有方法   -->
+        <mvc:mapping path="/**"/>				  <!--拦截的请求路径-->
+        <!-- 不需要拦截的资源  -->
+        <mvc:exclude-mapping path="/url/*"/>      <!--放行的请求路径-->
+
+        <!--配置实现的拦截器bean-->
+        <bean class="com.xxxx.interceptor.Interceptor01"/>
+
+    </mvc:interceptor>
+</mvc:interceptors>
+```
+
+#### 1.2.2.继承实现类（已弃用）
+
+​		本质还是实现接口。
+
+```java
+package com.xxxx.interceptor;
+
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class Interceptor02 extends HandlerInterceptorAdapter {
+
+
+    @Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        System.out.println("preHandle....");
+        return true;
+    }
+
+}
+```
+
+​	在servlet-context.xml中配置拦截器
+
+```xml
+<mvc:interceptors>
+    <mvc:interceptor>
+        <mvc:mapping path="/**"/>
+        <bean class="com.xxxx.interceptor.Interceptor02"/>
+    </mvc:interceptor>
+</mvc:interceptors>
+```
+
+#### 1.2.3.多个拦截器的实现
+
+​		SpringMVC 框架支持多个拦截器配置，从而构成拦截器链，对客户端进行多次拦截操作。
+
+*   拦截器代码实现
+
+​			参考1.1.1和1.1.2
+
+*   拦截器xml配置
+
+```xml
+<!-- 
+        拦截器链（多个连接器）
+                 如果有多个拦截满足拦截的要求，则会根据配置的先后顺序执行
+ 				 先配置的拦截器的方法先执行 
+     -->
+<mvc:interceptors>
+    <mvc:interceptor>
+        <mvc:mapping path="/**"/>
+        <bean class="com.xxxx.interceptor.Interceptor01"/>
+    </mvc:interceptor>
+    <mvc:interceptor>
+        <mvc:mapping path="/**"/>
+        <bean class="com.xxxx.interceptor.Interceptor02"/>
+    </mvc:interceptor>
+</mvc:interceptors>
+```
+
+### 1.3. 拦截器应用  -  非法的请求拦截
+
+​		使用拦截器完成用户是否登录请求验证功能
+
+#### 1.3.1.用户控制器
+
+```java
+package com.xxxx.controller;
+
+
+import com.xxxx.entity.User;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpSession;
+
+
+/**
+ * 用户登录  （无需拦截）
+ * 添加操作  （需要拦截）
+ * 修改操作  （需要拦截）
+ * 删除操作  （需要拦截）
+ */
+@Controller
+@RequestMapping("/userInfo")
+public class UserInfoController {
+
+
+    /**
+     * 用户登录
+     *
+     * @return
+     */
+    @RequestMapping("/login")
+    public ModelAndView userLogin(HttpSession session) {
+        System.out.println("用户登录....");
+
+        ModelAndView mv = new ModelAndView();
+
+        mv.setViewName("success");
+
+        // 如果用户登录，则设置用户对象到session作用域中
+        User user = new User("123", "SpongeBob");
+        session.setAttribute("user", user);
+
+
+        return mv;
+    }
+
+
+    /**
+     * 用户添加
+     *
+     * @return
+     */
+    @RequestMapping("/add")
+    public ModelAndView useAdd() {
+        System.out.println("用户添加....");
+
+        ModelAndView mv = new ModelAndView();
+
+        mv.setViewName("success");
+
+        return mv;
+    }
+
+
+    @RequestMapping("/update")
+    public ModelAndView userUpdate() {
+        System.out.println("用户更新....");
+
+        ModelAndView mv = new ModelAndView();
+
+        mv.setViewName("success");
+
+        return mv;
+    }
+
+
+    @RequestMapping("/delete")
+    public ModelAndView userDelete() {
+        System.out.println("用户删除....");
+
+        ModelAndView mv = new ModelAndView();
+
+        mv.setViewName("success");
+
+        return mv;
+    }
+}
+```
+
+#### 1.3.2.页面定义
+
+```jsp
+<%--
+  Created by IntelliJ IDEA.
+  User: Turing
+  Date: 2022/8/13
+  Time: 19:33
+  To change this template use File | Settings | File Templates.
+--%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<html>
+<head>
+    <title>登录</title>
+</head>
+<body>
+<form>
+
+    学号：<input type="text">
+    <br/>
+    姓名：<input type="text">
+
+</form>
+</body>
+</html>
+```
+
+#### 1.3.3.拦截器定义
+
+```java
+package com.xxxx.interceptor;
+
+import com.xxxx.entity.User;
+import org.springframework.web.servlet.HandlerInterceptor;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class LoginInterceptor implements HandlerInterceptor {
+
+    @Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+
+        // 获取session作用域中的user对象
+        User user = (User) request.getAttribute("user");
+
+        // 判断session作用域中的user对象是否为空
+        // 如果为空执行登录操作
+        if (user == null) {
+            // 拦截请求并跳转到登录页面
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            return false;
+        }
+
+        return true;
+    }
+}
+```
+
+#### 1.3.4.xml配置
+
+```xml
+<!--    非法访问拦截器-->
+<mvc:interceptors>
+    <mvc:interceptor>
+        <!-- 拦截所有请求 -->
+        <mvc:mapping path="/**"/>
+        <mvc:exclude-mapping path="/userInfo/login"/>
+        <bean class="com.xxxx.interceptor.LoginInterceptor"/>
+    </mvc:interceptor>
+</mvc:interceptors>
+```
+
+## 2.文件上传
+
+### 2.1.环境配置
+
+#### 2.1.1.pom.xml文件修改
+
+```xml
+<!--  spring 文件上传 依赖-->
+<dependency>
+    <groupId>commons-fileupload</groupId>
+    <artifactId>commons-fileupload</artifactId>
+    <version>1.3.2</version>
+</dependency>
+```
+
+#### 2.1.2.servlet-context.xml修改
+
+```xml
+<bean id="multipartResolver"
+      class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+
+
+    <!-- 允许上传的最大尺寸  单位KB -->
+    <property name="maxUploadSize">
+        <value>104857600</value>  
+    </property>
+
+    <!--
+               设置文件放入临时文件夹的最小  大小限制
+               此值是阈值，低于此值，则保存在内存中，如高于此值，则生成硬盘上的零时文件
+               -->
+    <property name="maxInMemorySize">
+        <value>4096</value>
+    </property>
+</bean>
+```
+
+### 2.2.代码实现
+
+#### 2.2.1.单文件上传
+
+##### 2.2.1.1.页面表单
+
+*   input的type设置为file
+*   form表单的method设置为post
+*   form表单的enctype设置为multipart/form-data，以二进制的形式传输数据
+
+```jsp
+<%--
+    文件上传表单 二进制表单
+    --%>
+<form method="post" action="uploadFile" enctype="multipart/form-data">
+
+    <input type="file" name="file"/>
+    <button type="submit">上传</button>
+</form>
+```
+
+##### 2.2.1.2.代码实现
+
+```java
+package com.xxxx.controller;
+
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
+
+@Controller
+public class FileController {
+
+
+    /**
+     * 单文件上传
+     *
+     * @return
+     */
+    @RequestMapping("/uploadFile")
+    public String uploadFile(HttpServletRequest httpServletRequest, @RequestParam("file") MultipartFile multipartFile) {
+
+        //        // 转换成MultipartHttpServletRequest对象
+        //        MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) httpServletRequest;
+        //
+        //        // 获取上传的文件
+        //        MultipartFile file = multipartHttpServletRequest.getFile("file");
+
+        // 判断文件是否为空
+        if (!multipartFile.isEmpty()) {
+            // 获取项目所在路径（绝对路径）
+            String path = httpServletRequest.getServletContext().getRealPath("/");
+            // 设置上传文件存放目录
+            File upload = new File(path + "/upload");
+            // 判断文件目录是否存在，如果存在则新建对应的目录
+            if (!upload.exists()) {
+                // 新建目录
+                upload.mkdir();
+            }
+
+            // 获取长传文件名
+            String originalFile = multipartFile.getOriginalFilename();
+            // 获取文件上传后缀名
+            String suffix = originalFile.substring(originalFile.lastIndexOf("."));
+            // 通过当前系统的毫秒数，生成随机文件名
+            String fileName = System.currentTimeMillis() + suffix;
+            // 上传文件 （转存文件到指定目录）
+            try {
+                multipartFile.transferTo(new File(upload, fileName));
+
+                // 如果上传成功，设置作用域
+                httpServletRequest.setAttribute("msg", "文件上传成功!");
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                // 如果上传失败，设置作用域
+                httpServletRequest.setAttribute("msg", "文件上传失败!");
+
+            }
+
+
+        } else {
+            // 如果上传文件不存在，设置作用域
+            httpServletRequest.setAttribute("msg", "文件不存在!");
+        }
+
+        return "result";
+    }
+}
+```
+
+#### 2.2.2.多文件上传
+
+##### 2.2.2.1.页面表单
+
+```jsp
+<%--
+    文件上传表单 二进制表单
+	多文件域
+    --%>
+<form method="post" action="uploadFile" enctype="multipart/form-data">
+
+    <input type="file" name="files"/>
+    <input type="file" name="files"/>
+    <input type="file" name="files"/>
+    <button type="submit">上传</button>
+</form>
+```
+
+##### 2.2.2.2.代码实现
+
+```java
+package com.xxxx.controller;
+
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+
+@Controller
+public class FileController {
+
+
+    // 封装
+    public void saveFile(HttpServletRequest httpServletRequest, MultipartFile multipartFile) {
+
+        // 判断文件是否为空
+        if (!multipartFile.isEmpty()) {
+            // 获取项目所在路径（绝对路径）
+            String path = httpServletRequest.getServletContext().getRealPath("/");
+            // 设置上传文件存放目录
+            File upload = new File(path + "/upload");
+            // 判断文件目录是否存在，如果存在则新建对应的目录
+            if (!upload.exists()) {
+                // 新建目录
+                upload.mkdir();
+            }
+
+            // 获取长传文件名
+            String originalFile = multipartFile.getOriginalFilename();
+            // 获取文件上传后缀名
+            String suffix = originalFile.substring(originalFile.lastIndexOf("."));
+            // 通过当前系统的毫秒数，生成随机文件名
+            String fileName = System.currentTimeMillis() + suffix;
+            // 上传文件 （转存文件到指定目录）
+            try {
+                multipartFile.transferTo(new File(upload, fileName));
+
+                // 如果上传成功，设置作用域
+                httpServletRequest.setAttribute("msg", "文件上传成功!");
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                // 如果上传失败，设置作用域
+                httpServletRequest.setAttribute("msg", "文件上传失败!");
+
+            }
+
+
+        } else {
+            // 如果上传文件不存在，设置作用域
+            httpServletRequest.setAttribute("msg", "文件不存在!");
+        }
+
+    }
+
+    /**
+     * 单文件上传
+     *
+     * @return
+     */
+    @RequestMapping("/uploadFile")
+    public String uploadFile(HttpServletRequest httpServletRequest, @RequestParam("file") MultipartFile multipartFile) {
+
+        //        // 转换成MultipartHttpServletRequest对象
+        //        MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) httpServletRequest;
+        //
+        //        // 获取上传的文件
+        //        MultipartFile file = multipartHttpServletRequest.getFile("file");
+
+        saveFile(httpServletRequest, multipartFile);
+        return "result";
+    }
+
+
+    @RequestMapping("/uploadFiles")
+    public String uploadFiles(HttpServletRequest httpServletRequest, @RequestParam("files") List<MultipartFile> files) {
+
+
+        if (files.size() > 0 && files != null) {
+            // 上传文件
+            files.forEach((file) -> {
+                saveFile(httpServletRequest, file);
+            });
+        }
+        return "result";
+    }
+
+
+}
+```
+
+## 3.SSM 框架集成与测试
+
+### 3.1.环境配置
+
+#### 3.1.1.IDEA 下创建项目
+
+
 
 
 
