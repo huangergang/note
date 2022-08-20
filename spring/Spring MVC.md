@@ -2401,15 +2401,366 @@ password=123456
 
 ### 4.2. SpringMVC 支持 RestFul URL风格设计
 
+​		案例：如何使用 Java 构建没有扩展名的RestFul url，如 /forms/1?
+
+​		SpringMVC 是通过 @RequestMapping 以及 @PathVariable 注解提供的。
+
+​		通过如@RequestMapping(value="/blog/{id}", method = RequestMethod.DELETE), 即可处理/blog/1 的delete请求。
+
+### 4.3. RestFul url 映射地址配置实现
+
+#### 4.3.1. 准备环境
+
+##### 4.3.1.1. 添加 Account
+
+在实体类包下创建Account.java
+
+```java
+package com.xxxx.ssm.entity;
+
+import java.util.Date;
+
+public class Account {
+
+    private Integer account_id;
+    private String account_name;
+    private String account_type;
+    private Double money;
+    private String remark;
+    private Date create_time;
+    private Date update_time;
+    private Integer user_id;
+    
+    /* get set 方法省略*/
+}
+```
+
+##### 4.3.1.2. 添加AccountDao
+
+```java
+package com.xxxx.ssm.dao;
+
+import com.xxxx.ssm.entity.Account;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface AccountDao {
+
+    Account selectById(Integer id);
+
+    int insert(Account account);
+
+    int update(Account account);
+
+    int deleteById(Integer id);
+
+}
+```
+
+##### 4.3.1.3. 添加AccountMapper
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xxxx.ssm.dao.AccountDao">
+    <select id="selectById" parameterType="int" resultType="com.xxxx.ssm.entity.Account">
+        SELECT *
+        FROM tb_account
+        where account_id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="com.xxxx.ssm.entity.Account">
+        INSERT INTO tb_account
+        values (null,
+        #{account_name},
+        #{account_type},
+        #{money},
+        #{remark},
+        now(),
+        now(),
+        #{user_id})
+    </insert>
+    <update id="update" parameterType="com.xxxx.ssm.entity.Account">
+        UPDATE tb_account
+        SET account_name = #{account_name},
+        account_type = #{account_type},
+        money        = #{money},
+        remark       = #{remark},
+        update_time  = #{update_time}
+        WHERE account_id = #{account_id}
+    </update>
+
+    <delete id="deleteById" parameterType="int">
+        DELETE
+        FROM tb_account
+        WHERE account_id = #{id}
+    </delete>
+
+</mapper>
+```
+
+##### 4.3.1.4. 添加AccountService
+
+```java
+package com.xxxx.ssm.service;
+
+import com.xxxx.ssm.dao.AccountDao;
+import com.xxxx.ssm.entity.Account;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class AccountService {
+
+    @Autowired
+    private AccountDao accountDao;
+
+    public Account select(Integer id) {
+        return accountDao.selectById(id);
+    }
+
+    public int insert(Account account) {
+        return accountDao.insert(account);
+    }
+
+    public int update(Account account) {
+        return accountDao.update(account);
+    }
+
+    public int delete(Integer id) {
+        return accountDao.deleteById(id);
+    }
+
+}
+```
+
+#### 4.3.2. URL请求地址配置
+
+##### 4.3.2.1. GET请求配置 
+
+```java
+@RequestMapping(value = "/{id}", method = RequestMethod.GET)    /* @GetMapping*/
+@ResponseBody
+public Account queryAccountById(@PathVariable("id") Integer id) {
+    return accountService.select(id);
+}
+```
+
+##### 4.3.2.2. Delete
+
+```java
+@DeleteMapping("/{id}")
+@ResponseBody
+public Map<String, String> deleteAccountById(@PathVariable("id") Integer id) {
+
+    int row = accountService.delete(id);
+
+    Map<String, String> map = new HashMap();
+
+    if (row > 0) {
+        map.put("code", "200");
+        map.put("msg", "删除成功");
+    } else {
+        map.put("code", "500");
+        map.put("msg", "删除失败");
+    }
+    return map;
+}
+
+```
+
+##### 4.3.2.3. insert
+
+```java
+@PostMapping
+@ResponseBody
+public Map<String, String> addAccount(@RequestBody Account account) {
+    Map<String, String> map = new HashMap<>();
+
+    int row = accountService.insert(account);
+
+    if (row > 0) {
+        map.put("code", "200");
+        map.put("msg", "添加成功");
+    } else {
+        map.put("code", "500");
+        map.put("msg", "添加失败");
+    }
+    return map;
+}
+```
+
+##### 4.3.2.4. update
+
+```java
+@PutMapping
+@ResponseBody
+public Map<String, String> updateAccount(@RequestBody Account account) {
+    Map<String, String> map = new HashMap<>();
+
+    int row = accountService.update(account);
+
+    if (row > 0) {
+        map.put("code", "200");
+        map.put("msg", "更新成功");
+    } else {
+        map.put("code", "500");
+        map.put("msg", "更新失败");
+    }
+    return map;
+}
+```
+
+## 5.全局异常统一处理
+
+### 5.1. 全局异常概念
+
+​		在 JavaEE 项目中，不管是对底层的数据库操作，还是业务层的处理过程，还是控制层的处理过程，都不可避免会遇到各种可预知的、不可预知的异常需要处理。每个过程都单独处理异常，系统的代码耦合读高，工作量大且不好统一，维护工作量也很大。
+
+​		SpringMVC 对于异常处理这块提供了支持，通过SpringMVC 提供处理机制，能够将所有类型的异常处理从处理过程解耦出来，既保证了相关处理过程的功能较单一，也实现了异常信息的统一处理和维护。全局异常实现方式 Spring MVC 处理异常有三种方式：
+
+1.   使用Spring MVC 提供的简单异常处理器 SimpleMappingExceptionResolver
+2.   实现 Spring 的异常处理接口 HandlerExceptionResolver 自定义的异常处理器
+3.   使用 @ExceptionHandler 注解实现异常处理
+
+###  5.2. 异常处理实现
+
+#### 5.2.1. 全局异常处理方式一
+
+##### 5.2.1.1.配置对象
+
+配置 SimpleMappingExceptionResolver 对象
+
+```xml
+<!--  配置全局异常统一处理的 Bean （简单异常处理器） -->
+<bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+
+    <!--  页面在转发时出现异常，设置默认的错误页面（error代表是一个视图）  -->
+    <property name="defaultErrorView" value="error"></property>
+    <!--  异常发生时，设置异常的变量名 -->
+    <property name="exceptionAttribute" value="ex"></property>
+</bean>
+```
+
+可以在处理异常的页面获取异常信息
+
+```jsp
+${ex}
+```
+
+##### 5.2.1.2. 使用自定义异常
+
+```java
+package com.xxxx.ssm.exception;
+
+public class ParamException extends RuntimeException {
+    private Integer code = 300;
+    private String msg = "参数异常！";
+
+
+    public ParamException() {
+        super("参数异常!");
+    }
+
+    public ParamException(String msg) {
+        super(msg);
+        this.msg = msg;
+    }
+
+    public ParamException(Integer code){
+
+    }
+
+}
+```
+
+##### 5.2.1.3. 配置自定义异常页面
+
+```xml
+<!--  设置自定义异常和页面映射 -->
+<property name="exceptionMappings">
+    <props>
+        <!--  key代表的是自定义异常的路径，标签中设置的是具体的页面-->
+        <prop key="com.xxxx.ssm.exception.ParamException">param_error</prop>
+    </props>
+</property>
+```
+
+​		使用 SimpleMappingExceptionResolver进行异常处理，具有集成简单、有良好的扩展性、对已有代码没有入侵等优点，但是该方法仅能获取异常信息，若在出现异常时，对需要获取异常以外的数据的情况不适用。
 
 
 
+#### 5.2.2. 全局异常处理方式二（推荐）
+
+```java
+@Component
+public class GlobalExceptionResolver implements HandlerExceptionResolver {
+    @Override
+    public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
+        ModelAndView mv = new ModelAndView("error");
+        mv.addObject("ex", "默认的错误信息");
+
+        // 判断是否是自定义异常
+        if (ex instanceof ParamException) {
+            mv.setViewName("param_error");
+            ParamException pm = (ParamException) ex;
+            mv.addObject("ex",pm.getMessage());
+        }
+        return mv;
+    }
+}
+```
+
+​		使用实现 HandlerExceptionResolver 接口的异常处理器进行异常处理，具有集成简单、有良好的扩展性、对已有代码没有侵入性等优点，同时，在异常处理时获取导致异常出现的对象，有利于提供更详细的异常处理信息。
 
 
 
+#### 5.2.3. 全局异常处理方式三
+
+页面处理器继承 BaseController
+
+```java
+/***
+ *  若要使用该异常处理器，对应的Controller需要继承此类，对代码有侵入性，不建议使用 
+ */
+public class BaseController {
+
+    @ExceptionHandler
+    public String exc(HttpServletRequest request, HttpServletResponse response, Exception ex) {
+
+        request.setAttribute("ex", ex);
 
 
+        return "error";
+    }
+}
+```
 
+### 5.3. 未捕获异常的处理
+
+​		对于 Unchecked Exception 而言，由于代码不强制捕获，往往被忽略，如果运行时产生了Unchecked Exception，而代码中又没有进行相应的捕获和处理，则我们可能不得不面对尴尬的 404、500..... 等服务器内部错误提示页面。
+
+​		此时需要一个全面而有效的异常处理机制。目前大多数服务器都支持在 web.xml 中通过<error-page>(Websphere/weblogic)或者<erroe-code>(Tomcat)节点配置特定异常情况的显示页面。修改web.xml，文件增加以下内容：
+
+```xml
+<!--  出错页面定义   -->
+<error-page>
+    <exception-type>java.lang.Throwable</exception-type>
+    <location>/500.jsp</location>
+</error-page>
+<error-page>
+    <error-code>500</error-code>
+    <location>/500.jsp</location>
+</error-page>
+<error-page>
+    <error-code>404</error-code>
+    <location>/404.jsp</location>
+</error-page>
+```
+
+在webapp目录下创建404.jsp和500.jsp
 
 
 
