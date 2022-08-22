@@ -341,11 +341,152 @@ public @interface MyCompScan {
 
 ## 3. Spring MVC 零配置创建与部署
 
+​		基于 Spring MVC 5.x 使用maven 搭建 Spring MVC Web项目，通过 Spring 提供的注解与相关配置来对项目进行创建与部署。
+
 ### 3.1. 创建Spring MVC Web工程
 
+创建 Maven 的 web 项目
+
+### 3.2. pom.xml
+
+```xml
+<dependencies>
+    <!--  spring web  -->
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-web</artifactId>
+        <version>5.3.22</version>
+    </dependency>
+
+    <!-- spring mvc  -->
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-webmvc</artifactId>
+        <version>5.3.22</version>
+    </dependency>
+
+    <!--  servlet  -->
+    <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>servlet-api</artifactId>
+        <version>2.5</version>
+    </dependency>
 
 
+</dependencies>
 
+<build>
+    <finalName>springboot</finalName>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.8.0</version>
+            <configuration>
+                <!--  源代码使用的JDK版本  -->
+                <source>11</source>
+                <!--  需要生成的项目class文件的编译版本  -->
+                <target>11</target>
+                <!--  字符集编码  -->
+                <encoding>utf-8</encoding>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+```
+
+### 3.3. 添加源代码
+
+```java
+@Controller
+public class HelloController {
+
+    @RequestMapping("/index")
+    public String index() {
+        return "index";
+    }
+
+}
+```
+
+### 3.4. 添加视图
+
+在 WEB-INF/views 目录下创建index.jsp
+
+```html
+<body>
+    <h2>
+        hello springboot
+    </h2>
+</body>
+```
+
+### 3.5. Spring MVC 配置类添加
+
+​		Spring MVC 配置信息 MvcConfig 文件添加，作为MVC框架环境，原来是通过 xml 来进行配置（视图解析器、JSON转化器、文件上传解析器等），这里基于注解通过继承 WebMvcConfigurerAdapter 类并重写相关方法来进行配置（注意通过 @EnableWebMvc 注解来启动 MVC 环境）。
+
+```java
+/* 配置类 */
+@Configuration
+/* 在@Configuration 注解的配置类中添加，用于为该应用程序添加SpringMVC 的功能 */
+@EnableWebMvc
+/* 扫描包范围 */
+@ComponentScan("com.springboot")
+public class MvcConfig {
+
+
+    /***
+     * 配置 JSP 视图解析器
+     */
+    @Bean
+    public InternalResourceViewResolver viewResolver() {
+        // 获取视图解析器
+        InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
+        // 设置前缀
+        viewResolver.setPrefix("/WEB-INF/views/");
+        // 设置后缀
+        viewResolver.setSuffix(".jsp");
+
+        return viewResolver;
+    }
+
+}
+```
+
+### 3.6. 入口文件代码添加
+
+```java
+public class WebInitializer implements WebApplicationInitializer {
+    @Override
+    public void onStartup(ServletContext servletContext) throws ServletException {
+        // 得到Spring应用的上下文环境
+        AnnotationConfigWebApplicationContext act = new AnnotationConfigWebApplicationContext();
+        // 注册 MVC 配置类
+        act.register(MvcConfig.class);
+        // 设置ServletContext的上下文环境信息
+        act.setServletContext(servletContext);
+        // 配置转发器 Dispatcher
+        ServletRegistration.Dynamic servlet = servletContext.addServlet("dispatcher", new DispatcherServlet(act));
+        // 设置映射路径
+        servlet.addMapping("/");
+        // 启动是实例化Bean
+        servlet.setLoadOnStartup(1);
+
+    }
+}
+```
+
+### 3.7. 部署与测试
+
+在项目中添加Tomcat并访问
+
+配置拦截器：在配置类实现WebMvcConfigurationSupport
+
+## 4. SpringBoot 概念与特点
+
+### 4.1. 框架概念
+
+​		随着动态语言
 
 
 
