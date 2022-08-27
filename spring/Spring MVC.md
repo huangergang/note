@@ -1,6 +1,6 @@
 # Spring MVC one
 
-## 1.MVC模式
+## 1. MVC模式
 
 MVC 模式代表 Model-View-Controller（模型-视图-控制器） 模式。这种模式用于应用程序的分层开发。
 
@@ -10,29 +10,29 @@ MVC 模式代表 Model-View-Controller（模型-视图-控制器） 模式。这
 
 ![img](https://www.runoob.com/wp-content/uploads/2014/08/1200px-ModelViewControllerDiagram2.svg_.png)
 
-## 2.Spring MVC
+## 2. Spring MVC
 
 ​		Spring MVC是Spring家族中的一个web成员，它是一种基于Web MVC设计思想的请求驱动类型的轻量级Web框架，即使用了MVC架构模式思想，将web层进行职责解耦，基于请求驱动指的是使用请求-响应模型，框架的摸底就是简化开发，Spring MVC简化了日常Web开发。
 
 ​		Spring MVC是服务到工作者思想的实现。前端控制器是DispatcherServlet；应用控制器拆为处理器映射器（Handler Mapping）进行处理器管理和视图解析器（View Resolver）进行视图管理；支持本地化/国际化（Locale）解析及文件上传等；提供了非常灵活的数据验证、格式化和数据绑定机制；提供了强大的约束大于配置（管惯例优先原则）的契约式编程支持。
 
-## 3.Spring MVC请求流程&环境搭建
+## 3. Spring MVC请求流程&环境搭建
 
-### 3.1.Spring MVC请求处理程序分析
+### 3.1. Spring MVC请求处理程序分析
 
 TODO
 
-### 3.2.环境搭建
+### 3.2. 环境搭建
 
-#### 3.2.1.开发环境
+#### 3.2.1. 开发环境
 
 idea+Maven+jdk11+tomcat
 
-#### 3.2.2.新建Maven webApp
+#### 3.2.2. 新建Maven webApp
 
 idea下创建springmvc工程
 
-#### 3.2.3.pom.xml配置
+#### 3.2.3. pom.xml配置
 
 ```XML
 <properties>
@@ -100,7 +100,7 @@ idea下创建springmvc工程
 </build>
 ```
 
-#### 3.2.4.web.xml配置
+#### 3.2.4. web.xml配置
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -150,7 +150,7 @@ idea下创建springmvc工程
 </web-app>
 ```
 
-#### 3.2.5.servlet-context.xml配置
+#### 3.2.5. servlet-context.xml配置
 
 ```XML
 <?xml version="1.0" encoding="UTF-8"?>
@@ -188,7 +188,7 @@ idea下创建springmvc工程
 </beans>
 ```
 
-#### 3.2.6.页面控制器编写
+#### 3.2.6. 页面控制器编写
 
 ```java
 package com.xxxx.controller;
@@ -220,7 +220,7 @@ public class TestController {
 }
 ```
 
-#### 3.2.7.添加视图页面
+#### 3.2.7. 添加视图页面
 
 ```jsp
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -252,7 +252,7 @@ String basePath =
 </html>
 ```
 
-#### 3.2.8.启动服务器
+#### 3.2.8. 启动服务器
 
 配置启动命令
 
@@ -262,13 +262,13 @@ tomcat:run
 
 访问浏览器
 
-## 4.URL地址映射
+## 4. URL地址映射
 
-### 4.1.URL 地址映射配置	@RequestMapping
+### 4.1. URL 地址映射配置	@RequestMapping
 
 ​		通过注解@RequestMapping将请求地址与方法进行绑定，可以在类级别和方法级别声明。类级别的注解负责将一个特定的路径映射到一个控制器上，将url和类绑定；通过方法级别的注解可以细化映射，能够将一个特定的请求路径映射到某个具体的方法上，将url和类的方法绑定。
 
-#### 4.1.1.映射单个 URL
+#### 4.1.1. 映射单个 URL
 
 @RequestMapping("")或@RequestMapping(value="")
 
@@ -296,7 +296,7 @@ public ModelAndView test01() {
 }
 ```
 
-#### 4.1.2.映射多个 URL
+#### 4.1.2. 映射多个 URL
 
 ```java
    /**
@@ -323,7 +323,7 @@ public ModelAndView test02() {
 }
 ```
 
-#### 4.1.3.映射 URL 在控制器上
+#### 4.1.3. 映射 URL 在控制器上
 
 ​		用于类上，表示类中的所有响应请求的方法都是以该路径作为父路径。
 
@@ -356,7 +356,7 @@ public class URLController {
 }
 ```
 
-#### 4.1.4.通过参数名称映射URL
+#### 4.1.4. 通过参数名称映射URL
 
 ```java
     /**
@@ -402,7 +402,7 @@ public ModelAndView test05() {
 }
 ```
 
-#### 4.1.5.设置 URL 映射的请求方式
+#### 4.1.5. 设置 URL 映射的请求方式
 
 ​		默认没有设置请求方式，在HTTP请求中最常用的请求方法是 GET、POST，还有其他一些方法，如：DELET、PUT、HEAD等。
 
@@ -429,7 +429,7 @@ public ModelAndView test06() {
 }
 ```
 
-### 4.2.参数绑定
+### 4.2. 参数绑定
 
 设置data.jsp
 
@@ -464,7 +464,7 @@ String basePath =
 
 ```
 
-#### 4.2.1.基本数据绑定
+#### 4.2.1. 基本数据绑定
 
 ```java
     /**
@@ -491,7 +491,7 @@ public ModelAndView data01(int age, double money) {
 }
 ```
 
-##### 4.2.1.2参数默认值
+##### 4.2.1.2 参数默认值
 
 ```java
    /**
@@ -518,7 +518,7 @@ public ModelAndView data02(@RequestParam(defaultValue = "10") int age,
 }
 ```
 
-##### 4.2.1.3参数别名
+##### 4.2.1.3. 参数别名
 
 ```java
   /**
@@ -545,7 +545,7 @@ public ModelAndView data03(@RequestParam(defaultValue = "10",name = "userAge") i
 }
 ```
 
-#### 4.2.2.包装类型
+#### 4.2.2. 包装类型
 
 ```java
    /**
@@ -571,7 +571,7 @@ public ModelAndView data04(Integer age,
 }
 ```
 
-#### 4.2.3.字符串类型
+#### 4.2.3. 字符串类型
 
 ```java
  /**
@@ -597,7 +597,7 @@ public ModelAndView data05(String name,
 }
 ```
 
-#### 4.2.4.数组类型
+#### 4.2.4. 数组类型
 
 ```java
    /**
@@ -627,7 +627,7 @@ public ModelAndView data06(String[] hobbies) {
 }
 ```
 
-#### 4.2.5.JavaBean类型
+#### 4.2.5. JavaBean类型
 
 javabean
 
@@ -677,9 +677,9 @@ public ModelAndView data07(User user) {
 }
 ```
 
-#### 4.2.6.List类型
+#### 4.2.6. List类型
 
-##### 4.2.6.1.基本类型（包装类和String）的集合
+##### 4.2.6.1. 基本类型（包装类和String）的集合
 
 在User实体需要定义对应的list属性。（对于集合的参数绑定，一般需要使用JavaBean对象进行包装）；
 
@@ -746,7 +746,7 @@ public ModelAndView data08(User2 user2) {
 
 <hr>
 
-##### 4.2.6.2.自定义类的集合
+##### 4.2.6.2. 自定义类的集合
 
 自定义类
 
@@ -818,11 +818,11 @@ public ModelAndView data09(User3 user3) {
 }
 ```
 
-#### 4.2.7.Set类型
+#### 4.2.7. Set类型
 
 TODO
 
-#### 4.2.8.Map类型
+#### 4.2.8. Map类型
 
 JavaBean
 
@@ -891,9 +891,9 @@ public ModelAndView data10(User4 user4) {
 }
 ```
 
-### 4.3.请求域对象
+### 4.3. 请求域对象
 
-#### 4.3.1.返回ModelAndView
+#### 4.3.1. 返回ModelAndView
 
 ```java
 @RequestMapping(value = "/model01")
@@ -909,7 +909,7 @@ public ModelAndView model01() {
 }
 ```
 
-#### 4.3.2.ModelMap对象
+#### 4.3.2. ModelMap对象
 
 ```java
 @RequestMapping(value = "/model02")
@@ -922,7 +922,7 @@ public String model02(ModelMap modelMap) {
 
 ```
 
-#### 4.3.3.Model对象
+#### 4.3.3. Model对象
 
 ```java
 @RequestMapping(value = "/model03")
@@ -934,7 +934,7 @@ public String model03(Model model) {
 }
 ```
 
-#### 4.3.4.Map对象
+#### 4.3.4. Map对象
 
 ```java
 @RequestMapping(value = "/model04")
@@ -947,7 +947,7 @@ public String model04(Map map) {
 
 ```
 
-#### 4.3.5.原生HttpServletRequest对象
+#### 4.3.5. 原生HttpServletRequest对象
 
 ```java
 @RequestMapping(value = "/model05")
@@ -959,11 +959,11 @@ public String model05(HttpServletRequest request) {
 }
 ```
 
-## 5.请求转发与重定向
+## 5. 请求转发与重定向
 
 ​		SpringMVC默认采用服务器内部转发的形式展示页面信息。同时也支持重定向页面。
 
-### 5.1.重定向
+### 5.1. 重定向
 
 ​		重定向是发送一个302的状态码给浏览器，浏览器自己取请求跳转的网页。地址栏会发生变化。
 
@@ -1057,7 +1057,7 @@ public ModelAndView view05(ModelAndView modelAndView) {
 }
 ```
 
-### 5.2.请求转发
+### 5.2. 请求转发
 
 ​		请求转发，直接调用跳转的页面，让它返回。对于浏览器来说，它无法感觉服务器有没有forward。地址栏不发生改变。可以获取请求域中的数据。
 
@@ -1130,25 +1130,25 @@ public ModelAndView view11(ModelAndView modelAndView) {
 }
 ```
 
-## 6.SpringMVC 之 JSON 数据开发
+## 6. SpringMVC 之 JSON 数据开发
 
-### 6.1.基本概念
+### 6.1. 基本概念
 
 ​		Json在企业开发中已经作为通用的接口参数类型，在页面（客户端）解析很方便。SpringMVC对于json提供了良好的支持，这里需要修改相关配置，添加json数据支持功能。
 
-#### 6.1.1.@ResponseBody
+#### 6.1.1. @ResponseBody
 
 ​		该注解用于将Controller的方法返回的对象，通过适当的HttpMessageConverter转换为指定格式后，写入到Response对象的body数据区。
 
 ​		返回的数据不是html标签的页面，而是其他某种格式的数据（如json、xml等）使用（通常用于ajax请求）
 
-#### 6.1.2.@RequestBody
+#### 6.1.2. @RequestBody
 
 ​		该注解用于读取Request请求的body部分数据，使用系统默认的HttpMessageConverter进行解析，然后把相应的数据绑定到要返回的对象上，再把HttpMessageConverter返回的对象绑定到Controller中方法的参数上。
 
-### 6.2.使用配置
+### 6.2. 使用配置
 
-#### 6.2.1.pom.xml添加json相关坐标
+#### 6.2.1. pom.xml添加json相关坐标
 
 ```XML
 <!--  JSON      -->
@@ -1171,7 +1171,7 @@ public ModelAndView view11(ModelAndView modelAndView) {
 </dependency>
 ```
 
-#### 6.2.2.修改servlet-context.xml
+#### 6.2.2. 修改servlet-context.xml
 
 ```XML
 <!--  mvc 请求映射 处理器与适配器配置  -->
@@ -1183,9 +1183,9 @@ public ModelAndView view11(ModelAndView modelAndView) {
 </mvc:annotation-driven>
 ```
 
-#### 6.2.3.注解使用
+#### 6.2.3. 注解使用
 
-##### 6.2.3.1.@ResponseBody
+##### 6.2.3.1. @ResponseBody
 
 ```java
 @Controller
@@ -1275,7 +1275,7 @@ public @ResponseBody User json03() {
 }
 ```
 
-##### 6.2.3.2.@RequestBody
+##### 6.2.3.2. @RequestBody
 
 ​		@RequestBody 注解常用来处理content-type 不是默认的 application/x-www-form-urlcoded类型的内容，比如：application/json或者是application/xml等。一般情况下用来处理application/json类型。@RequestBody接受的是一个 json 格式的字符串。
 
@@ -1334,7 +1334,7 @@ jsp页面
 
 # Spring MVC two
 
-## 1.拦截器
+## 1. 拦截器
 
 ### 1.1. 基本概念
 
@@ -1346,7 +1346,7 @@ jsp页面
 
 ### 1.2. 拦截器实现
 
-#### 1.2.1.实现接口
+#### 1.2.1. 实现接口
 
 ```java
 package com.xxxx.interceptor;
@@ -1408,7 +1408,7 @@ public class Interceptor01 implements HandlerInterceptor {
 </mvc:interceptors>
 ```
 
-#### 1.2.2.继承实现类（已弃用）
+#### 1.2.2. 继承实现类（已弃用）
 
 ​		本质还是实现接口。
 
@@ -1443,7 +1443,7 @@ public class Interceptor02 extends HandlerInterceptorAdapter {
 </mvc:interceptors>
 ```
 
-#### 1.2.3.多个拦截器的实现
+#### 1.2.3. 多个拦截器的实现
 
 ​		SpringMVC 框架支持多个拦截器配置，从而构成拦截器链，对客户端进行多次拦截操作。
 
@@ -1475,7 +1475,7 @@ public class Interceptor02 extends HandlerInterceptorAdapter {
 
 ​		使用拦截器完成用户是否登录请求验证功能
 
-#### 1.3.1.用户控制器
+#### 1.3.1. 用户控制器
 
 ```java
 package com.xxxx.controller;
@@ -1564,7 +1564,7 @@ public class UserInfoController {
 }
 ```
 
-#### 1.3.2.页面定义
+#### 1.3.2. 页面定义
 
 ```jsp
 <%--
@@ -1591,7 +1591,7 @@ public class UserInfoController {
 </html>
 ```
 
-#### 1.3.3.拦截器定义
+#### 1.3.3. 拦截器定义
 
 ```java
 package com.xxxx.interceptor;
@@ -1623,7 +1623,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 }
 ```
 
-#### 1.3.4.xml配置
+#### 1.3.4. xml配置
 
 ```xml
 <!--    非法访问拦截器-->
@@ -1637,11 +1637,11 @@ public class LoginInterceptor implements HandlerInterceptor {
 </mvc:interceptors>
 ```
 
-## 2.文件上传
+## 2. 文件上传
 
-### 2.1.环境配置
+### 2.1. 环境配置
 
-#### 2.1.1.pom.xml文件修改
+#### 2.1.1. pom.xml文件修改
 
 ```xml
 <!--  spring 文件上传 依赖-->
@@ -1652,7 +1652,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 </dependency>
 ```
 
-#### 2.1.2.servlet-context.xml修改
+#### 2.1.2. servlet-context.xml修改
 
 ```xml
 <bean id="multipartResolver"
@@ -1674,11 +1674,11 @@ public class LoginInterceptor implements HandlerInterceptor {
 </bean>
 ```
 
-### 2.2.代码实现
+### 2.2. 代码实现
 
-#### 2.2.1.单文件上传
+#### 2.2.1. 单文件上传
 
-##### 2.2.1.1.页面表单
+##### 2.2.1.1. 页面表单
 
 *   input的type设置为file
 *   form表单的method设置为post
@@ -1695,7 +1695,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 </form>
 ```
 
-##### 2.2.1.2.代码实现
+##### 2.2.1.2. 代码实现
 
 ```java
 package com.xxxx.controller;
@@ -1771,9 +1771,9 @@ public class FileController {
 }
 ```
 
-#### 2.2.2.多文件上传
+#### 2.2.2. 多文件上传
 
-##### 2.2.2.1.页面表单
+##### 2.2.2.1. 页面表单
 
 ```jsp
 <%--
@@ -1789,7 +1789,7 @@ public class FileController {
 </form>
 ```
 
-##### 2.2.2.2.代码实现
+##### 2.2.2.2. 代码实现
 
 ```java
 package com.xxxx.controller;
@@ -1888,11 +1888,11 @@ public class FileController {
 }
 ```
 
-## 3.SSM 框架集成与测试
+## 3. SSM 框架集成与测试
 
-### 3.1.环境配置
+### 3.1. 环境配置
 
-#### 3.1.1.IDEA 下创建项目
+#### 3.1.1. IDEA 下创建项目
 
 ​		创建Maven对应的Web项目
 
@@ -2382,7 +2382,7 @@ password=123456
 </web-app>
 ```
 
-## 4.RestFul URL
+## 4. RestFul URL
 
 ### 4.1. 基本概念
 
@@ -2613,7 +2613,7 @@ public Map<String, String> updateAccount(@RequestBody Account account) {
 }
 ```
 
-## 5.全局异常统一处理
+## 5. 全局异常统一处理
 
 ### 5.1. 全局异常概念
 
@@ -2629,7 +2629,7 @@ public Map<String, String> updateAccount(@RequestBody Account account) {
 
 #### 5.2.1. 全局异常处理方式一
 
-##### 5.2.1.1.配置对象
+##### 5.2.1.1. 配置对象
 
 配置 SimpleMappingExceptionResolver 对象
 

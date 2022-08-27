@@ -1,10 +1,10 @@
 # Spring JDBC 和 事务
 
-## 1.Spring整合JDBC环境
+## 1. Spring整合JDBC环境
 
 ​		Spring框架除了提供IOC和AOP核心功能外，同样提供了基于JDBC的数据访问功能，使得访问持久层更加方便。
 
-### 1.1.添加坐标依赖
+### 1.1. 添加坐标依赖
 
 ```xml
 <!--  junit测试环境  -->
@@ -79,7 +79,7 @@
 </dependency>
 ```
 
-### 1.2.添加jdbc配置文件
+### 1.2. 添加jdbc配置文件
 
 在src/resources目录下创建数据库配置文件（db.properties）。
 
@@ -94,7 +94,7 @@ user=root
 password=123456
 ```
 
-### 1.3.设置spring.xml配置文件
+### 1.3. 设置spring.xml配置文件
 
 ```XML
 !--  加载properties配置文件  -->
@@ -123,9 +123,9 @@ spring.xml
 </beans>
 ```
 
-### 1.4.配置数据源
+### 1.4. 配置数据源
 
-#### 1.4.1.C3P0数据源配置
+#### 1.4.1. C3P0数据源配置
 
 ```xml
 <!--   配置C3P0数据源  -->
@@ -137,11 +137,11 @@ spring.xml
 </bean>
 ```
 
-#### 1.4.2.DBCP数据源
+#### 1.4.2. DBCP数据源
 
 TODO
 
-### 1.5.模板类配置
+### 1.5. 模板类配置
 
 ​		Spring把jdbc中的重复操作建立成一个模板类：org.springframework.jdbc.core.JdbcTemplate
 
@@ -152,13 +152,13 @@ TODO
 </bean>
 ```
 
-### 1.6.测试连接
+### 1.6. 测试连接
 
-#### 1.6.1.创建数据表
+#### 1.6.1. 创建数据表
 
 <img src="..\spring\img\spring_jdbc.png">
 
-#### 1.6.2.测试类
+#### 1.6.2. 测试类
 
 查询总记录数
 
@@ -184,7 +184,7 @@ public class SpringJdbcTest01{
 }
 ```
 
-#### 1.6.3.测试封装
+#### 1.6.3. 测试封装
 
 Base测试类
 
@@ -223,13 +223,13 @@ public class SpringJdbcTest01 extends BaseTest{
 }
 ```
 
-## 2.持久层账户模块操作
+## 2. 持久层账户模块操作
 
 ​	crud操作
 
-### 2.1.账户接口方法定义
+### 2.1. 账户接口方法定义
 
-#### 2.1.1.定义实体类
+#### 2.1.1. 定义实体类
 
 Account.java
 
@@ -336,7 +336,7 @@ public class Account {
 }
 ```
 
-#### 2.1.2.定义接口类
+#### 2.1.2. 定义接口类
 
 IAccountDao.java
 
@@ -430,7 +430,7 @@ public interface IAccountDao {
 }
 ```
 
-#### 2.1.3.定义实现类
+#### 2.1.3. 定义实现类
 
 AccountDaoImpl.java
 
@@ -444,9 +444,9 @@ public class AccountDaoImpl implements IAccountDao {
 }
 ```
 
-### 2.2.账户记录添加实现
+### 2.2. 账户记录添加实现
 
-#### 2.2.1.实现
+#### 2.2.1. 实现
 
 AccountDaoImpl.java
 
@@ -537,7 +537,7 @@ public int addAccounts(List<Account> accounts) {
 }
 ```
 
-#### 2.2.2.测试
+#### 2.2.2. 测试
 
 ```java
 public class SpringJdbcAddTest extends BaseTest{
@@ -586,9 +586,9 @@ public class SpringJdbcAddTest extends BaseTest{
 
 
 
-### 2.3.账户查询实现
+### 2.3. 账户查询实现
 
-#### 2.3.1.实现
+#### 2.3.1. 实现
 
 AccountDaoImpl.java
 
@@ -690,7 +690,7 @@ public List<Account> queryAccountsByParams(int userId, String accountName, Strin
 }
 ```
 
-#### 2.3.2.测试
+#### 2.3.2. 测试
 
 ```java
 public class SpringJdbcQueryTest extends BaseTest {
@@ -726,9 +726,9 @@ public class SpringJdbcQueryTest extends BaseTest {
 }
 ```
 
-### 2.4.账户更新实现
+### 2.4. 账户更新实现
 
-#### 2.4.1.实现
+#### 2.4.1. 实现
 
 AccountDaoImpl.java
 
@@ -774,7 +774,7 @@ public int updateAccounts(List<Account> accounts) {
 }
 ```
 
-#### 2.4.2.测试
+#### 2.4.2. 测试
 
 ```java
 public class SpringJdbcUpdateTest extends BaseTest {
@@ -810,9 +810,9 @@ public class SpringJdbcUpdateTest extends BaseTest {
 }
 ```
 
-### 2.5.账户删除实现
+### 2.5. 账户删除实现
 
-#### 2.5.1.实现
+#### 2.5.1. 实现
 
 AccountDaoImpl.java
 
@@ -848,7 +848,7 @@ public int deleteAccounts(Integer[] ids) {
 }
 ```
 
-#### 2.5.2.测试
+#### 2.5.2. 测试
 
 ```java
 package com.xxxx.test;
@@ -883,11 +883,11 @@ public class SpringJdbcDeleteTest extends BaseTest {
 }
 ```
 
-## 3.Spring 事务控制
+## 3. Spring 事务控制
 
-### 3.1.转账场景模拟实现
+### 3.1. 转账场景模拟实现
 
-#### 3.1.1.接口方法定义
+#### 3.1.1. 接口方法定义
 
 ```java
 /**
@@ -907,7 +907,7 @@ int inAccount(Integer inId, Double money);
 int outAccount(Integer outId, Double money);
 ```
 
-#### 3.1.2.实现接口
+#### 3.1.2. 实现接口
 
 Dao层
 
@@ -939,7 +939,7 @@ public int outAccount(Integer outId, Double money) {
 }
 ```
 
-#### 3.1.3.实现服务
+#### 3.1.3. 实现服务
 
 service层
 
@@ -966,7 +966,7 @@ public class AccountService {
 }
 ```
 
-#### 3.1.4.测试
+#### 3.1.4. 测试
 
 ```java
 public class AccountTransfer extends BaseTest {
@@ -990,9 +990,9 @@ public class AccountTransfer extends BaseTest {
 }
 ```
 
-### 3.2.Spring 事务概念
+### 3.2. Spring 事务概念
 
-#### 3.2.1.事务四大特性
+#### 3.2.1. 事务四大特性
 
 　如果一个数据库声称支持事务的操作，那么该数据库必须要具备以下四个特性：
 
@@ -1070,7 +1070,7 @@ public class AccountTransfer extends BaseTest {
 
 博客https://www.cnblogs.com/dwxt/p/8807981.html
 
-#### 3.2.2.Spring 事务核心接口
+#### 3.2.2. Spring 事务核心接口
 
 ​		Spring 并不直接管理事务，而是提供了许多事务管理器，它们将事务的管理职责委托给 Hibernate 或者JTA等持久化机制所提供的相关平台框架的事务来实现。
 
@@ -1089,11 +1089,11 @@ public interface PlatformTransactionManager extends TransactionManager {
 }
 ```
 
-### 3.3.Spring 事务控制配置
+### 3.3. Spring 事务控制配置
 
-#### 3.3.1.XMl 配置
+#### 3.3.1. XMl 配置
 
-##### 3.3.1.1.添加命令空间
+##### 3.3.1.1. 添加命令空间
 
 spring.xml
 
@@ -1132,14 +1132,14 @@ http://www.springframework.org/schema/aop/spring-aop.xsd
 </beans>
 ```
 
-##### 3.3.1.2.设置aop代理
+##### 3.3.1.2. 设置aop代理
 
 ```XML
 <!-- 开启aop代理  -->
 <aop:aspectj-autoproxy/>
 ```
 
-##### 3.3.1.3.配置事务管理器
+##### 3.3.1.3. 配置事务管理器
 
 ```xml
 <!-- 事务管理器 -->
@@ -1149,7 +1149,7 @@ http://www.springframework.org/schema/aop/spring-aop.xsd
 </bean>
 ```
 
-##### 3.3.1.4.配置事务相关通知
+##### 3.3.1.4. 配置事务相关通知
 
 一般来说增删该方法 propagation=Required，对于查询方法使用read-only="true"
 
@@ -1169,7 +1169,7 @@ http://www.springframework.org/schema/aop/spring-aop.xsd
 </tx:advice>
 ```
 
-##### 3.3.1.5.配置aop
+##### 3.3.1.5. 配置aop
 
 ```xml
 <!-- aop切面定义 -->
@@ -1181,9 +1181,9 @@ http://www.springframework.org/schema/aop/spring-aop.xsd
 </aop:config>
 ```
 
-#### 3.3.2.注解配置
+#### 3.3.2. 注解配置
 
-##### 3.3.2.1.配置事务管理器
+##### 3.3.2.1. 配置事务管理器
 
 ```xml
 <!-- 事务管理器 -->
@@ -1193,14 +1193,14 @@ http://www.springframework.org/schema/aop/spring-aop.xsd
 </bean>
 ```
 
-##### 3.3.2.2.配置注解支持
+##### 3.3.2.2. 配置注解支持
 
 ```xml
 <!-- 事务注解支持 -->
 <tx:annotation-driven transaction-manager="txManager"/>
 ```
 
-##### 3.3.2.3.方法上添加事务注解
+##### 3.3.2.3. 方法上添加事务注解
 
 ```java
 

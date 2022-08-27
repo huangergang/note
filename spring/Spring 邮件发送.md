@@ -8,7 +8,7 @@ w8Nq99wi6U87Ffi
 
 KWJWNERDUTLQIJVO
 
-## 1.环境配置
+## 1. 环境配置
 
 ```xml
 <!--  java mail    -->
@@ -25,9 +25,9 @@ KWJWNERDUTLQIJVO
 </dependency>
 ```
 
-## 2.java Mail 发送邮件
+## 2. java Mail 发送邮件
 
-### 2.1.发送普通文本的邮件
+### 2.1. 发送普通文本的邮件
 
 ```java
 package com.xxxx.mail;
@@ -112,7 +112,7 @@ public class MailTest01 {
 }
 ```
 
-### 2.2.发送HTML内容的邮件
+### 2.2. 发送HTML内容的邮件
 
 ```java
 package com.xxxx.mail;
@@ -213,7 +213,7 @@ public class MailTest02 {
 }
 ```
 
-### 2.3.发送包含附件的邮件
+### 2.3. 发送包含附件的邮件
 
 ```java
 package com.xxxx.mail;
@@ -330,9 +330,9 @@ public class MailTest03 {
 }
 ```
 
-### 2.4.封装
+### 2.4. 封装
 
-#### 2.4.1.创建邮件发送信息类
+#### 2.4.1. 创建邮件发送信息类
 
 ```java
 package com.xxxx.mail2;
@@ -439,7 +439,7 @@ public class MailSendInfo {
 }
 ```
 
-#### 2.4.2.创建身份认证类
+#### 2.4.2. 创建身份认证类
 
 ```java
 package com.xxxx.mail2;
@@ -469,7 +469,7 @@ public class MyAuthenticator extends Authenticator {
 }
 ```
 
-#### 2.4.3.创建发送邮件类
+#### 2.4.3. 创建发送邮件类
 
 ```java
 package com.xxxx.mail2;
@@ -585,7 +585,7 @@ public class MailSender {
 }
 ```
 
-#### 2.4.4.测试类
+#### 2.4.4. 测试类
 
 ```java
 package com.xxxx.mail2;
@@ -646,9 +646,9 @@ public class MailTest04 {
 }
 ```
 
-## 3.使用Spring API 实现邮件发送
+## 3. 使用Spring API 实现邮件发送
 
-### 3.1.环境搭建
+### 3.1. 环境搭建
 
 ```xml
 <!--  java mail    -->
@@ -692,7 +692,7 @@ public class MailTest04 {
 </dependency>
 ```
 
-### 3.2.配置邮件发送bean
+### 3.2. 配置邮件发送bean
 
 创建配置文件
 
@@ -745,7 +745,7 @@ password=KWJWNERDUTLQIJVO
 </beans>
 ```
 
-### 3.3.定义接口和实现类
+### 3.3. 定义接口和实现类
 
 ```java
 package com.xxxx.springMail;
@@ -784,7 +784,7 @@ public class SimpleOrderManager implements OrderManager {
 }
 ```
 
-### 3.4.邮件发送测试
+### 3.4. 邮件发送测试
 
 ```java
 package com.xxxx.springMail;
@@ -804,7 +804,7 @@ public class Test {
 }
 ```
 
-### 3.5.发送附件
+### 3.5. 发送附件
 
 ```java
 package com.xxxx.springMail;

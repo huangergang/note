@@ -1,8 +1,8 @@
 # Spring IOC
 
-## 1.Spring框架
+## 1. Spring框架
 
-### 1.1.引入依赖
+### 1.1. 引入依赖
 
 ​	在maven仓库中找到spring的依赖jar包，放到项目中。或者在maven项目中的XML中直接添加依赖。
 
@@ -16,7 +16,7 @@
 </dependency>
 ```
 
-### 1.2.创建配置文件
+### 1.2. 创建配置文件
 
 ​	在maven目录结构中的main目录下，创建与java目录同级的resources目录标记为资源目录。
 
@@ -48,7 +48,7 @@
 </beans>
 ```
 
-### 1.3.获取上下文环境
+### 1.3. 获取上下文环境
 
 ```java
 public class Test {
@@ -65,7 +65,7 @@ public class Test {
 }
 ```
 
-## 2.Spring IOC模拟
+## 2. Spring IOC模拟
 
 思路：
 
@@ -73,7 +73,7 @@ public class Test {
 2. 定义Bean工厂接口实现类，解析配置文件，实例化Bean对象
 3. 实现getBean方法
 
-### 2.1.定义Bean属性对象
+### 2.1. 定义Bean属性对象
 
 ```java
 public class MyBean {
@@ -103,7 +103,7 @@ public class MyBean {
 }
 ```
 
-### 2.2.添加dom4j和XPath依赖
+### 2.2. 添加dom4j和XPath依赖
 
 ```XML
 // dom4j依赖
@@ -122,7 +122,7 @@ public class MyBean {
 </dependency>
 ```
 
-### 2.3.准备配置文件
+### 2.3. 准备配置文件
 
 ```XML
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -133,7 +133,7 @@ public class MyBean {
 </beans>
 ```
 
-### 2.4.定义Bean工厂接口
+### 2.4. 定义Bean工厂接口
 
 ```java
 package com.xxxx.spring;
@@ -143,7 +143,7 @@ public interface BeanFactory {
 }
 ```
 
-### 2.5.定义Bean接口的实现类
+### 2.5. 定义Bean接口的实现类
 
 ```java
 package com.xxxx.spring;
@@ -246,7 +246,7 @@ public class MyApplicationContext implements BeanFactory {
 
 ```
 
-### 2.6.测试模拟的IOC容器
+### 2.6. 测试模拟的IOC容器
 
 ```java
 package com.xxxx.dao;
@@ -262,9 +262,9 @@ public class Test {
 }
 ```
 
-## 3.Spring 加载配置文件
+## 3. Spring 加载配置文件
 
-### 3.1.加载配置文件
+### 3.1. 加载配置文件
 
 spring.xml
 
@@ -288,21 +288,21 @@ spring.xml
 </beans>
 ```
 
-#### 3.1.1.根据相对路径加载资源
+#### 3.1.1. 根据相对路径加载资源
 
 ```java
 ApplicationContext ac = new ClassPathXmlApplicationContext("spring.xml");
 ```
 
-#### 3.1.2.根据绝对路径加载资源
+#### 3.1.2. 根据绝对路径加载资源
 
 ```java
     ApplicationContext ac = new FileSystemXmlApplicationContext( "C:\\Users\\turing\\Desktop\\spring\\src\\main\\resources\\spring.xml");
 ```
 
-### 3.2.加载多个配置文件
+### 3.2. 加载多个配置文件
 
-#### 3.2.1.可变参数
+#### 3.2.1. 可变参数
 
 ​	有两个配置文件spring.xml和bean.xml
 
@@ -310,7 +310,7 @@ ApplicationContext ac = new ClassPathXmlApplicationContext("spring.xml");
 ApplicationContext ac = new ClassPathXmlApplicationContext("spring.xml","bean.xml");  // ClassPathXmlApplicationContext支持可变参数
 ```
 
-#### 3.2.2.通过总配置文件import导入其他配置文件
+#### 3.2.2. 通过总配置文件import导入其他配置文件
 
 ```XML
 <?xml version="1.0" encoding="UTF-8"?>
@@ -325,15 +325,15 @@ ApplicationContext ac = new ClassPathXmlApplicationContext("spring.xml","bean.xm
 </beans>
 ```
 
-## 4.Spring IOC 容器对Bean对象的实例化
+## 4. Spring IOC 容器对Bean 对象的实例化
 
-### 4.1.构造器实例化
+### 4.1. 构造器实例化
 
 ​	**IOC默认使用空构造器实例化。**
 
 ​	**Bean对象必须有空构造器。**
 
-### 4.2.静态工厂实例化
+### 4.2. 静态工厂实例化
 
 注：
 
@@ -377,7 +377,7 @@ public class StudentFactory {
 
 静态工厂实例化把实例化的工作交给了我们定义的静态工厂，不再有Spring IOC容器负责。**可以给实例化的类先设置一些属性。**
 
-### 4.3.实例化工厂实例化
+### 4.3. 实例化工厂实例化
 
 注：
 
@@ -419,7 +419,7 @@ public class PersonFactory {
 </beans>
 ```
 
-### 4.4.三种方式的比较
+### 4.4. 三种方式的比较
 
 **三种实例化bean都是单例模式。**
 
@@ -429,7 +429,7 @@ public class PersonFactory {
 
 ​	**开发中一般使用第一种方式实例化bean。交给Spring托管。另外两种了解即可。**
 
-## 5.Spring IOC 注入
+## 5. Spring IOC 注入
 
 ​	**注入是指在其他类中依赖其他类的实例 。**
 
@@ -454,16 +454,16 @@ public class UserService {
 
 ​	在一个类中需要为作为类属性的其他类使用set方法完成实例化，从外部传参进行的实例化称为注入。
 
-### 5.1.Spring IOC 手动装配（注入）
+### 5.1. Spring IOC 手动装配（注入）
 
-#### 5.1.1.set方法注入
+#### 5.1.1. set 方法注入
 
 注：
 
 * 属性字段需要提供set方法
 * 四种方式，推荐使用set方法注入
 
-##### 5.1.1.1.业务对象JavaBean
+##### 5.1.1.1. 业务对象JavaBean
 
 1. 属性字段需要提供set方法
 
@@ -511,7 +511,7 @@ public class Service {
 </beans>
 ```
 
-##### 5.1.1.2常用对象和基本类型
+##### 5.1.1.2. 常用对象和基本类型
 
 ​	必须提供set方法。
 
@@ -525,7 +525,7 @@ public class Service {
 </bean>
 ```
 
-##### 5.1.1.3.集合类型和属性对象 
+##### 5.1.1.3. 集合类型和属性对象 
 
 1. List：
 
@@ -592,13 +592,13 @@ public class Service {
 </bean>
 ```
 
-#### 5.1.2.构造器注入
+#### 5.1.2. 构造器注入
 
 注：
 
 * 提供带参构造
 
-##### 5.1.2.1.单个Bean对象作为参数
+##### 5.1.2.1. 单个Bean对象作为参数
 
 ```XML
 <bean id="dao" class="com.xxxx.dao.Dao"></bean>
@@ -609,7 +609,7 @@ public class Service {
 </bean>
 ```
 
-##### 5.1.2.2.多个Bean对象作为参数
+##### 5.1.2.2. 多个Bean对象作为参数
 
 ```XML
 <bean id="dao" class="com.xxxx.dao.Dao"></bean>
@@ -621,7 +621,7 @@ public class Service {
 </bean>
 ```
 
-##### 5.1.2.3.常用类型作为参数
+##### 5.1.2.3. 常用类型作为参数
 
 ```XML
 <bean id="dao" class="com.xxxx.dao.Dao"></bean>
@@ -634,26 +634,26 @@ public class Service {
 </bean>
 ```
 
-##### 5.1.2.4.循环依赖的问题
+##### 5.1.2.4. 循环依赖的问题
 
 ​	两个Bean对象的实例化相互依赖。
 
 ​	如果出现循环依赖，需要通过set注入解决。
 
-#### 5.1.3.静态工厂注入
+#### 5.1.3. 静态工厂注入
 
 ```XML
 <bean id="student" class="com.xxxx.factory.StudentFactory" factory-method="createStudent"></bean>
 ```
 
-#### 5.1.4.实例化工厂注入
+#### 5.1.4. 实例化工厂注入
 
 ```XML
 <bean id="person" factory-bean="personFactory" factory-method="creatPerson">
 </bean>
 ```
 
-#### 5.1.5.注入方式的选择
+#### 5.1.5. 注入方式的选择
 
 ​	开发中首选set方式注入
 
@@ -695,11 +695,11 @@ xmlns:p="http://www.springframework.org/schema/p"
 </bean>
 ```
 
-### 5.2.Spring IOC自动装配（注入）
+### 5.2. Spring IOC自动装配（注入）
 
 ​	通过注解和反射简化配置文件的繁琐。
 
-#### 5.2.1.准备环境
+#### 5.2.1. 准备环境
 
 1. 修改XML
 
@@ -738,7 +738,7 @@ xmlns:p="http://www.springframework.org/schema/p"
 </dependency>
 ```
 
-#### 5.2.2.@Resource
+#### 5.2.2. @Resource
 
 可以实现自动注入（反射）
 
@@ -749,7 +749,7 @@ xmlns:p="http://www.springframework.org/schema/p"
 * 注解可以设置name属性，name属性值与bean的id一致，使用name查找bean
 * 注入接口（只有一个实现类）时可以正常注入，当有多个实现类时必须使用name。
 
-#### 5.2.3.@Autowired
+#### 5.2.3. @Autowired
 
 @Autowired实现自动化注入
 
@@ -758,7 +758,7 @@ xmlns:p="http://www.springframework.org/schema/p"
 * 注解可以声明在属性字段上，也可以在set方法上
 * 没有name字段，若想使用name查找bean，可以提供一个@Qualifier（value=“da”）
 
-## 6.Spring IOC 扫描器
+## 6. Spring IOC 扫描器
 
 简化自动化注入，无需手动配置bean标签
 
@@ -808,13 +808,13 @@ public class Dao {
 }
 ```
 
-## 7.Bean的作用域和生命周期
+## 7. Bean的作用域和生命周期
 
-### 7.1.Bean的作用域
+### 7.1. Bean的作用域
 
 ​	**默认情况下，从spring容器中拿到的对象均为单例。**
 
-#### 7.1.1.singleton作用域
+#### 7.1.1. singleton作用域
 
 ​	默认在spring容器启动时，单例已经加载到单例缓存池中了，可以在xml配置时，对bean标签使用lazy-init属性，其意为是否在spring容器启动时实例化bean。当lazy-init=“true”，表示在spring容器启动时不会实例化bean，而是在程序调用时才会实例化。默认为false。
 
@@ -822,7 +822,7 @@ public class Dao {
 <bean id="user" class="com.xxxx.dao.User" lazy-init="true"></bean>
 ```
 
-#### 7.1.2.prototype作用域
+#### 7.1.2. prototype作用域
 
 ​	spring IOC容器在启动时，不会将bean对象的实例化设置到单例缓存池中。
 
@@ -834,7 +834,7 @@ public class Dao {
 <bean id="user" class="com.xxxx.dao.User" scope="prototype"></bean>
 ```
 
-#### 7.1.3.Web应用中的作用域
+#### 7.1.3. Web应用中的作用域
 
 1. **request作用域**
 
@@ -844,19 +844,19 @@ public class Dao {
 
 3. **globalSession作用域**
 
-### 7.2.Bean的生命周期
+### 7.2. Bean的生命周期
 
 ​	**在spring中，Bean的生命周期包含Bean的定义、初始化、使用和销毁4个阶段。**
 
 
 
-#### 7.2.1.Bean的定义
+#### 7.2.1. Bean的定义
 
 ​	在spring中，通常通过配置文档（xml）的方式来定义Bean。
 
 ​	在一个配置文夹中可以定义多个Bean。
 
-#### 7.2.2.Bean的初始化
+#### 7.2.2. Bean的初始化
 
 ​	默认在IOC容器加载时，实例化对象。
 
@@ -892,7 +892,7 @@ public class User implements InitializingBean {
 }
 ```
 
-#### 7.2.3.Bean的使用
+#### 7.2.3. Bean的使用
 
 有两种
 
@@ -912,7 +912,7 @@ BeanFactory ac = new ClassPathXmlApplicationContext("spring.xml");
 User user = (User) ac.getBean("user");
 ```
 
-#### 7.2.4.Bean的销毁
+#### 7.2.4. Bean的销毁
 
 ​	实现销毁方法。
 

@@ -486,38 +486,1488 @@ public class WebInitializer implements WebApplicationInitializer {
 
 ### 4.1. 框架概念
 
-​		随着动态语言
+​		随着动态语言的流行(Ruby、Scala、NOdejs等)，java 开发变得相对笨重，配置繁琐，开发效率低下，部署流程复杂，以及第三方集成难度也相对较大，针对该环境，Spring Boot 被开发出来，其实用“习惯大于配置目标”，借助Spring Boot 能够让项目快速运行起来，同时借助 Spring Boot可以创建 web 应用并独立进行部署（jar包 war包方式，内嵌 Servlet 容器），同时借助 Spring Boot 在开发应用是可以不用或很少去进行相关 xml 环境配置，简化了开发，大大提高项目开发效率。
+
+​		Spring Boot 是由 Pivotal 团队提供的全新框架，其设计目的是用来简化 Spring 应用的初始搭建以及开发过程，该框架使用了特定的方式来进行配置，从而使开发人员不需要定义样板化的配置。通过这种方式，让Spring Boot 在快速开发领域（rapid application development）成为领导者。
+
+### 4.2. 框架特点
+
+​		创建独立 Spring 应用程序、嵌入式Tomcat、jetty容器、无需部署 WAR 包、简化 Maven 以及 Gradle 配置、尽可能自动化配置 Spring、直接植入产品环境下的实用功能，比如度量指标、健康检查及扩展配置、无需代码生成及XML 配置等，同时 Spring Boot 不仅对web 应用程序做了简化，还提供了一系列的依赖包来把其他一些工作做成开箱即用。
+
+### 4.3. Spring Boot 快速入门
+
+#### 4.3.1. 环境准备
+
+ **IDEA、Maven、JDK 1.8+、Spring Boot 2.x**
+
+#### 4.3.2. 添加依赖坐标
+
+```xml
+<parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>2.2.2.RELEASE</version>
+</parent>
+```
+
+#### 4.3.3. 导入 Spring Boot 的web坐标与相关插件
+
+```xml
+<!-- web支持，SpringMVC， Servlet支持等 -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
+</dependency>
+```
+
+#### 4.3.4. 添加源代码
+
+```java
+@Controller
+public class HelloController {
+
+
+    @RequestMapping("/hello")
+    @ResponseBody
+    public String hello(){
+        return "hello spring-boot";
+    }
+
+
+}
+```
+
+#### 4.3.5. 启动程序
+
+```java
+@SpringBootApplication
+public class Starter {
+
+    public static void main(String[] args) {
+        SpringApplication.run(Starter.class);
+    }
+}
+```
+
+#### 4.3.6. 测试
+
+  在浏览器输入请求地址http://localhost:8080/hello
+
+## 5. Spring Boot 核心配置
+
+### 5.1. 设置 Banner 图标
+
+<img src="..\spring\img\banner.png">
+
+​		在搭建 Spring Boot 项目环境时，程序启动后会在控制台打印SpringBoot 图标，图标描述了SpringBoot 的版本信息，这是 Spring Boot项目与Sping 项目启动区别较大的地方， Spring Boot默认 Banner 在程序启动时显示应用图标，当然图标也可以自定义。
+
+#### 5.1.1. Banner 图标自定义
+
+​		Spring Boot 项目启动时默认加载 **src/main/resources目录下的banner.txt 图标文件**，如果该目录文件未提供，则默认使用Spring 图标。
+
+**图标风格生成网站：patorjk.com**
+
+#### 5.1.2. Banner图标关闭
+
+​		如果启动时不想看到启动图标，可以通过代码进行关闭操作，修改 StarterApplication 设置BannerMode 值为Banner.Mode.OFF，启动Spring Boot 应用关闭图标输出功能即可。
+
+```java
+@SpringBootApplication
+public class Starter {
+
+    public static void main(String[] args) {
+
+        SpringApplication springApplication = new SpringApplication(Starter.class);
+        springApplication.setBannerMode(Banner.Mode.OFF);
+        springApplication.run();
+    }
+}
+```
+
+### 5.2. Spring Boot 配置文件
+
+​		Spring Boot 默认会读取全局配置文件，配置文件名固定为：application.properties 或 application.yml，放在 src/main/resources 资源目录下，使用配置文件来修改 SpringBoot 自动配置的默认值。
+
+在 resources 资源目录下添加 application.properties 文件，配置信息如下：
+
+```properties
+## 项目启动端口配置
+server.port=8080
+## 项目访问上下文路径
+server.servlet.context-path=/mvc
+
+## 数据源配置
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.datasource.url=jdbc
+spring.dataource.username=root
+spring.dataource.password=root
+```
+
+或者 application.yml 文件
+
+```yml
+server:
+  # 端口
+  port: 8999
+  servlet:
+    # 上下文访问路径
+    context-path: /mvc01
+```
+
+### 5.3. Starter坐标与自动化配置
+
+#### 5.3.1. Starter坐标配置
+
+​		Spring Boot 引入了全新的Starter坐标体系，简化企业项目开发大部分场景的 Starter pom，应用程序引入指定场景的 Start pom 相关配置就可以消除，通过 Spring Boot 就可以得到自动化配置的 Bean。
+
+##### 5.3.1.1. Web starter
+
+使用 Spring MVC 来构建 RestFul Web 应用，并使用Tomcat 作为默认内嵌容器。
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
+</dependency>
+```
+
+##### 5.3.1.2. Freemarker Starter  &  Thymeleaf starter
+
+集成视图技术，引入 Freemarker Sharter， Thymeleaf starter
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-freemarker</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-thymeleaf</artifactId>
+</dependency>
+```
+
+##### 5.3.1.3. JavaMail邮件发送 Starter
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-mailf</artifactId>
+</dependency>
+```
+
+##### 5.3.1.4. aop
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-aop</artifactId>
+</dependency>
+```
+
+相关starter系列坐标参考：
+
+| 名称                                   | 描述                                                         |
+| -------------------------------------- | ------------------------------------------------------------ |
+| spring-boot-starter                    | 核心Spring Boot starter，包括自动化支持，日志和YAML          |
+| spring-boot-starter-actuator           | 生产准备的特性，用于帮我们监控和管理应用                     |
+| spring-boot-starter-amqp               | 对“高级消息队列协议”的支持，通过spring-rabbit实现            |
+| spring-boot-starter-aop                | 对面向切面编程的支持，包括spring-aop和AspectJ                |
+| spring-boot-starter-batch              | 对Spring Batch的支持，包括HSQLDB数库                         |
+| spring-boot-starter-cloud-connectors   | 对Spring Cloud Connectors的支持，简化在云平台下（例如，Cloud Foundry和Heroku）服务的连接 |
+| spring-boot-starter-data-elasticsearch | 对Elasticsearch搜索和分析引擎的支持，包括spring-data-elasticsearch |
+| spring-boot-starter-data-gemfire       | 对GemFire分布式数据存储的支持，包括spring-data-gemfire       |
+| spring-boot-starter-data-jpa           | 对java持久化API的支持，包括spring-data-jpa，spring-orm和Hibernate |
+| spring-boot-starter-data-mongodb       | 对MongoDB NOSQL数据库的支持，包括spring-data-mongodb         |
+|                                        |                                                              |
+|                                        |                                                              |
+|                                        |                                                              |
+|                                        |                                                              |
+|                                        |                                                              |
+|                                        |                                                              |
+|                                        |                                                              |
+|                                        |                                                              |
+
+#### 5.3.2. 自动化配置
+
+### 5.4. Profile 配置
+
+​		Profile 是 Spring 用来针对不同环境对不同配置提供的全局 Profile 配置使用 application-{profile}.yml，比如 application-dev.yml，application-test.yml。
+
+通过在 aplication.yml 中设置 spring.profiles.active=test|dev|prod 来动态切换不同环境，具体配置如下：
+
+*   application-dev.yml  开发环境配置
+
+```yml
+server:
+	port: 8989
+```
+
+*   application-test.yml  开发环境配置
+
+```yml
+server:
+	port: 9999
+```
+
+*   application-prod  开发环境配置
+
+```yml
+server:
+	port: 9999
+```
+
+*   application.yml   主配置文件
+
+```yml
+# 切换环境配置
+spring: 
+  profiles:
+    active: test
+```
+
+### 5.5. 日志配置
+
+​		在开发企业项目式，日志的输出对于系统 bug 定位无疑是一种比较有效的方式，也是项目后续进入生产环境后快速发现错误的一种有效手段，所以日志的使用对于项目也是比较重要的一块功能。
+
+​		Spring Boot 默认使用 LogBack 日志系统，如果不需要更改为其他日志系统如 Log4j2 等，则无需多余的配置，LogBack 默认将日志打印到控制台上。如果要使用 LogBack ，原则上是需要添加 dependency 依赖的。
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-logging</artifactId>
+</dependency>
+```
+
+​		因为新建的 Spring Boot 项目一般都会引用`spring-boot-starter`或者`spring-boot-starter-web`，而这两个起步依赖中都已经包含了对于`spring-boot-starter-logging`的依赖，所以，无需额外添加依赖。
+
+#### 5.5.1. 项目中日志信息输出
+
+Starter 启动类中添加 Log 日志类，控制台打印日志信息。
+
+```java
+@SpringBootApplication
+public class Starter {
+
+    private static Logger logger = LoggerFactory.getLogger(Starter.class);
+
+
+    public static void main(String[] args) {
+        // 使用日志
+        logger.info("in loading.... ");
+
+        SpringApplication springApplication = new SpringApplication(Starter.class);
+        springApplication.setBannerMode(Banner.Mode.LOG);
+        springApplication.run();
+    }
+
+}
+```
+
+####  5.5.2. 日志输出格式配置
+
+​		修改 application.yml 文件添加日志输出格式信息配置，可以修改 application.yml 文件控制控制台日志输出格式，同时可以设置日志信息输出到外部文件。
+
+```yml
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger- %msg%n"
+    level: debug
+  file:
+    path: "."
+    name: "springboot02.log"
+```
+
+详细配置请官网查看
 
 
 
+## 6. Freemarker & Thymeleaf 视图技术集成
+
+### 6.1. Freemarker 视图集成
+
+​		SpringBoot 内部支持 Freemarker 视图技术的集成，并提供了自动化配置类
+
+FreemarkerAutoConfiguration，借助自动化配置可以很方便的集成 Freemarker 基础到 SpringBoot 环境中。这里借助入门项目引入 Freemarker 环境配置。
+
+*   Starter 坐标引入
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-freemarker</artifactId>
+</dependency>
+```
+
+*   添加Freemarker 配置信息
+
+​		Freemarker 默认默认视图路径 resources/templates 目录（有自动化配置类 FreemarkerProperties决定），该目录可以在application.yml 中修改。
+
+ ```yml
+ spring:
+ # freemarker 配置
+   freemarker:
+     suffix: .ftl
+     content-type: text/html
+     charset: UTF-8
+     template-loader-path: classpath:/views/
+ ```
+
+*   添加控制器
+
+```java
+@Controller
+public class IndexController {
+
+
+    @RequestMapping("/index")
+    public String index() {
+        return "index";
+    }
+
+}
+```
+
+*   在resources目录下添加views目录添加index.ftl文件
+
+```ftl
+Hello SpringBoot
+```
+
+*   启动Starter 访问浏览器
 
 
 
+### 6.2. Thymeleaf 视图集成
+
+​		SpringBoot 支持多种视图集成，并且 SpringBoot 官网推荐使用 Thymeleaf 作为前端视图页面，这里实现Thymeleaf 视图集成，借助入门项目引入 Thymeleaf 环境配置。
+
+*   starter坐标引入
+
+```xml
+<dependency>    
+    <groupId>org.springframework.boot</groupId>  
+    <artifactId>spring-boot-starter-thymeleaf</artifactId>
+</dependency>
+```
+
+*   添加Thymeleaf 配置信息
+
+​		Thymeleaf 默认默认视图路径 resources/templates 目录 (由自动化配置类 ThymeleafProperties 类决定)，该目录可以在applicatioin.yml 中进行修改。
+
+```yml
+spring:
+  # thymeleaf 配置
+  thymeleaf:
+    prefix: classpath/html/
+    # 关闭页面缓存
+    cache: false
+```
+
+*   编写 Indexcontroller 控制器
+
+    ```java
+    @Controller
+    public class IndexController02 {
+    
+    
+        @RequestMapping("/index02")
+        public String index(Model model) {
+            model.addAttribute("msg","Hello SpringBoot 02 ");
+            return "index";
+        }
+    
+    }
+    ```
+
+*   html 目录下添加 index.html 视图
+
+​		修改 Thymeleaf 模板默认存放路径 (在 resources 目录下的 html 文件夹)
+
+```html
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Thymeleaf </title>
+    </head>
+    <body>
+        <!-- 获取请求域的值 -->
+        <h2 th:text="${msg}"></h2>
+    </body>
+</html>
+```
+
+*   启动Starter 访问浏览器
 
 
 
+## 7. SpringBoot 静态资源访问
+
+​	从入门项目中可以看到：对于 Spring MVC 请求拦截规则 '/' ，Spring Boot   默认静态资源路径如下：
+
+​    <img src="..\spring\img\ResourceProperties.png">                                       
+
+```java
+"classpath:/META-INF/resources/", 
+"classpath:/resources/", 
+"classpath:/static/", 
+"classpath:/public/"
+```
+
+即：我们可以在 resources 资源目录下存放 web 应用静态资源文件。
+
+### 7.1. 默认静态资源路径
+
+在 resources 目录下创建 static 或者 public 目录，存放images、js、css等静态资源文件
+
+<img src="..\spring\img\resources-static.png">
+
+浏览器访问：
+
+<img src="..\spring\img\static1.png">
+
+### 7.2. 自定义静态资源路径
+
+在spring.resources.static-locations 后追加一个配置 classpath:/path_name/
+
+```yml
+spring:
+    # 设置静态资源的默认访问路径 多个路径之间用逗号隔开
+    resources:
+  	  static-locations: classpath:/os/,clsspath/static/
+```
+
+## 8. SpringBoot 应用打包与部署
+
+### 8.1 jar 包部署
+
+#### 8.1.1. 配置打包命令
+
+​		idea 下配置`clean compile package -Dmaven.test.skip=true`执行打包命令，target 目录得到待部署的项目文件。
+
+<img src="..\spring\img\springboot-jar.png">
+
+<img src="..\spring\img\springboot-jar-target.png">
 
 
 
+#### 8.1.2. 部署并访问
 
+​		打开本地 dos 窗口，执行 java-jar 命令 部署已经打包好的 jar 文件。
 
+​		命令如下：java  -jar  jar包所在目录
 
+<img src="..\spring\img\jar包部署cmd.png">
 
+访问：
 
+<img src="..\spring\img\static1.png">
 
+### 8.2. war 包部署
 
+​		War 包形式部署 Web 项目在生产环境中是比较常见的部署方式，也是目前大多数 web 应用部署的方案，这里对于 Spring Boot Web 项目进行打包部署步骤如下：
 
+#### 8.2.1. pom.xml 修改
 
+*   应用类型修改
 
+    由于入门项目构造项目默认为 jar 应用，所以这里打 war 修要做如下修改
 
+    <img src="..\spring\img\pom-war.png"> 
 
+*   忽略内嵌 Tomcat
 
+    构建 SpringBoot 应用时，引入的 spring-boot-starter-web 默认引入了 Tomcat 容器，这里忽略内容 Tomcat
 
+    ```xml
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-tomcat</artifactId>
+        <scope>provided</scope>
+    </dependency>
+    
+    <build>
+    
+        <!--  配置生成的项目名  -->
+        <finalName>springboot02</finalName>
+    
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+    ```
 
+#### 8.2.2. Starter 修改
 
+​		添加容器启动加载文件（类似于读取 web.xml），这里通过继承 SpringBootServletInitializer 类并重写configure 方法来实现，在部署项目时指定外部 Tomcat 读取项目入口方法。
 
+```java
+@Override
+protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+    return builder.sources(Starter.class);
+}
+```
 
+#### 8.2.3. 打包操作
+
+将war包放在tomcat的webapps目录下，并启动tomcat。
+
+访问：
+
+<img src="..\spring\img\springboot-war.png">
 
 
 
 # SpringBoot  two
+
+## 1. Mybatis 整合 & 数据访问
+
+​		使用 SpringBoot 开发企业，持久层数据访问是前端页面数据展示的基础，SpingBoot支持市面上常见的关系库产品（Oracle、Mysql、SqlServer、BD2等）对应的相关持久层框架，当然除了对于关系库访问的支持，也支持当下众多非关系库（Redis、Solr、MongoDB等）数据访问操作，这里主要介绍SpringBoot集成Mybatis并实现持久层数据基本增删改查操作。
+
+### 1.1. SpringBoot 整合 Mybatis
+
+#### 1.1.1. 环境配置
+
+*   idea创建Maven普通项目
+
+*   pom.xml配置
+
+    ```xml
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.2.2.RELEASE</version>
+    </parent>
+    
+    <dependencies>
+    
+        <!-- web支持，SpringMVC， Servlet支持等 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+    
+        <!-- mybatis 与 springboot 整合 -->
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>2.2.2</version>
+        </dependency>
+    
+        <!-- 分页插件  -->
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
+            <version>1.4.1</version>
+        </dependency>
+    
+        <!--  MySQL 数据库  -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+    
+        <!--  C3P0 数据源  -->
+        <dependency>
+            <groupId>com.mchange</groupId>
+            <artifactId>c3p0</artifactId>
+            <version>0.9.5.5</version>
+        </dependency>
+    
+    </dependencies>
+    
+    <build>
+    
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>2.2.2.RELEASE</version>
+            </plugin>
+        </plugins>
+    
+    </build>
+    </project>
+    ```
+
+*   application.yml整合配置
+
+    ```yml
+    server:
+      port: 8080
+      # 设置项目的访问路径（上下文路径）
+      servlet:
+        context-path: /springboot_mybatis
+    
+    ## 数据源配置
+    spring:
+      datasource:
+        type: com.mchange.v2.c3p0.ComboPooledDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/springboot_mybatis?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8
+        username: root
+        password: 123456
+    
+    ## mybatis 配置
+    mybatis:
+      mapper-locations: classpath:/mappers/*.xml
+      type-aliases-package: com.springboot.po
+      configuration:
+        ## 下划线转驼峰配置
+        map-underscore-to-camel-case: true
+    
+    ## pageHelper
+    pagehelper:
+      helper-dialect: mysql
+    
+    ## 显示 dao 执行sql语句
+    logging:
+      level:
+        com:
+          springboot:
+            dao: debug
+    ```
+    
+
+#### 1.1.2. 源代码添加
+
+*   JavaBean 对象定义
+
+    ```java
+    public class User {
+    
+        private Integer id;
+        private String userName;
+        private String UserPwd;
+        
+        /* get set 方法省略*/
+    
+    }
+    ```
+
+*   Dao 层接口方法定义
+
+    com.springboot.dao 包下创建UserMapper.java 接口声明查询方法
+
+    ```java
+    package com.springboot.dao;
+    
+    import com.springboot.po.User;
+    
+    public interface UserMapper {
+    
+        // 根据用户名查询记录
+        User queryUserByUserName(String UserName);
+    
+    }
+    ```
+
+*   SQL映射文件添加
+
+    resources/mappers 目录下添加 UserMapper.xml 配置
+
+    ```xml
+    <?xml version="1.0" encoding="UTF-8" ?>
+    <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    <mapper namespace="com.springboot.dao.UserMapper">
+        <select id="queryUserByUserName" parameterType="String" resultType="com.springboot.po.User">
+            SELECT
+            id,
+            user_name,
+            user_pwd
+            FROM user
+            WHERE user_name = #{userName}
+        </select>
+    </mapper>
+    ```
+
+*   添加service、controller 对应代码
+
+    UserService.java
+
+    ```java
+    @Service
+    public class UserService {
+    
+        @Resource
+        private UserMapper mapper;
+    
+        public User queryUserByUserName(String userName) {
+            return mapper.queryUserByUserName(userName);
+        }
+    
+    }
+    ```
+
+    UserController.java
+
+    ```java
+    @RestController
+    public class UserController {
+    
+        @Resource
+        UserService userService;
+    
+        @GetMapping("/user/{userName}")
+        public User queryByUserName(@PathVariable String userName) {
+            return userService.queryUserByUserName(userName);
+        }
+    
+    }
+    ```
+
+*   添加应用启动入口
+
+    ```java
+    @SpringBootApplication
+    @MapperScan("com.springboot.dao")
+    public class Starter {
+    
+        public static void main(String[] args) {
+            SpringApplication.run(Starter.class);
+        }
+    
+    }
+    ```
+
+#### 1.1.3. 测试
+
+运行Starter main 方法，启动应用浏览器测试查询
+
+...
+
+
+
+### 1.2. SpringBoot 数据访问操作
+
+​		完成 SpringBoot 与 Mybatis 集成后，接下来以用户表为例实现一套用户模块基本数据维护。
+
+#### 1.2.1. 查询操作
+
+##### 1.2.1.1. 接口方法定义
+
+UserMapper 接口添加查询方法
+
+```java
+// 根据用户ID查询记录
+User queryById(Integer id);
+```
+
+##### 1.2.1.2. 添加xml 映射
+
+```xml
+<select id="queryById" parameterType="Integer" resultType="com.springboot.po.User">
+    SELECT
+    id,
+    user_name,
+    user_pwd
+    FROM user
+    WHERE id = #{id,jdbcType=INTEGER}
+</select>
+```
+
+##### 1.2.1.3. service、controller添加方法
+
+UserService.java
+
+```java
+public User queryById(Integer id) {
+    return mapper.queryById(id);
+}
+```
+
+UserController.java
+
+```java
+@GetMapping("/user/id/{id}")
+public User queryById(@PathVariable Integer id) {
+    return userService.queryById(id);
+}
+```
+
+#### 1.2.2. 添加操作
+
+##### 1.2.2.1. 接口方法定义
+
+```java
+// 添加对象
+int save(User user);
+```
+
+##### 1.2.2.2. 添加xml 映射
+
+```xml
+<insert id="save" parameterType="com.springboot.po.User">
+    insert into user
+    (user_name, user_pwd)
+    values (#{userName}, #{userPwd})
+</insert>
+```
+
+##### 1.2.2.3. 添加 commons-lang3 依赖
+
+如果需要使用StringUtils工具类，需要引入 commons-lang3 依赖。
+
+```xml
+<!--  StringUtils  -->
+<dependency>
+    <groupId>org.apache.commons</groupId>
+    <artifactId>commons-lang3</artifactId>
+</dependency>
+```
+
+##### 1.2.2.4. AssertUtil 工具类
+
+```java
+package com.springboot.utils;
+
+import com.springboot.exceptions.ParamsException;
+
+public class AssertUtil {
+
+    /**
+     * 判断结果是否为true
+     * 如果为true，抛出异常
+     *
+     * @param flag
+     * @param msg
+     */
+    public static void isTrue(Boolean flag, String msg) {
+
+        if (flag) {
+            throw new ParamsException(msg);
+        }
+
+    }
+}
+```
+
+##### 1.2.2.5. ParamsException 自定义异常
+
+```java
+package com.springboot.exceptions;
+
+/**
+ * 自定义参数异常
+ */
+public class ParamsException extends RuntimeException {
+
+    private Integer code = 300;
+    private String msg = "参数异常!";
+
+    public ParamsException() {
+        super("参数异常!");
+    }
+
+    public ParamsException(String msg) {
+        super(msg);
+        this.msg = msg;
+    }
+
+    public ParamsException(Integer code) {
+        super("参数异常!");
+        this.code = code;
+    }
+
+    public ParamsException(Integer code, String msg) {
+        super(msg);
+        this.code = code;
+        this.msg = msg;
+    }
+
+    public Integer getCode() {
+        return code;
+    }
+
+    public void setCode(Integer code) {
+        this.code = code;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+}
+```
+
+##### 1.2.2.6. UserService
+
+```java
+//   添加用户
+public void saveUser(User user) {
+    AssertUtil.isTrue(StringUtils.isBlank(user.getUserName()), "用户名不能为空!");
+    AssertUtil.isTrue(StringUtils.isBlank(user.getUserPwd()), "密码不能为空!");
+
+    // 通过用户名查询用户对象是否存在
+    User real = mapper.queryUserByUserName(user.getUserName());
+    AssertUtil.isTrue(null != real, "该用户已存在!");
+    AssertUtil.isTrue(mapper.save(user) < 1, "添加用户失败!");
+
+}
+```
+
+##### 1.2.2.7. Resultlnfo
+
+```java
+package com.springboot.po.vo;
+
+public class ResultInfo {
+    private Integer code = 200;
+    private String msg = "操作成功";
+    private Object result;
+
+    public Integer getCode() {
+        return code;
+    }
+
+    public void setCode(Integer code) {
+        this.code = code;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
+    public Object getResult() {
+        return result;
+    }
+
+    public void setResult(Object result) {
+        this.result = result;
+    }
+}
+```
+
+##### 1.2.2.8. UserController
+
+```java
+/**
+  *  添加操作
+  * @param user
+  * @return
+  */
+@PutMapping("/user")
+public ResultInfo saveUser(User user) {
+    ResultInfo resultInfo = new ResultInfo();
+
+    try {
+        userService.saveUser(user);
+    } catch (ParamsException e) {
+        resultInfo.setCode(e.getCode());
+        resultInfo.setMsg(e.getMsg());
+        e.printStackTrace();
+    } catch (Exception e) {
+        resultInfo.setCode(300);
+        resultInfo.setMsg("添加失败");
+        e.printStackTrace();
+    }
+
+    return resultInfo;
+}
+```
+
+#### 1.2.3. 修改操作
+
+##### 1.2.3.1. 接口方法定义
+
+```java
+// 修改方法
+int update(User user);
+```
+
+##### 1.2.3.2. 添加xml 映射
+
+```xml
+<update id="update" parameterType="com.springboot.po.User">
+    update
+ 	   user
+    set
+ 	   user_name = #{userName},
+ 	   user_pwd = #{userPwd}
+    where 
+  	  id = #{id}
+</update>
+```
+
+##### 1.2.3.3. UserService
+
+```java
+//   修改用户
+@PostMapping("/update")
+public void updateUser(User user) {
+    AssertUtil.isTrue(StringUtils.isBlank(user.getUserName()), "用户名不能为空!");
+    AssertUtil.isTrue(StringUtils.isBlank(user.getUserPwd()), "密码不能为空!");
+
+    // 通过用户名查询用户对象是否存在
+    User real = mapper.queryUserByUserName(user.getUserName());
+    // 如果用户对象存在，且不是当前修改对象
+    AssertUtil.isTrue(null != real && !(user.getId().equals(real.getId())), "该用户名已经存在!");
+    AssertUtil.isTrue(mapper.update(user) < 1,"修改用户失败!");
+
+}
+```
+
+##### 1.2.3.4. UserController
+
+```java
+/**
+  *  修改操作
+  * @param user
+  * @return
+  */
+@PostMapping("/update")
+public ResultInfo updateUser(User user) {
+    ResultInfo resultInfo = new ResultInfo();
+
+    try {
+        userService.updateUser(user);
+    } catch (ParamsException e) {
+        resultInfo.setCode(e.getCode());
+        resultInfo.setMsg(e.getMsg());
+        e.printStackTrace();
+    } catch (Exception e) {
+        resultInfo.setCode(300);
+        resultInfo.setMsg("修改失败");
+        e.printStackTrace();
+    }
+
+    return resultInfo;
+}
+```
+
+#### 1.2.4. 删除操作
+
+##### 1.2.4.1. 接口方法定义
+
+```java
+// 删除用户
+int delete(Integer id);
+```
+
+##### 1.2.4.2. 添加xml 映射
+
+```xml
+<delete id="delete" parameterType="Integer">
+    delete from
+   		 user
+    where
+  	  id = #{id}
+</delete>
+```
+
+##### 1.2.4.3. UserService
+
+```java
+// 删除用户
+public void deleteUser(Integer id) {
+    AssertUtil.isTrue(null == id || null == mapper.queryById(id), "待删除用户不存在!");
+    AssertUtil.isTrue(mapper.delete(id) < 1, "删除用户失败!");
+
+}
+```
+
+##### 1.2.4.4. UserController
+
+```java
+@DeleteMapping("/user/{id}")
+public ResultInfo deleteUser(@PathVariable Integer id){
+    ResultInfo resultInfo = new ResultInfo();
+
+    try {
+        userService.deleteUser(id);
+    } catch (ParamsException e) {
+        resultInfo.setCode(e.getCode());
+        resultInfo.setMsg(e.getMsg());
+        e.printStackTrace();
+    } catch (Exception e) {
+        resultInfo.setCode(300);
+        resultInfo.setMsg("删除失败");
+        e.printStackTrace();
+    }
+
+    return resultInfo;
+}
+```
+
+#### 1.2.5. 分页条件查询操作
+
+##### 1.2.5.1. UserQuery
+
+```java
+package com.springboot.query;
+
+public class UserQuery {
+
+    private Integer pageNum = 1; // 当前页
+    private Integer pageSize = 10; // 每页显示的数量
+    private String userName;  // 查询条件：用户名
+
+	/* get set 方法省略 */
+}
+```
+
+##### 1.2.5.2. 接口方法定义
+
+```java
+// 通过条件分页查询用户类表
+List<User> selectUserByParams(UserQuery userQuery);
+```
+
+##### 1.2.5.3. 添加 xml 映射
+
+```xml
+<select id="selectUserByParams" parameterType="com.springboot.query.UserQuery" resultType="com.springboot.po.User">
+    select
+    *
+    from
+    user
+    <where>
+        <if test="null != userName and  userName != '' ">
+            and user_name like concat('%',#{userName},'%')
+        </if>
+    </where>
+</select>
+```
+
+##### 1.2.5.4. UserService
+
+```java
+public PageInfo<User> queryUserByParams(UserQuery userQuery) {
+    PageHelper.startPage(userQuery.getPageNum(), userQuery.getPageSize());
+    return new PageInfo<User>(mapper.selectUserByParams(userQuery));
+}
+```
+
+##### 1.2.5.5. UserController
+
+```java
+@GetMapping("/user/list")
+public PageInfo<User> queryUserByParams(UserQuery userQuery) {
+    return userService.queryUserByParams(userQuery);
+}
+```
+
+#### 1.2.6. 使用PostMan测试
+
+​		测试接口
+
+
+
+## 2. API 文档构建工具 - Swagger2
+
+​		由于 Spring Boot 能够快速开发、便携部署等特性，通常在使用 Spring Boot 构建 Restful 接口应用时考虑到多终端的原因，这些终端会共有很多底层业务逻辑，因此我们会抽象出这样一层来同时服务于多个移动端或者Web 前端。对于不同的终端公用一套接口 API 时，对于联调测试的时候就需要知道后端提供的接口 API 列表文档，对于服务端开发人员来说就需要编写接口文档，描述接口的调用地址、参数结果等，这里借助第三方构建工具Swagger2 来实现 API 文档生成功能。
+
+### 2.1. 环境整合配置
+
+*   pom.xml 依赖添加
+
+    ```xml
+    <dependency>
+        <groupId>io.springfox</groupId>
+        <artifactId>springfox-swagger2</artifactId>
+        <version>2.9.2</version>
+    </dependency>
+    <dependency>
+        <groupId>io.springfox</groupId>
+        <artifactId>springfox-swagger-ui</artifactId>
+        <version>2.9.2</version>
+    </dependency>
+    ```
+
+*   配置类添加
+
+    ```java
+    @Configuration
+    @EnableSwagger2
+    public class Swagger2 {
+        public Docket createRestApi() {
+            return new Docket(DocumentationType.SWAGGER_2)
+                .apiInfo(apiInfo())
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("com.springboot.controller"))
+                .paths(PathSelectors.any())
+                .build();
+        }
+    
+        public ApiInfo apiInfo() {
+            return new ApiInfoBuilder()
+                .title("用户管理接口API文档")
+                .version("1.0")
+                .build();
+        }
+    
+    }
+    ```
+
+### 2.2. Swagger2 常用注解
+
+#### 2.2.1. @Api
+
+```java
+@Api：作用在请求的类上，说明该类的作用
+    tags="说明该类的作用"
+```
+
+```java
+@Api(tags="APP用户注册Controller")
+```
+
+#### 2.2.2. @ApiOperation
+
+```java
+@ApiOperation："用在请求的方法上，说明方法的作用"
+    value="说明方法的作用"
+    notes="方法的备注说明"
+```
+
+```java
+@ApiOperation(value="用户注册",notes="手机、密码是必填项，年龄是选填项，但必须是数字")
+```
+
+#### 2.2.3. @ApiImplicitParams
+
+```dart
+@ApiImlicitParams: 用在请求的方法上，包含一组参数说明
+    @ApiImlicitParam: 用在 @ApiImlicitParams 注解中，指定一个请求参数的配置信息
+        name: 参数名
+        value: 参数的汉字说明、解释
+        required: 参数是否必须传
+        paramType: 参数放在哪个地方
+            . header -->  请求参数的获取: @RequestHeader
+			. query --> 请求参数的获取: @RequestParam
+			. path (用于restful) --> 请求参数的获取: @PathVariable
+			. body (不常用)
+            . form (不常用)
+        dataType: 参数类型，默认String，其他值dataType="Integer"
+        defaultvalue: 参数的默认值  
+```
+
+```java
+@ApiImplicitParam(name = "userName", value = "用户名称", required = true, paramType = "path")
+```
+
+#### 2.2.4. @ApiResponses
+
+```java
+@ApiResponses: 用于请求的方法上，表示一组响应
+    @ApiResponse: 用在@ApiReqsponses中，一般用于表达一个错误的响应信息
+        code: 数字，例如400
+        message: 信息，例如"请求参数没填好"
+        response: 抛出异常的类
+```
+
+```java
+ @ApiResponse(code = 404, message = "路径不正确或访问资源未找到")
+```
+
+#### 2.2.5. @ApiModel
+
+```dart
+@ApiModel: 用于响应类上，表示一个返回响应数据的信息
+    (这种一般用在post创建的时候，使用@RequestBody这样的场景，请求参数无法使用@ApiImlicitParam注解进行描述的时候)
+    @ApiModelProperty: 用在属性上，描述响应类的属性
+```
+
+```java
+@ApiModel(description = "用户实体类")
+```
+
+### 2.3. 用户模块注解配置
+
+#### 2.3.1. Controller 使用注解
+
+```java
+@Api(tags = "用户模块 UserController")
+@RestController
+public class UserController {
+
+    @Resource
+    UserService userService;
+
+
+    @ApiOperation(value = "根据用户名查询用户对象", notes = "用户名不能为空")
+    @ApiImplicitParam(name = "userName", value = "用户名称", required = true, paramType = "path")
+    @ApiResponse(code = 404, message = "路径不正确或访问资源未找到")
+    @GetMapping("/user/{userName}")
+    public User queryByUserName(@PathVariable String userName) {
+        return userService.queryUserByUserName(userName);
+    }
+
+    @ApiOperation(value = "根据用户ID查询用户对象")
+    @ApiImplicitParam(name = "id", value = "用户主键ID", required = true, paramType = "path")
+    @GetMapping("/user/id/{id}")
+    public User queryById(@PathVariable Integer id) {
+        return userService.queryById(id);
+    }
+
+
+    /**
+     * 添加操作
+     *
+     * @param user
+     * @return
+     */
+    @ApiOperation(value = "添加用户")
+    @ApiImplicitParam(name = "user", value = "用户实体")
+    @PutMapping("/user")
+    public ResultInfo saveUser(@RequestBody User user) {
+        ResultInfo resultInfo = new ResultInfo();
+
+        try {
+            userService.saveUser(user);
+        } catch (ParamsException e) {
+            resultInfo.setCode(e.getCode());
+            resultInfo.setMsg(e.getMsg());
+            e.printStackTrace();
+        } catch (Exception e) {
+            resultInfo.setCode(300);
+            resultInfo.setMsg("添加失败");
+            e.printStackTrace();
+        }
+
+        return resultInfo;
+    }
+
+
+    /**
+     * 修改操作
+     *
+     * @param user
+     * @return
+     */
+    @ApiOperation(value = "修改用户")
+    @ApiImplicitParam(name = "user", value = "用户实体")
+    @PostMapping("/user")
+    public ResultInfo updateUser(@RequestBody User user) {
+        ResultInfo resultInfo = new ResultInfo();
+
+        try {
+            userService.updateUser(user);
+        } catch (ParamsException e) {
+            resultInfo.setCode(e.getCode());
+            resultInfo.setMsg(e.getMsg());
+            e.printStackTrace();
+        } catch (Exception e) {
+            resultInfo.setCode(300);
+            resultInfo.setMsg("修改失败");
+            e.printStackTrace();
+        }
+
+        return resultInfo;
+    }
+
+    @ApiOperation(value = "删除用户")
+    @ApiImplicitParam(name = "id", value = "用户id")
+    @DeleteMapping("/user/{id}")
+    public ResultInfo deleteUser(@PathVariable Integer id) {
+        ResultInfo resultInfo = new ResultInfo();
+
+        try {
+            userService.deleteUser(id);
+        } catch (ParamsException e) {
+            resultInfo.setCode(e.getCode());
+            resultInfo.setMsg(e.getMsg());
+            e.printStackTrace();
+        } catch (Exception e) {
+            resultInfo.setCode(300);
+            resultInfo.setMsg("删除失败");
+            e.printStackTrace();
+        }
+
+        return resultInfo;
+    }
+
+
+    @ApiOperation(value = "多条件分页查询用户列表")
+    @ApiImplicitParam(name = "userQuery", value = "用户查询对象")
+    @GetMapping("/user/list")
+    public PageInfo<User> queryUserByParams(UserQuery userQuery) {
+        return userService.queryUserByParams(userQuery);
+    }
+
+
+}
+```
+
+#### 2.3.2. JavaBean 使用注解
+
+```java
+@ApiModel(description = "用户实体类")
+public class User {
+
+    @ApiModelProperty(value = "用户ID",example = "0")
+    private Integer id;
+    @ApiModelProperty(value = "用户名")
+    private String userName;
+    @ApiModelProperty(value = "用户密码")
+    private String userPwd;
+    
+}
+```
+
+### 2.4. Swagger2 接口文档访问
+
+启动项目，访问http://localhost:8080/springboot_mybatis/swagger-ui.html#/
+
+
+
+
+
+## 3. SpringBoot 应用热部署
+
+
+
+
+
+## 4. SpringBoot 单元测试
+
+## 5. 分布式缓存 Ehcache 整合
+
+## 6. 定时调度集成 - Quartz
+
+## 7. 全局异常与事务控制
+
+## 8. SpringBoot 数据校验 - Validation
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

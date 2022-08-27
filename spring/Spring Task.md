@@ -1,14 +1,14 @@
 # Spring Task 定时任务
 
-## 1.定时任务概述
+## 1. 定时任务概述
 
 每隔一定时间执行。
 
 如发送邮件。
 
-## 2.XML实现
+## 2. XML实现
 
-### 2.1.引入坐标
+### 2.1. 引入坐标
 
 ```XML
 <dependency>
@@ -25,7 +25,7 @@
 <context:component-scan base-package="com.xxxx.task"/>
 ```
 
-### 2.2.spring.xml配置
+### 2.2. spring.xml配置
 
 命令空间
 
@@ -38,7 +38,7 @@ http://www.springframework.org/schema/task
 http://www.springframework.org/schema/task/spring-task.xsd
 ```
 
-### 2.3.定义类
+### 2.3. 定义类
 
 ```java
 import org.springframework.stereotype.Component;
@@ -63,7 +63,7 @@ public class TestJob {
 }
 ```
 
-### 2.4.xml配置定时任务映射
+### 2.4. xml配置定时任务映射
 
 ```XML
 <!-- 配置定时任务 -->
@@ -75,17 +75,17 @@ public class TestJob {
 </task:scheduled-tasks>
 ```
 
-## 3.注解实现
+## 3. 注解实现
 
 **引入spring框架，并开启自动化扫描。**
 
-### 3.1.开启定时任务驱动
+### 3.1. 开启定时任务驱动
 
 ```XML
 <task:annotation-driven />
 ```
 
-### 3.2.定义类
+### 3.2. 定义类
 
 **@Scheduled**注解用来声明定时任务方法
 
@@ -116,7 +116,7 @@ public class TestJob {
 }
 ```
 
-## 4.Cron表达式
+## 4. Cron表达式
 
 Cron表达式是一个字符串，分为6或7个域，每一个域代表一个含义，Cron有如下两种语法格式：
 
