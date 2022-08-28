@@ -1925,17 +1925,550 @@ public class User {
 
 ## 3. SpringBoot 应用热部署
 
+### 3.1. 什么是热部署？
 
+​		热部署，就是在应用正在运行的时候升级 软件(增加业务/修改bug)，却不需要重新启动应用。
+
+​		在项目开发过程中，常常会改动页面数据或者修改数据结构，为了显示改动效果，往往需要重启应用查看改变的效果，其实就是重新编译生成了新的Class 文件，这个文件记里录着和代码等对应的各种信息，然后Class 文件将被虚拟机的ClassLoader 加载。
+
+​		而热部署正是利用了这个特点，它监听到如果有Class 文件改动了，就会创建一个新的 ClassLoader 进行加载该文件，经过一系列的过程，最终将结果呈现在我们眼前，Spring Boot 通过配置 DevTools 工具来达到热部署效果。
+
+​		在原理上是使用了两个 ClassLoader，一个 ClassLoader 加载那些不会改变的类（第三方 Jar 包），另一个 ClassLoader 加载会改变的类，称为 restart ClassLoader，这样在有代码更改的时候，原来的 restart ClassLoader 被丢弃，重新创建一个 restart ClassLoader，由于需要加载的类相对比较少，所以实现了比较快的重启事件。
+
+### 3.2. 热部署环境配置与测试
+
+#### 4.2.1. 配置 DevTools 环境
+
+*   修改 pom 文件，添加 DevTools 依赖
+
+    ```xml
+    <!--  DevTools  -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-devtools</artifactId>
+        <!--  当前这个项目被继承之后，这个不向下传递 -->
+        <optional>true</optional>
+    </dependency>
+    ```
+
+    同时在plugin 中添加 devtools 生效标志
+
+    ```xml
+    <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <version>2.2.2.RELEASE</version>
+        <configuration>
+            <fork>true</fork>  <!-- 如果没有该配置，热部署的devtools不生效 -->
+        </configuration>
+    </plugin>
+    ```
+
+    ​		devtools 可以实现页面热部署（即页面修改后立即生效，这个可以直接在 application.properties 文件中配置 spring.thymeleaf.cache=false 来实现），实现类文件热部署（类文件修改后不会立即生效），实现对属性文件的热部署。即 devtools 会监听 classpath 下的文件变动，并且会立即重启应用（发生在保存时机），注意：因为其采用的虚拟机机制，该项重启是很快的。配置了后在修改 java 文件后就支持了热启动，不过这种方式是属于项目重启（速度比较快的项目重启），会清空 session 中的值，也就是如果有用户登录的话，项目重启后需要重新登录。
+
+    ​		默认情况下，/META-INF/maven，/META-INF/resources，/resources，/static，/templates，/public这些文件夹下的文件修改不会使应用重启，但是会重新加载 ( devtools 内嵌了一个 LiveReload server，当资源发生改变时，浏览器刷新)
+
+#### 3.2.2. 全局配置文件配置
+
+​		在 application.yml 中配置 spring.devtools.restart.enabled=false，此时 restart 类加载器还会初始化，但不会监听文件更新。
+
+```yml
+spring:
+ ## 热部署配置
+  devtools:
+    restart:
+      enabled: true
+      # 设置重启的目录，添加目录的文件需要restart
+      additional-paths: src/main/java
+      # 解决项目自动重新编译后接口包404的问题
+      poll-interval: 3000
+      quiet-period: 1000
+```
+
+#### 3.2.3. IDEA配置
+
+​		当我们修改了java类后，IDEA 默认是不会自动编译的，而 spring-boot-devtools 又是监听 classpath 下的文件变化才会重新启动应用，所以需要设置 IDEA 的自动编译。
+
+*   自动编译配置
+
+    File -> Settings -> Compiler -> Build Project automatically
+
+    <img src="../spring/img/IDEA自动编译.png">
+
+*   Regisrty s属性修改
+
+    ctrl + shift + alt + / ，选择Registry，勾选 Compiler autoMake allow when app runing
+
+    <img src="./img/Registry.png">
+
+    <img src="./img/compilerauto.png">
+
+#### 3.2.4. 热部署效果测试
+
+*   第一次访问 user/{userName} 接口
+
+    ```java
+    @ApiOperation(value = "根据用户名查询用户对象", notes = "用户名不能为空")
+    @ApiImplicitParam(name = "userName", value = "用户名称", required = true, paramType = "path")
+    @ApiResponse(code = 404, message = "路径不正确或访问资源未找到")
+    @GetMapping("/user/{userName}")
+    public User queryByUserName(@PathVariable String userName) {
+        return userService.queryUserByUserName(userName);
+    }
+    ```
+
+    控制台打印
+
+    <img src="./img/one.png">
+
+*   第二次访问 user/{userName} 接口
+
+    ```java
+    @ApiOperation(value = "根据用户名查询用户对象", notes = "用户名不能为空")
+    @ApiImplicitParam(name = "userName", value = "用户名称", required = true, paramType = "path")
+    @ApiResponse(code = 404, message = "路径不正确或访问资源未找到")
+    @GetMapping("/user/{userName}")
+    public User queryByUserName(@PathVariable String userName) {
+        System.out.println("参数数据  ->  userName: "+ userName);   // 添加改动
+        return userService.queryUserByUserName(userName);
+    }
+    ```
+
+    控制台打印
+
+    <img src="./img/two.png">
 
 
 
 ## 4. SpringBoot 单元测试
 
+### 4.1. pom.xml 测试依赖添加
+
+```xml
+<!-- 单元测试 -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-test</artifactId>
+</dependency>
+```
+
+### 4.2. Service 业务方法测试
+
+这里以 UserService为例，src/test/java 目录下添加测试包 com.spring.service 定义测试类代码如下:
+
+```java
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = {Starter.class})
+public class TestUserService {
+    private Logger log = LoggerFactory.getLogger(TestUserService.class);
+
+    @Autowired
+    private UserService userService;
+
+    @Before
+    public void before() {
+        log.info("单元测试开始...");
+    }
+
+    @Test
+    public void test01() {
+        log.info("用户记录: {}", userService.queryById(1).toString());
+    }
+
+
+    @Test
+    public void test02() {
+        log.info("用户记录: {}", userService.queryUserByParams(new UserQuery()).toString());
+    }
+
+
+    @After
+    public void after() {
+        log.info("单元测试结束...");
+    }
+
+}
+```
+
+<img src="./img/springboot-test01.png">
+
+### 4.3. 控制层接口方法测试
+
+​		视图层代码使用 MockMvc 进行测试，这里以 UserController 为例，src/test/java 目录下添加测试包 com.springboot.controller 定义测试类代码如下:
+
+```java
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = {Starter.class})
+@AutoConfigureMockMvc
+public class TestUserController {
+
+    // 使用日志
+    private Logger log = LoggerFactory.getLogger(TestUserController.class);
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    /**
+     * 用户列表查询
+     */
+    @Test
+    public void apiTest01() throws Exception {
+        // 构建请求
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
+            .get("/user/list")
+            .contentType("text/html")       // 设置请求头信息
+            .accept(MediaType.APPLICATION_JSON);  // 设置请求 Accept 头信息
+
+        // 发送请求
+        ResultActions perform = mockMvc.perform(requestBuilder);
+
+        // 校验请求结果
+        perform.andExpect(MockMvcResultMatchers.status().isOk());
+
+        // 获取执行返回的结果
+        MvcResult mvcResult = perform.andReturn();
+
+        // 得到执行后的响应
+        MockHttpServletResponse response = mvcResult.getResponse();
+        response.setCharacterEncoding("utf-8");
+
+        // 打印结果
+        log.info("用户状态：{}", response.getStatus());
+        log.info("用户信息：{}", response.getContentAsString());
+
+    }
+
+
+    /**
+     * 通过用户名查询用户对象
+     */
+    @Test
+    public void apiTest02() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/user/frank"))
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andReturn();
+
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+        response.setCharacterEncoding("utf-8");
+
+        // 打印结果
+        log.info("用户状态：{}", response.getStatus());
+        log.info("用户信息：{}", response.getContentAsString());
+    }
+
+}
+```
+
+
+
 ## 5. 分布式缓存 Ehcache 整合
+
+​		EhCache 是一个比较成熟的 Java 缓存框架，最早从 Hiberate 发展而来，是进程中的缓存系统，它提供用内存，磁盘文件存储，以及分布式存储方式等多种灵活的 cache 管理方案，快速简单。
+
+​		SpringBoot 对 Ehcahe 的使用提供支持，所以在 Spring Boot 中只需要简单配置即可使用 EhCache 实现数据缓存处理。
+
+### 5.1. Spring Cache 相关注解说明
+
+​		SpringBoot 缓存实现内部使用 SpringCache 实现缓存控制，这里集成 EhCache 实际上是对 SpringCache 抽象的其中一种实现，这里在使用 Ehcache 实现缓存控制时的相关注解说明如下：
+
+#### 5.1.1. @CacheConfig
+
+用于标注在类上，可以存放该类中所有缓存的公有属性，比如设置缓存的名字。
+
+```java
+```
+
+​		配置了该类数据访问对象中返回的内容将存储于名为users的缓存对象中，我们也可以用使用该注解，直接通过@Cacheable自己配置缓存集的名字来定义。
+
+#### 5.1.2. @Cacheable
+
+​		应用到读取数据的方法上，即可缓存的方法，如查找方法，先从缓存中读取，如果没有在调用相应的方法获取数据，然后把数据添加到缓存中。
+
+该注解主要有下面几个参数：
+
+*   **value、cacheNames：**两个等同的参数（cacheNames 为 Spring4 新增，作为 value 的别名），用于指定缓存存储的集合名。由于 Spring 4 中新增了 @CacheConfig，因此在 Spring 3 中原本必须有的 value 属性，也成为非必须项了。
+*   **key：**缓存对象存储在Map集合中的 key 值，非必需，缺省按照函数的所有参数组合作为 key 值，若自己配置需要使用 SpEL 表达式，比如：@Cacheable(key = "#p0")：使用函数第一个参数作为缓存的 key 值，更多关于SpEL 表达式的详细内容可参照官方文档。
+*   **condition：**缓存对象的条件，非必须，也需要使用SpEL表达式，只有满足表达式条件的内容才会被缓存，比如：@Cacheable(key = "#p0"，condition = "#p0.length() < 3")，表示只有当第一个参数的长度小于3的时候才会被缓存。
+*   **unless：**另外一个缓存条件参数，非必需，需要使用 SpEL 表达式。它不同于 condition 参数的地方在于它的判断时机，该条件是函数被调用之后才会做判断的，所以它可以通过对 result 进行判断。
+*   **keyGenerator：**用于指定 key 生成器，非必须。若需要指定一个自定义的 key 生成器，我们需要去实现org.springframework.cache.interceptor.KeyGenerator 接口，并使用参数来指定。需要注意的是：该参数与 key 是互斥的。
+*   **cacheManager：**用于指定使用那个缓存管理器，非必需。只有当有多个时需要使用
+*   **cacheResolver：**用于指定使用那个缓存解析器，非必需。需通过org.springframework.cache.interceptor.CacheResolver 接口来实现自己的缓存解析器，并用该参数指定。
+
+```java
+
+```
+
+#### 5.1.3. @CachePut
+
+应用到写数据的方法上，如新增/修改方法，调用方法时会自动把相应的数据放入缓存，@CachePut 的参数与@Cacheable 类似，示例如下：
+
+```java
+
+```
+
+#### 5.1.4. @CacheEvict
+
+应用到移除数据的方法上，如删除方法，调用方法会从缓存中移除相应的数据，示例如下：
+
+```java
+```
+
+除了同 @Cacheable 一样的参数之外，@CacheEvict 还有下面两个参数：
+
+*   **allEntries：**非必需，默认为 false 。当为true 时，会移除所有数据
+*   **beforeInvocation：**非必需，默认为 false ，会在调用方法之后移除数据，当为 true 时，会在调用方法之前移除数据。
+
+#### 5.1.5. @Caching
+
+组合多个 Cache 注解使用。示例：
+
+```java
+@Caching(
+	put = {
+    @CachePut(value = "user", key = "#user.id"),
+	}
+)
+```
+
+将 id ---> user；username ---> user；age --->user 进行缓存。
+
+
+
+### 5.2. 环境配置
+
+#### 5.2.1. pom.xml 依赖添加
+
+```xml
+<!--  Ehcache  -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-cache</artifactId>
+</dependency>
+<dependency>
+    <groupId>net.sf.ehcache</groupId>
+    <artifactId>ehcache</artifactId>
+</dependency>
+```
+
+#### 5.2.2. ehcache.xml 文件添加
+
+src/main/resources 目录下添加 ehcache.xml 为文件，内容如下：
+
+```xml
+<ehcache name="mycache">
+
+    <!--  磁盘路径  -->
+    <diskStore path="C:\java\cache"/>
+
+    <defaultCache
+                  maxElementsInMemory="10000"
+                  eternal="false"
+                  timeToIdleSeconds="120"
+                  timeToLiveSeconds="120"
+                  maxElementsOnDisk="10000000"
+                  diskExpiryThreadIntervalSeconds="120"
+                  memoryStoreEvictionPolicy="LRU">
+    </defaultCache>
+
+    <cache
+           name="users"
+           maxElementsInMemory="100"
+           eternal="false"
+           overflowToDisk="false"
+           diskPersistent="false"
+           timeToIdleSeconds="0"
+           timeToLiveSeconds="300"
+           memoryStoreEvictionPolicy="LRU">
+
+    </cache>
+</ehcache>
+```
+
+#### 5.2.3. application.yml 缓存配置
+
+```yml
+spring:
+## 缓存配置
+  cache:
+    cache:
+      config: classpath:ehcache.xml
+```
+
+#### 5.2.4. 启动缓存
+
+在 Starter 启动入口类中，添加 @EnableCaching 注解，启动缓存
+
+```java
+@SpringBootApplication
+@EnableCaching
+@MapperScan("com.springboot.dao")
+public class Starter {
+
+    public static void main(String[] args) {
+        SpringApplication.run(Starter.class);
+    }
+
+}
+```
+
+#### 5.2.5. JavaBean 对象实现序列化接口
+
+```java
+@ApiModel(description = "用户实体类")
+public class User implements Serializable {
+
+    @ApiModelProperty(value = "用户ID",example = "0")
+    private Integer id;
+    @ApiModelProperty(value = "用户名")
+    private String userName;
+    @ApiModelProperty(value = "用户密码")
+    private String userPwd;
+    
+    
+}
+```
+
+### 5.3 缓存实现
+
+这里以 UserService 方法为例
+
+#### 5.3.1. 用户详情查询缓存添加
+
+```java
+@Cacheable(value = "users",key = "#userName")
+public User queryUserByUserName(String userName) {
+    return mapper.queryUserByUserName(userName);
+}
+```
+
+#### 5.3.2. 用户列表查询缓存
+
+```java
+@Cacheable(value = "users", key = "#userQuery.userName+'-'+#userQuery.pageNum+'-'+#userQuery.pageSize")
+public PageInfo<User> queryUserByParams(UserQuery userQuery) {
+    PageHelper.startPage(userQuery.getPageNum(), userQuery.getPageSize());
+    return new PageInfo<User>(mapper.selectUserByParams(userQuery));
+}
+```
+
+#### 5.3.3. 用户更新 & 删除缓存
+
+```java
+//   修改用户
+@CacheEvict(value = "users", key = "#user.id")
+public User updateUser(User user) {
+    AssertUtil.isTrue(StringUtils.isBlank(user.getUserName()), "用户名不能为空!");
+    AssertUtil.isTrue(StringUtils.isBlank(user.getUserPwd()), "密码不能为空!");
+
+    // 通过用户名查询用户对象是否存在
+    User real = mapper.queryUserByUserName(user.getUserName());
+    // 如果用户对象存在，且不是当前修改对象
+    AssertUtil.isTrue(null != real && !(user.getId().equals(real.getId())), "该用户名已经存在!");
+    AssertUtil.isTrue(mapper.update(user) < 1, "修改用户失败!");
+
+    return user;
+}
+
+// 删除用户
+@CacheEvict(value = "users", key = "#user.id")
+public void deleteUser(Integer id) {
+    AssertUtil.isTrue(null == id || null == mapper.queryById(id), "待删除用户不存在!");
+    AssertUtil.isTrue(mapper.delete(id) < 1, "删除用户失败!");
+}
+
+```
+
+
 
 ## 6. 定时调度集成 - Quartz
 
+​		在日常项目运行中，我们总会有需求在某一时间段周期性的执行某个动作。比如每天在某个时间段导出报表，或者每个多久统计一次现在在线的用户量等。
+
+​		在 Spring Boot 中有 java 自带的 java.util.Timer 类，也有强大的调度器 Quartz，还有 SpringBoot 自带的Scheduled 来实现。Scheduled 在 Spring3.x 引入，默认 SpringBoot 自带该功能，使用起来也很简单，在启动类级别添加 @EnableScheduling 注解即可引入定时任务环境。但遗憾的是 Scheduled 默认不支持分布式环境，这里主要讲解 Quartz 时钟调度框架与 Spring Boot 集成。
+
+### 6.1. 环境整合配置
+
+```xml
+<!-- Quartz -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-quartz</artifactId>
+</dependency>
+```
+
+### 6.2. 源代码添加
+
+#### 6.2.1. 定义 job
+
+com.springboot 下添加` jobs` 包，定义待执行 job 任务。实现` Job` 接口，并且在`execute`方法中实现自己的业务逻辑。
+
+```java
+
+public class MyFirstJob implements Job {
+
+    private Logger log = LoggerFactory.getLogger(MyFirstJob.class);
+
+    @Override
+    public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        TriggerKey triggerKey = jobExecutionContext.getTrigger().getKey();
+        log.info("触发器："+triggerKey.getName()+", 所数组："+triggerKey.getGroup()+" ---- "+sdf.format(new Date()) + "->" +"Hello Spring Boot Quartz...");
+    }
+}
+```
+
+#### 6.2.2. 构建调度配置类
+
+创建`JobDetail`实例并定义`Trigger`注册到`scheduler`，启动`scheduler`开启调度。
+
+```java
+package com.springboot.conf;
+
+@Configuration
+public class QuartzConfig {
+
+    @Bean
+    public JobDetail jobDetail() {
+        return JobBuilder.newJob(MyFirstJob.class).storeDurably().build();
+    }
+
+    @Bean
+    public Trigger trigger01() {
+        SimpleScheduleBuilder simpleScheduleBuilder = SimpleScheduleBuilder.simpleSchedule()
+            // 每一秒执行一次
+            .withIntervalInSeconds(1)
+            // 永久重复，一直执行下去
+            .repeatForever();
+
+        return TriggerBuilder.newTrigger()
+            .withIdentity("trigger01", "group1")
+            .withSchedule(simpleScheduleBuilder)
+            .forJob(jobDetail())
+            .build();
+    }
+
+    @Bean
+    // 每5秒执行一次
+    public Trigger trigger02() {
+
+        return TriggerBuilder.newTrigger()
+            .withIdentity("trigger02", "group1")
+            .withSchedule(CronScheduleBuilder.cronSchedule("0/5 * * * * ? *"))
+            .forJob(jobDetail())
+            .build();
+    }
+
+}
+```
+
+
+
 ## 7. 全局异常与事务控制
+
+### 7.1. Spring Boot 事务支持
+
+​		在使用 JDBC 作为数据库访问技术时，Spring Boot 框架定义了基于 jdbc 的 PlatformTranssactionManager 接口实现 DataSourceTransactionManager，并在 Spring Boot应用启动时自动进行配置。如果使用 jpa 的话
 
 ## 8. SpringBoot 数据校验 - Validation
 
