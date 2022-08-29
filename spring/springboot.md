@@ -2468,17 +2468,264 @@ public class QuartzConfig {
 
 ### 7.1. Spring Boot 事务支持
 
-​		在使用 JDBC 作为数据库访问技术时，Spring Boot 框架定义了基于 jdbc 的 PlatformTranssactionManager 接口实现 DataSourceTransactionManager，并在 Spring Boot应用启动时自动进行配置。如果使用 jpa 的话
+​		在使用 JDBC 作为数据库访问技术时，Spring Boot 框架定义了基于 jdbc 的 PlatformTranssactionManager 接口实现 DataSourceTransactionManager，并在 Spring Boot应用启动时自动进行配置。如果使用 jpa 的话Spring Boot 同样提供了对应的实现。
+
+|  数据访问  |             实现             |
+| :--------: | :--------------------------: |
+|    JDBC    | DataSourceTransactionManager |
+|    JPA     |    JpaTransactionManager     |
+| Hibernate  | HibernateTransactionManager  |
+|    JDO     |    JdoTransactionManager     |
+| 分布式事务 |    JtaTransactionManager     |
+
+​		这里 Spring Boot 集成了 Mybatis 框架，mybatis 底层数据访问层实现基于 jdbc 来实现，所以在 Spring Boot 环境下对事务进行控制，事务实现由 Spring Boot 实现并自动配置，在使用 时通过注解方式标注相关方法加如事务控制即可。
+
+*   声明式事务配置
+
+```java
+//   修改用户
+@CachePut(value = "users", key = "#user.id")
+@Transactional(propagation = Propagation.REQUIRED)
+public User updateUser(User user) {
+    AssertUtil.isTrue(StringUtils.isBlank(user.getUserName()), "用户名不能为空!");
+    AssertUtil.isTrue(StringUtils.isBlank(user.getUserPwd()), "密码不能为空!");
+
+    // 通过用户名查询用户对象是否存在
+    User real = mapper.queryUserByUserName(user.getUserName());
+    // 如果用户对象存在，且不是当前修改对象
+    AssertUtil.isTrue(null != real && !(user.getId().equals(real.getId())), "该用户名已经存在!");
+    AssertUtil.isTrue(mapper.update(user) < 1, "修改用户失败!");
+
+
+    // TODO 出现异常
+    int i = 1 / 0;
+
+    return user;
+}
+```
+
+### 7.2. Spring Boot 全局异常处理
+
+​		SpringMvc 中对异常统一处理提供了相关处理方式，推荐大家使用的时实现接口 HandlerExceptionResolver 的方式，对代码入侵性较小。
+
+​		在SpringBoot应用中同样提供了对应的全局性处理，相关注解如下：
+
+#### 7.2.1. @ControllerAdvice
+
+​		该注解组合了 @Component 注解功能，最常用的就是作为全局异常处理的切面类，同样通过该注解可以指定包的扫描的范围。@ControllerAdivce 约定了几种可行的放回值，如果直接返回 model 类的话，需要使用 @ResponseBody 进行 json 转换。
+
+#### 7.2.2. @ExceptionHandler
+
+​		该注解在 Spring 3.X 版本引入，在处理异常时标注在方法级别，代表当前方法处理的异常类型有那些具体用于 Restful 接口为例，测试保存用户接口。
+
+#### 7.2.3. 全局异常应用
+
+##### 7.2.3.1. 异常抛出与全局捕获
+
+*   UserController 查询接口
+
+```java
+@ApiOperation(value = "根据用户ID查询用户对象")
+@ApiImplicitParam(name = "id", value = "用户主键ID", required = true, paramType = "path")
+@GetMapping("/user/id/{id}")
+public User queryById(@PathVariable Integer id) {
+    return userService.queryById(id);
+}
+```
+
+*   UserService 查询业务方法，抛出 ParamsException 异常
+
+```java
+@Cacheable(value = "users", key = "#id")
+public User queryById(Integer id) {
+
+    // 抛出自定义异常
+    AssertUtil.isTrue(true,"异常测试...");
+
+    return mapper.queryById(id);
+}
+```
+
+*   全局异常处理类
+
+```java
+@ControllerAdvice
+public class GlobalExceptionHandler {
+    /**
+     * 全局异常处理，返回JSON
+     */
+    @ExceptionHandler(value = Exception.class)
+    @ResponseBody
+    public ResultInfo exceptionHandler(Exception e) {
+        ResultInfo resultInfo = new ResultInfo();
+
+        resultInfo.setCode(300);
+        resultInfo.setMsg("操作异常!");
+
+        //        // 判断异常类型
+        //        if (e instanceof ParamsException) {
+        //            ParamsException p = (ParamsException) e;
+        //            resultInfo.setCode(p.getCode());
+        //            resultInfo.setMsg(p.getMsg());
+        //        }
+
+        return resultInfo;
+    }
+
+
+    /**
+     * 参数异常处理，返回JSON
+     */
+    @ExceptionHandler(value = ParamsException.class)
+    @ResponseBody
+    public ResultInfo ParamsExceptionHandler(ParamsException p) {
+        ResultInfo resultInfo = new ResultInfo();
+        resultInfo.setCode(p.getCode());
+        resultInfo.setMsg(p.getMsg());
+
+        return resultInfo;
+    }
+}
+```
+
+##### 7.2.3.2. 特定异常处理
+
+*   通过 @ExceptionHandler 标注方法处理特定异常，这里以用户未登录异常为例，通过全局异常进行统一处理
+
+```java
+/**
+  * 用户未登录异常处理，返回JSON
+  */
+@ExceptionHandler(value = NoLoginException.class)
+@ResponseBody
+public ResultInfo noLoginExceptionHandler(NoLoginException e) {
+    System.out.println("用户未登录异常处理...");
+    ResultInfo resultInfo = new ResultInfo();
+    resultInfo.setCode(e.getCode());
+    resultInfo.setMsg(e.getMsg());
+
+    return resultInfo;
+}
+```
+
+*   在用户修改接口中抛出未登录为例进行测试
+
+```java
+@ApiOperation(value = "添加用户")
+@ApiImplicitParam(name = "user", value = "用户实体")
+@PutMapping("/user")
+public ResultInfo saveUser(@RequestBody User user) {
+
+    // ###########################
+    // 抛出异常
+    if (1 == 1) {
+        throw new NoLoginException();
+    }
+    // ###########################
+
+    ResultInfo resultInfo = new ResultInfo();
+    userService.saveUser(user);
+
+    return resultInfo;
+}
+```
+
+
 
 ## 8. SpringBoot 数据校验 - Validation
 
+​		日常项目开发中，对于签单提交的表单，后台 接口接受到表单数据后，为了程序的严谨性，通常后端会加入业务参数的合法校验操作来避免程序的非技术性 bug ，这里对于客户端提交的数据校验，Spring Boot通过 spring-boot-starter-validation 模块包含了数据校验的工作。
 
+​		这里主要介绍 Spring Boot 中对请求数据进行校验，相关概念如下：
 
+*   JSR303：JSR303 是一项标准，只提供规范不提供实现，规定一些校验规范即校验注解，如 @Null，@NotNull，@Pattern，位于 javax.validation.constaints 包下。JSR-349 是其升级版本，添加了一些新特性。
+*   Hibernate Validation ：Hibernate Validation 是对这个规法的实现，并增加了一些其他校验注解，如@Email，@Length，@Range 等等。
+*   Spring Validation：Spring Validation 对 Hibernate Validation 进行了二次封装，在 Spring MVC 模块中添加了自动校验，并将校验信息封装进了特殊的类中。
 
+### 8.1. 环境配置
 
+​		实现参数校验，程序必须引入 spring-boot-starter-validation 依赖，只是在引入 spring-boot-starter-web 依赖时，该模块会自定依赖 spring-boot-starter-validation ，所以程序中引入 spring-boot-starter-web 会一并依赖 spring-boot-starter-validation 到项目中。
 
+<img src="./img/validation.png">
 
+### 8.2. 校验相关注解
 
+| 注解         | 功能                                                         |
+| ------------ | ------------------------------------------------------------ |
+| @AssertFalse | 可以为null，如果不为null的话必须为false                      |
+| @AssertTrue  | 可以为null，如果不为null的话必须为true                       |
+| @DecimalMax  | 设置不能超过最大值                                           |
+| @DecimalMin  | 设置不能超过最小值                                           |
+| @Digits      | 设置必须是数字且数字整数和小数的位数必须在指定范围内         |
+| @Future      | 日期必须在当日期的未来                                       |
+| @Past        | 日期必须在当日期的过去                                       |
+| @Max         | 最大不得超过此最大值                                         |
+| @Min         | 最小不得小于此最小值                                         |
+| @NotNull     | 不能为null，可以是空                                         |
+| @Pattern     | 必须满足指定的正则表达式                                     |
+| @Size        | 集合、数组、map等size()值必须在指定范围内                    |
+| @Email       | 必须是email格式                                              |
+| @Length      | 长度必须在指定范围内                                         |
+| @NotBlank    | 字符串不能为null，字符串trin() 后不等于""                    |
+| @NotEmpty    | 不能为null，集合、数组、map等size()值不能为0；字符串 trin() 后不等于"" |
+| @Range       | 值必须在指定范围内                                           |
+| @URL         | 必须是一个URL                                                |
+
+### 8.3. 校验注解使用
+
+*   User 实体类参数校验注解
+
+```java
+@ApiModel(description = "用户实体类")
+public class User implements Serializable {
+
+    private Integer id;
+    
+    @NotBlank(message = "用户名不能为空！")
+    private String userName;
+    
+    @NotBlank(message = "用户密码不能为空！")
+    @Length(min = 4,max = 10,message = "密码长度至少6位但不能超过10位！")
+    private String userPwd;
+    
+    /* get set 省略 */
+    
+}
+```
+
+*   接口方法形参 @Valid 注解添加
+
+```java
+@PutMapping("/user")
+public ResultInfo saveUser02(@Valid @RequestBody User user) {
+
+    ResultInfo resultInfo = new ResultInfo();
+    userService.saveUser(user);
+
+    return resultInfo;
+}
+```
+
+*   全局异常错误信息捕捉
+
+```java
+/**
+  * 用户未登录异常处理
+  */
+@ExceptionHandler(value = BindException.class)
+@ResponseBody
+public ResultInfo bindExceptionHandler(BindException e) {
+    ResultInfo resultInfo = new ResultInfo();
+    resultInfo.setCode(500);
+    resultInfo.setMsg(e.getBindingResult().getFieldError().getDefaultMessage());
+
+    return resultInfo;
+}
+```
+
+*   postman测试
+
+<img src="./img/test-postman.png">
 
 
 
