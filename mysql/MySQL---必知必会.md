@@ -1,22 +1,22 @@
 # MySQL---必知必会
 
-## 1.sql
+## 1. sql
 
 SQL(Structred Query Language)的缩写，是结构化查询语言。SQL是一种专门用来与数据库通信的语言。
 
-## 2.MySQL
+## 2. MySQL
 
 MySQL是一个客户机—服务器（CS）DBMS。
 
-## 3.使用MySQL
+## 3. 使用MySQL
 
-### 3.1.登录MySQL
+### 3.1. 登录MySQL
 
 ~~~ shell
 mysql -u root -p
 ~~~
 
-### 3.2.选择一个数据库
+### 3.2. 选择一个数据库
 
 ~~~ SQL
 use crashcourse;
@@ -26,19 +26,19 @@ use crashcourse;
 Database changed  # 显示此消息表示数据库选择成功
 ~~~
 
-### 3.3.显示所有库
+### 3.3. 显示所有库
 
 ``` SQL
 show databases;
 ```
 
-### 3.4.显示一个库内的所有表
+### 3.4. 显示一个库内的所有表
 
 ~~~ SQL
 show tables;
 ~~~
 
-### 3.5.显示表的所有字段信息
+### 3.5. 显示表的所有字段信息
 
 ~~~ SQL
 show columns from student;
@@ -46,7 +46,7 @@ show columns from student;
 desc student;
 ~~~
 
-### 3.6.显示创建库和表时的MySQL语句
+### 3.6. 显示创建库和表时的MySQL语句
 
 ~~~ SQL
 show create database;
@@ -54,13 +54,13 @@ show create database;
 show create table;
 ~~~
 
-### 3.7.显示授予用户的安全权限
+### 3.7. 显示授予用户的安全权限
 
 ~~~ SQL
 show grants;
 ~~~
 
-### 3.8.显示服务器错误或警告信息
+### 3.8. 显示服务器错误或警告信息
 
 ~~~ SQL
 show errors;
@@ -68,69 +68,69 @@ show errors;
 show warnings;
 ~~~
 
-## 4.检索数据
+## 4. 检索数据
 
-### 4.1.检索一张表的某一列
+### 4.1. 检索一张表的某一列
 
 ~~~ SQL
 select name from student;
 ~~~
 
-### 4.2.检索多个列
+### 4.2. 检索多个列
 
 ~~~ SQL
 select id,name,sex,grade from student;
 ~~~
 
-### 4.3.检索所有列
+### 4.3. 检索所有列
 
 ~~~ SQL
 select * from student;
 ~~~
 
-### 4.4.检索某列的唯一字段值
+### 4.4. 检索某列的唯一字段值
 
 ~~~ SQL
 select  distinct name from student;
 ~~~
 
-### 4.5.限制检索行数
+### 4.5. 限制检索行数
 
 ~~~ SQL
 select name from student
 limit 5;    # 显示不超过5行
 ~~~
 
-### 4.6.完全限定表名
+### 4.6. 完全限定表名
 
 ~~~ SQL
 select student.name from scholl.student;
 ~~~
 
-## 5.排序数据
+## 5. 排序数据
 
-### 5.1.按某一列正序（上小下大）
+### 5.1. 按某一列正序（上小下大）
 
 ~~~ SQL
 select name from student
 order by name; # 字符串类型按字母顺序排序
 ~~~
 
-### 5.2.按多个列排序
+### 5.2. 按多个列排序
 
 ~~~ SQL
 select grade,name from student
 order by grade,name; # 先按成绩排序，在对具有相同成绩的学生姓名按字母顺序排序
 ~~~
 
-### 5.3.指定排序方向
+### 5.3. 指定排序方向
 
 ~~~SQL
 select * from student
 order by grade DESC;  # 按成绩由大到小，从上到下排序
 ~~~
 
-### 5.4.检索某一行的最大（排序最前）值
+### 5.4. 检索某一行的最大（排序最前）值
 
 ~~~ SQL
 select grade from student
@@ -138,16 +138,16 @@ order by grade
 limit 1;
 ~~~
 
-## 6.过滤数据
+## 6. 过滤数据
 
-### 6.1.where子句
+### 6.1. where子句
 
 ~~~ SQL
 select * from student
 where name = "frank"; # 查询名为frank的所有行数据
 ~~~
 
-### 6.2.where子句操作符
+### 6.2. where子句操作符
 
 |         操作符         |        说明        |
 | :--------------------: | :----------------: |
@@ -160,44 +160,44 @@ where name = "frank"; # 查询名为frank的所有行数据
 |           >=           |      大于等于      |
 | between    A   and   B | A到B之间(包含A，B) |
 
-### 6.3.空值检查
+### 6.3. 空值检查
 
 ~~~ SQL
 select * from student
 where name is null;  # 检索姓名为null值的所有学生
 ~~~
 
-### 6.4.过滤某一字段的空值
+### 6.4. 过滤某一字段的空值
 
 ~~~ SQL
 select * from student
 where name is not null; 
 ~~~
 
-## 7.数据过滤
+## 7. 数据过滤
 
-### 7.1.and操作符
+### 7.1. and操作符
 
 ~~~ SQL
 select * from student
 where grade >= 60 and sex = '女';  #  检索成绩大于等于60，同时性别为女的学生
 ~~~
 
-### 7.2.or操作符
+### 7.2. or操作符
 
 ``` SQL
 select name from student
 where grade = 80 or grade = 60 ;  # 检索成绩等于80或60的学生姓名
 ```
 
-### 7.3.分组操作符
+### 7.3. 分组操作符
 
 ``` SQL
 select name from student
 where (grade = 80 or grade = 60) and sex = '女';  # 检索成绩等于80或60，并且性别为女的学生姓名
 ```
 
-### 7.4.in操作符
+### 7.4. in操作符
 
 IN操作符用来指定条件范 围，范围中的每个条件都可以进行匹配。
 
@@ -206,7 +206,7 @@ select grade from student
 where name in ("frnak","alan");   # 检索姓名为frank或alan的成绩 
 ~~~
 
-### 7.5.not操作符
+### 7.5. not操作符
 
 not操作符用来否定她之后的条件
 
@@ -215,11 +215,11 @@ select * from student
 where id not in (1,2); # 检索学号不为1，2的学生信息
 ```
 
-## 8.用通配符进行过滤
+## 8. 用通配符进行过滤
 
-### 8.1.like操作符
+### 8.1. like操作符
 
-#### 8.1.1.% 通配符
+#### 8.1.1. % 通配符
 
 ​	%表示任何字符出现任意次数。（0个，1个，多个）
 
@@ -238,7 +238,7 @@ select name from student
 where name like "s%k";  # 按两端字符检索，中间任意字符，任意长度
 ```
 
-#### 8.1.2.下划线   _  通配符
+#### 8.1.2. 下划线   _  通配符
 
 ​		_ 表示单个任意字符。
 
@@ -247,29 +247,29 @@ select name from student
 where name like "张_";   # 检索张姓，并且两个字组成的人名 
 ```
 
-## 9.正则表达式
+## 9. 正则表达式
 
-### 9.1.定义
+### 9.1. 定义
 
 ​	正则表达式是用来匹配文本 的特殊的串（字符集合）。
 
-### 9.2.MySQL正则表达式
+### 9.2. MySQL正则表达式
 
-#### 9.2.1.基本字符
+#### 9.2.1. 基本字符
 
 ```SQL
 select name from student
 where name regexp '伟'; # 检索名字里有‘伟’字的人名
 ```
 
-#### 9.2.2.进行or匹配
+#### 9.2.2. 进行or匹配
 
 ```SQL
 select name from student
 where name regexp '伟|一|佳' ;  # 检索名字里有‘伟’或者‘一’或者‘佳’字的人名
 ```
 
-#### 9.2.3.匹配几个字符之一
+#### 9.2.3. 匹配几个字符之一
 
 ```SQL
 select grade from sc
@@ -281,13 +281,13 @@ select grade from sc
 where grade regexp '[^89]'; # 成绩里面没有8或9的数据
 ```
 
-#### 9.2.4.配备范围
+#### 9.2.4. 配备范围
 
 ```SQL
 [1-9] [6-9] [a-z]
 ```
 
-#### 9.2.5.匹配特殊字符
+#### 9.2.5. 匹配特殊字符
 
 ​	为了匹配特殊字符，必须用\\\为前导。\\\\\-表示查找-， \\\\.表示查找 . 。
 
@@ -313,7 +313,7 @@ where grade regexp '[^89]'; # 成绩里面没有8或9的数据
  where pwd regexp "[:alpha:]";  # 检索密码为任意字符组成
 ```
 
-#### 9.2.7.匹配多个实例
+#### 9.2.7. 匹配多个实例
 
 | 元字符 |             说明             |
 | :----: | :--------------------------: |
@@ -329,7 +329,7 @@ select pwd from user
 where pwd regexp "[[:digit:]]{4}";  # 四个连起来的任意字符
 ```
 
-#### 9.2.8.定位符
+#### 9.2.8. 定位符
 
 | 元字符  |    说明    |
 | :-----: | :--------: |
@@ -338,9 +338,9 @@ where pwd regexp "[[:digit:]]{4}";  # 四个连起来的任意字符
 | [[:<:]] |  词的开始  |
 | [[:<:]] |  词的结尾  |
 
-## 10.创建计算字段
+## 10. 创建计算字段
 
-### 10.2.拼接字段
+### 10.2. 拼接字段
 
 ​	在MySQL的SELECT语句中，可使用 Concat()函数来拼接两个列。
 
@@ -354,7 +354,7 @@ select Concat(name,"(",pwd,")") from user;
 select Concat(name,"(",pwd,")") as name_pwd from user;
 ```
 
-### 10.3.算数计算
+### 10.3. 算数计算
 
 | 操作符 | 说明 |
 | :----: | :--: |
@@ -367,17 +367,17 @@ select Concat(name,"(",pwd,")") as name_pwd from user;
 select duration/60*money as salarys from salary  where dated like "2021-11%";  # 查询11月的日薪
 ```
 
-## 11.数据处理函数
+## 11. 数据处理函数
 
-### 11.1.文本处理函数
+### 11.1. 文本处理函数
 
-#### 11.1.1.Upper()将文本转换为大写
+#### 11.1.1. Upper()将文本转换为大写
 
 ```SQL
 select Upper(name) from user; # 将所有字母姓名转换为大写
 ```
 
-#### 11.1.2.一些函数
+#### 11.1.2. 一些函数
 
 |    函数     |       说明        |
 | :---------: | :---------------: |
@@ -398,9 +398,9 @@ select left(name,1) from user; # 返回左边第一个字符
 
 ​	SOUNDEX是一个将任何文 本串转换为描述其语音表示的字母数字模式的算法。SOUNDEX考虑了类似 的发音字符和音节，使得能对串进行发音比较而不是字母比较。
 
-### 11.2.日期和时间处理函数
+### 11.2. 日期和时间处理函数
 
-#### 11.2.1.常用日期和时间处理函数
+#### 11.2.1. 常用日期和时间处理函数
 
 |     函数      |              说明              |
 | :-----------: | :----------------------------: |
@@ -422,7 +422,7 @@ select left(name,1) from user; # 返回左边第一个字符
 |    Time()     |   返回一个日期时间的时间部分   |
 |    Year()     |     返回一个日期的年份部分     |
 
-### 11.3.数值处理函数
+### 11.3. 数值处理函数
 
 |  函数  |        说明        |
 | :----: | :----------------: |
@@ -436,9 +436,9 @@ select left(name,1) from user; # 返回左边第一个字符
 | Sqrt() | 返回一个数的平方根 |
 | Tan()  | 返回一个角度的正切 |
 
-## 12.汇聚数据
+## 12. 汇聚数据
 
-### 12.1.聚合函数
+### 12.1. 聚合函数
 
 |  函数   |       说明       |
 | :-----: | :--------------: |
@@ -448,13 +448,13 @@ select left(name,1) from user; # 返回左边第一个字符
 |  MIN()  | 返回某列的最小值 |
 |  SUM()  |  返回某列值之和  |
 
-#### 12.1.1.AVG()函数
+#### 12.1.1. AVG()函数
 
 ```SQL
 select avg(duration) from salary;
 ```
 
-#### 12.1.2.count()函数
+#### 12.1.2. count()函数
 
 COUNT()函数有两种使用方式。
 
@@ -462,7 +462,7 @@ COUNT()函数有两种使用方式。
 
 ​	2.使用COUNT(column)对特定列中具有值的行进行计数，忽略 NULL值。
 
-#### 12.2. distinct 的使用
+### 12.2. distinct 的使用
 
 ​	对所有的行执行计算，指定ALL参数或不给参数（因为ALL是默认 行为）.
 
@@ -473,9 +473,9 @@ select avg(distinct prod_price) as avg_price from products
 where vend_id= 1003;
 ```
 
-## 13.分组数据
+## 13. 分组数据
 
-### 13.1.创建分组
+### 13.1. 创建分组
 
 ​	分组是在SELECT语句的GROUP BY子句中建立的。
 
@@ -491,7 +491,7 @@ where vend_id= 1003;
 
 ​		 5. GROUP BY子句必须出现在WHERE子句之后，ORDER BY子句之前。
 
-### 13.2.过滤分组（HAVING）
+### 13.2. 过滤分组（HAVING）
 
 ```SQL
 select id,count(*) as num from products
@@ -499,7 +499,7 @@ group by id
 having num>2;   # 以id分组，显示id数量大于2的分组
 ```
 
-### 13.3 select子句顺序
+### 13.3. select子句顺序
 
 ```SQL
 select 
@@ -511,9 +511,9 @@ order by
 limit
 ```
 
-## 14.子查询
+## 14. 子查询
 
-### 14.1.使用
+### 14.1. 使用
 
 ```SQL
 select name from student
@@ -523,15 +523,15 @@ where grade > 80);
 # 查询sc表中成绩大于80的学号在student表中的姓名
 ```
 
-### 14.2.作为计算字段使用子查询
+### 14.2. 作为计算字段使用子查询
 
 ```SQL
 select name,(select count(*) from sc where stu_id=student.id) 选课数 from student;		# 查询学生选课数  
 ```
 
-## 15.联结表（join）
+## 15. 联结表（join）
 
-### 15.1.where子句链接
+### 15.1. where子句链接
 
 ​	WHERE子句作为 过滤条件，它只包含那些匹配给定条件（这里是联结条件）的行。没有 WHERE子句，第一个表中的每个行将与第二个表中的每个行配对，而不管 它们逻辑上是否可以配在一起。
 
@@ -539,7 +539,7 @@ select name,(select count(*) from sc where stu_id=student.id) 选课数 from stu
 select name,cou_id,grade from student,sc where id=stu_id;  # 查询学生姓名和他所选的课程id和成绩
 ~~~
 
-#### 15.1.2.and 操作符链接多个表
+#### 15.1.2. and 操作符链接多个表
 
 ```SQL
 select student.name,course.name,grade
@@ -549,11 +549,11 @@ where student.id=sc.stu_id
 # 查询学生姓名和他所选的课程名和成绩
 ```
 
-### 15.2.笛卡尔积
+### 15.2. 笛卡尔积
 
 ​	由没有联结条件的表关系返回 的结果为笛卡儿积。
 
-### 15.3.内联结
+### 15.3. 内联结
 
 ```SQL
 select student.name,course.name,grade
@@ -563,9 +563,9 @@ inner join sc on id=stu_id
 # 查询学生姓名和他所选的课程名和成绩
 ```
 
-## 16.创建高级联结
+## 16. 创建高级联结
 
-### 16.1.使用表别名联结
+### 16.1. 使用表别名联结
 
 ```SQL
 select s.name,s.name,grade 
@@ -574,9 +574,9 @@ where s.id = stu_id and c.id =
 cou_id;
 ```
 
-### 16.2.使用不同类型的联结
+### 16.2. 使用不同类型的联结
 
-### 16.2.1.自联结
+### 16.2.1. 自联结
 
 ​	为同一张表创建不同的别名，然后联结
 
@@ -586,9 +586,9 @@ from student as s1,student as s2
 where s1.id =s2.id;
 ```
 
-### 16.2.2.自然联结
+### 16.2.2. 自然联结
 
-## 17.组合查询
+## 17. 组合查询
 
 ​	可用UNION操作符来组合数条SQL查询。
 
@@ -599,7 +599,7 @@ select name from teacher;
 # 查询老师和学生的姓名 
 ```
 
-### 17.2.2union 规则
+### 17.1. union 规则
 
 1.UNION必须由两条或两条以上的SELECT语句组成，语句之间用关 键字UNION分隔（因此，如果组合4条SELECT语句，将要使用3个 UNION关键字）。
 
@@ -607,7 +607,7 @@ select name from teacher;
 
 3.列数据类型必须兼容：**类型不必完全相同，但必须是DBMS可以 隐含地转换的类型**（例如，不同的数值类型或不同的日期类型）。
 
-### 17.2.3. 包含或取消重复的行
+### 17.2. 包含或取消重复的行
 
 ```SQL
 union all
@@ -615,17 +615,17 @@ union all
 
 不写all 默认取消
 
-### 17.2.4.对组合查询结果排序
+### 17.3. 对组合查询结果排序
 
 只允许使用一条order by 语句。
 
-## 18.全文本搜索
+## 18. 全文本搜索
 
 todo
 
-## 19.插入数据
+## 19. 插入数据
 
-### 19.1.数据插入
+### 19.1. 数据插入
 
 ​	INSERT是用来插入（或添加）行到数据库表的。
 
@@ -636,7 +636,7 @@ todo
 3. 插入多行；
 4. 插入某些查询的结果。
 
-### 19.2.插入完整的行
+### 19.2. 插入完整的行
 
 ```SQL
 insert into <表名>(指定插入字段顺序) values(字段顺序)
@@ -646,21 +646,21 @@ insert into <表名>(指定插入字段顺序) values(字段顺序)
 insert into <表名> values(默认字段顺序)
 ```
 
-### 19.3.插入多行
+### 19.3. 插入多行
 
 ```SQL
 insert into <表名> values(1,2,3),(1,2,3)...
 ```
 
-### 19.4.插入检索出的数据
+### 19.4. 插入检索出的数据
 
 ```SQL
 insert into <表名>(字段顺序) select (字段) from <表名> where (过滤条件);
 ```
 
-## 20.更新和删除数据
+## 20. 更新和删除数据
 
-### 20.1.更新数据
+### 20.1. 更新数据
 
 ​	为了更新（修改）表中的数据，可使用UPDATE语句。可采用两种方 式使用UPDATE：
 
@@ -673,7 +673,7 @@ update <表名> set 字段名1 = "更改的字段值",字段名2 = "更改的字
 
 ***注意：如果没有where过滤数据，表示更新每一列***
 
-### 20.2.删除数据
+### 20.2. 删除数据
 
 ​	为了从一个表中删除（去掉）数据，使用DELETE语句。可以两种方式使用DELETE：
 
@@ -684,7 +684,7 @@ update <表名> set 字段名1 = "更改的字段值",字段名2 = "更改的字
 delete from <表名> where id = "XXX";
 ```
 
-### 20.3.更新和删除的指导原则
+### 20.3. 更新和删除的指导原则
 
 ​	下面是许多SQL程序员使用UPDATE或DELETE时所遵循的习惯:
 
@@ -693,9 +693,9 @@ delete from <表名> where id = "XXX";
 2. 保证每个表都有主键（如果忘记这个内容，请参阅第15章），尽可能 像WHERE子句那样使用它（可以指定各主键、多个值或值的范围）。
 3.   在对UPDATE或DELETE语句使用WHERE子句前，应该先用SELECT进 行测试，保证它过滤的是正确的记录，以防编写的WHERE子句不 正确
 
-## 21.创建和操作表
+## 21. 创建和操作表
 
-### 21.1.创建表
+### 21.1. 创建表
 
 ```SQL
 # 创建表(规范版)
@@ -711,7 +711,7 @@ create table if not exists teather(
 # comment SQL内注释
 ```
 
-### 21.2.更新表
+### 21.2. 更新表
 
 ```SQL
 # 显示字段类型、默认值、null、、、等信息
@@ -728,13 +728,13 @@ alter table 表名 modify <字段> <新类型>;
 alter table <表名> rename to <新表名>;   
 ```
 
-## 22.使用视图
+## 22. 使用视图
 
-### 22.1.视图
+### 22.1. 视图
 
 ​	视图是虚拟的表。与包含数据的表不一样，视图只包含使用时动态检索数据的查询。
 
-#### 22.1.1.为什么使用视图
+#### 22.1.1. 为什么使用视图
 
 1. 重用SQL语句。 
 2. 简化复杂的SQL操作。在编写查询后，可以方便地重用它而不必 知道它的基本查询细节。
@@ -742,9 +742,9 @@ alter table <表名> rename to <新表名>;
 4.  保护数据。可以给用户授予表的特定部分的访问权限而不是整个 表的访问权限。 
 5. 更改数据格式和表示。视图可返回与底层表的表示和格式不同的 数据
 
-### 22.2.使用视图
+### 22.2. 使用视图
 
-#### 22.2.1.创建视图
+#### 22.2.1. 创建视图
 
 ```SQL
 create view <视图名> as 
@@ -752,13 +752,13 @@ select name,sex
 from student; # 以姓名，性别创建一个视图
 ```
 
-#### 22.2.2.查看视图创建信息
+#### 22.2.2. 查看视图创建信息
 
 ```SQL
 show create view <视图名>;
 ```
 
-#### 22.2.3.更新视图
+#### 22.2.3. 更新视图
 
 ```SQL
 alter view <视图名> as 
@@ -766,21 +766,21 @@ select name,sex
 from student;
 ```
 
-#### 22.2.4.删除视图
+#### 22.2.4. 删除视图
 
 ```SQL
 drop view <视图名>;
 ```
 
-### 22.3.视图算法
+### 22.3. 视图算法
 
 **1.mergn**
 
 **2.temptable**
 
-## 23.存储过程
+## 23. 存储过程
 
-### 23.1.创建存储过程
+### 23.1. 创建存储过程
 
 ```SQL
 create procedure <命名>()
@@ -791,19 +791,19 @@ begin
 end;
 ```
 
-### 23.2.执行存储过程
+### 23.2. 执行存储过程
 
 ```SQL
 call <名> ;
 ```
 
-### 23.3.删除存储过程
+### 23.3. 删除存储过程
 
 ```SQL
 drop procedure <名>;
 ```
 
-### 23.4.使用参数
+### 23.4. 使用参数
 
 ```SQL
 delimiter //
@@ -825,20 +825,20 @@ delimiter ;
 
 ​	**MySQL支持IN（传递给存储过程）、OUT（从存 储过程传出，如这里所用）和INOUT（对存储过程传入和传出）类型的参 数。存储过程的代码位于BEGIN和END语句内。**
 
-#### 23.4.1.执行
+#### 23.4.1. 执行
 
 ```SQL
 call proc(@min_number,@max_number);
 ```
 
-#### 23.4.2.查询输出参数
+#### 23.4.2. 查询输出参数
 
 ```SQL
 select @min_number;
 select @max_number;
 ```
 
-### 23.5.检查存储过程
+### 23.5. 检查存储过程
 
 ```SQL
 show create procedure <名> ;
@@ -850,7 +850,7 @@ show create procedure <名> ;
 show procedure status like "proc" ;
 ```
 
-## 24.使用游标
+## 24. 使用游标
 
 
 
