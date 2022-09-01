@@ -838,8 +838,6 @@ public class Dao {
 
 1. **request作用域**
 
-
-
 2. **session作用域**
 
 3. **globalSession作用域**

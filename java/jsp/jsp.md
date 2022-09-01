@@ -4,9 +4,12 @@
 
 ### 1.1.简介
 
-​		**JSP**（全称**J**akarta **S**erver **P**ages，曾称为**J**ava**S**erver **P**ages）是由[Sun Microsystems](https://zh.m.wikipedia.org/wiki/Sun_Microsystems)公司主导建立的一种动态网页技术标准。JSP部署于网络服务器上，可以响应客户端发送的请求，并根据请求内容动态地生成[HTML](https://zh.m.wikipedia.org/wiki/HTML)、[XML](https://zh.m.wikipedia.org/wiki/XML)或其他格式文档的[Web](https://zh.m.wikipedia.org/wiki/Web)网页，然后返回给请求者。JSP技术以[Java](https://zh.m.wikipedia.org/wiki/Java)语言作为[脚本语言](https://zh.m.wikipedia.org/wiki/脚本语言)，为用户的[HTTP](https://zh.m.wikipedia.org/wiki/HTTP)请求提供服务，并能与服务器上的其它Java程序共同处理复杂的业务需求。
+​		JSP: Java Server Page SUN公司提供的动态网页编程技术，是Java Web服务器端的动态资源。
 
-​		jsp就是一个servlet，servlet写后端，jsp写页面。
+​		它相比html而言，html 只能为用户提供静态数据，而Jsp技术允许在页面中嵌套java代码,为用户提供动态数据。
+​		相比servlet而言，servlet 很难对数据进行排版，而jsp除了可以用java代码产生动态数据的同时，也很容易对数据进行排版。
+​		不管是JSP还是Servlet,虽然都可以用于开发动态web资源。但由于这2门技术各自的特点，在长期的软件实践中，人们逐渐把servlet作为web应用中的控制器组件来使用，而把JSP技术作为数据显示模板来使用。
+​		其实Jsp就是一个 Servlet,当我们第一次访问Jsp的时候，Jsp引擎都会将这个Jsp翻译成一个Servlet，这个文件存放在tomcat (源码目录)中的work目录中。
 
 ### 1.2.注释
 
