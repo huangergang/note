@@ -691,77 +691,83 @@ var stu = JSON.parse(str);
 
 ​		**JS 事件（event）是当用户与网页进行交互时发生的事情，例如单机某个链接或按钮、在文本框中输入文本、按下键盘上的某个按键、移动鼠标等等。当事件发生时，您可以使用 JavaScript 中的事件处理程序（也可称为事件监听器）来检测并执行某些特定的程序。**
 
-## 1.事件中的名词
+## 1. 事件中的名词
 
-**事件源：谁触发了事件**
+**事件源**：谁触发了事件
 
-**事件名：触发了什么事件**
+**事件名**：触发了什么事件
 
-**事件监听：谁管理这个事件**
+**事件监听**：谁管理这个事件
 
-**事件处理：发生了该怎么办**
+**事件处理**：发生了该怎么办
 
 ```HTML
 <body>
-<button type="button" onclick="test()">点击</button>
+    <button type="button">点击</button>
+
 </body>
-<script type="text/javascript">	
-	var n=1;
-	function test(){
-		console.log("点击了"+(n++)+"次");
-	}
+<script type="text/javascript">
+    var n = 1;
+
+    var t = document.querySelector("button");
+    console.log(t);
+    t.onclick = function () {
+        console.log("点击了" + (n++) + "次");
+    };
+    // t.addEventListener("click",test);
+
 </script>
 ```
 
-## 2.事件类型
+## 2. 事件类型
 
-**JavaScript可以处理的事件类型为：鼠标事件、键盘事件、HTML事件。**
+​		JavaScript可以处理的事件类型为：**鼠标事件、键盘事件、HTML事件。**
 
-## 3.常用事件
+## 3. 常用事件
 
-### 3.1.onload
+*   onload
 
-当页面或图像加载完后立即触发。
+    当页面或图像加载完后立即触发。
 
-### 3.2.onblur
+*   onblur
 
-元素失去焦点
+    元素失去焦点 
 
-### 3.3.onfocus
+*   onfocus
 
-元素获取焦点
+    元素获取焦点
 
-### 3.4.onclick
+*   onclick
 
-鼠标点击某个对象
+    鼠标点击某个对象
 
-### 3.5.onchange
+*   onchange
 
-用户改变域的内容
+    用户改变域的内容
 
-### 3.6.onmouseover
+*   onmouseover
 
-鼠标移动到某个元素上
+    鼠标移动到某个元素上
 
-### 3.7.onmouseout
+*   onmouseout
 
-鼠标从某个元素上离开
+    鼠标从某个元素上离开
 
-### 3.8.onkeyup
+*   onkeyup
 
-键盘某个键被松开
+    键盘某个键被松开
 
-### 3.9.onkeydown
+*   onkeydown
 
-键盘某个键被按下
+    键盘某个键被按下
 
-## 4.事件流和事件模型
+## 4. 事件流和事件模型
 
 事件流：事件在节点之间按特定顺序传播。
 
 事件顺序有两种类型：事件捕获和事件冒泡。
 
-### 4.1.事件冒泡
+### 4.1. 事件冒泡
 
 IE的事件流叫做事件冒泡，即事件开始时由最具体的元素接受，然后逐级向上传播到不具体的节点（document）。
 
@@ -783,67 +789,78 @@ IE的事件流叫做事件冒泡，即事件开始时由最具体的元素接受
 
 <button >  >>  <body>   >>  <html>  >>   document
 
-### 4.2.事件捕获
+### 4.2. 事件捕获
 
 事件开始时，有document接受，逐级向下传播到具体标签。
 
 ```HTML
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<title>second</title>
-	</head>
-	<body>
-			<button type="button" onclick="test()">点击</button>
-	</body>
+    <head>
+        <meta charset="utf-8">
+        <title>second</title>
+    </head>
+    <body>
+        <button type="button" onclick="test()">点击</button>
+    </body>
 </html>
 ```
 
 <button>事件的传播顺序，从大到小。
 
-## 5.事件处理程序
+## 5. 事件处理程序
 
 ​		响应事件的函数叫事件处理程序。事件处理程序以“on”开头。
 
-### 5.1.HTML事件处理程序
+### 5.1. HTML事件处理程序
 
 ​	某个元素支持的每种事件，都可以用一个与事件相应事件同名的HTML属性来指定，这个属性可以执行JS代码。
 
 ```HTML
 <body>
-	<button type="button" onclick="test()">点击</button>
+    <button type="button" onclick="test()">点击</button>
 </body>
-
 ```
 
-### 5.2.DOM0级事件处理程序
+### 5.2. DOM0级事件处理程序
 
 ​	通过JS指定事件处理程序的传统方式，就是将一个函数赋值给一个事件处理属性。**只能为同一个元素的同一个事件设定一个事件程序。**
 
 ```HTML
 <body>
-		<button id="but">点击	</button>
+    <button id="btn">点击	</button>
 </body>
-	<script type="text/javascript">	
-	var n=1;
-	function test(){
-		console.log("点击了"+(n++)+"次");
-	}
-    var but = document.getElementById("but");
-        but.onclick = test();
+<script type="text/javascript">	
+    var n=1;
+    function test(){
+        console.log("点击了"+(n++)+"次");
+    }
+    var but = document.getElementById("btn");
+    but.onclick = test;  // 注意没有()
 </script>
 ```
 
-### 5.3.DOM2级事件
+### 5.3. DOM2级事件
 
-​	**DOM2级事件定义了两个方法，用于处理指定和删除事件处理程序的操作：*addEventListener()*和*removeEventListener()*。**
+​		DOM2级事件定义了两个方法，用于处理指定和删除事件处理程序的作：
 
-**这两个方法都接受三个参数：**
+*   **addEventListener**
 
-**要处理的事件名，事件处理函数、布尔值。**
+    事件的名称没有"on"，如：
 
-**其中布尔值true表示在捕获阶段调用事件处理程序，false表示在冒泡阶段调用处理程序。**
+    ```js
+    document.getElementById("btn").addEventListener("click", test);
+    ```
+
+*   **removeEventListener**
+
+
+
+这两个方法都接受三个参数：
+
+​		要处理的**事件名，事件处理函数、布尔值**。
+
+其中布尔值true表示在捕获阶段调用事件处理程序，false表示在冒泡阶段调用处理程序。
 
 ```JS
 var btn = document.getElementById("btn");
@@ -853,9 +870,247 @@ function test(){
 }
 ```
 
-***DOM2级事件可以为同一个元素绑定多个事件处理函数。***
+​		**DOM2级事件可以为同一个元素绑定多个事件处理函数。**
 
 ```JS
 btn.removeEventListener("click",test);
 ```
+
+
+
+# 第三部分 document 对象
+
+​		**文档对象模型**（英语：**Document Object Model**，缩写**DOM**），是W3C组织推荐的处理可扩展置标语言的标准编程接口。
+
+每个载入浏览器的HTML都会成为Document对象。Document对象使我们可以从脚本中对HTML页面中的所有元素进行访问。Docment对象是window对象的一部分，可以通过window.document属性对其进行访问。
+
+## 1. 节点
+
+​	加载HTML页面的时候，web浏览器生成一个树型结构，用来表示页面内部结构。DOM将这种结构理解为有节点组成的一个结点树。
+
+**节点分类：**
+
+| 节点类型 | HTML             | 例如               |
+| :------- | :--------------- | :----------------- |
+| 文档节点 | 文档本身         | 整个文档           |
+| 元素节点 | 所有HTML元素     | <a>,<div>,<p>      |
+| 属性节点 | HTML元素内的属性 | id,href,name,class |
+| 文本节点 | 元素内的文本     | hello              |
+| 注释节点 | HTML中的注释     | <!--   -->         |
+
+## 2. 获取节点
+
+| 方法                    | 描述                                     |
+| ----------------------- | ---------------------------------------- |
+| getElementById()        | 根据id获取对象，如果id重复，以第一个为准 |
+| getElementByTagName()   | 根据标签名获取dom对象数组                |
+| getElemetnByClassName() | 根据class属性获取dom对象数组             |
+| getElementByName()      | 根据name属性获取dom对象数组              |
+
+## 3. 创建节点和插入
+
+### 3.1. 创建节点
+
+| 方法             | 描述                                                       |
+| ---------------- | ---------------------------------------------------------- |
+| createElement()  | 创建一个新节点，需要传入节点的标签名称，返回创建的元素对象 |
+| createTextNode() | 创建一个文本节点，可以传入文本内容                         |
+| innerHTML        | 直接添加到指定位置                                         |
+
+### 3.2. 插入节点
+
+| 方法           | 描述                                       |
+| -------------- | ------------------------------------------ |
+| write()        | 将任意的字符插入到文档中                   |
+| appendChild()  | 向元素中添加新的子节点，作为最后一个子节点 |
+| insertBefore() | 向指定的已有的节点之前插入新的节点         |
+
+第一种
+
+```js
+// 获取html容器
+var div = document.getElementById("cont");
+// 创建p标签
+var p = document.createElement("p");
+// 创建文本
+var text = document.createTextNode("this is text");
+// 将文本添加到p标签内
+p.appendChild(txt);
+// 将p标签设置到div中
+div.appendChild(p);
+```
+
+第二种
+
+```JS
+// 获取html容器
+var div = document.getElementById("cont");
+// 创建p标签
+var p = document.createElementById("p");
+// 将文本添加到p标签内
+p.innerHTML = "this is text";
+// 将p标签设置到div中
+div.appendChild(p);
+```
+
+第三种
+
+```JS
+// 获取html容器
+var div = document.getElementById("cont");
+
+var p = "<p>this is text</p>";
+
+div.innerHTML += p;
+```
+
+**添加图片：**
+
+第一种
+
+```JS
+// 获取html容器
+var div = document.getElementById("cont");
+
+var img = document.createElement("img");
+img.src="url";
+img.width=100;
+img.height=100;
+
+div.appendChild(img);
+```
+
+第二种
+
+```JS
+// 获取html容器
+var div = document.getElementById("cont");
+
+var img = document.createElement("img");
+
+img.setAttribute("src","img/img1.jpg");
+
+div.appendChild(img);
+```
+
+第三种
+
+```JS
+// 获取html容器
+var div = document.getElementById("cont");
+
+var img = "<img src="url" />";
+div.innerHTML += img;
+```
+
+直接插入文本到HTML
+
+```JS
+document.write("");
+```
+
+### 3.3. 间接查找节点
+
+| 方法           | 描述                       |
+| -------------- | -------------------------- |
+| childNodes     | 返回元素的一个子节点的数组 |
+| firstChild     | 返回元素的第一个子节点     |
+| lastChild      | 返回元素的最后一个子节点   |
+| nextSibing     | 返回元素的下一个兄弟节点   |
+| parentNode     | 返回元素的父节点           |
+| previousSibing | 返回元素的上一个兄弟节点   |
+
+### 3.4. 删除节点
+
+removeChild()  从元素中山删除子节点。
+
+
+
+# 第四部分 window 对象
+
+​		**浏览器对象模型**(BOM)指的是由Web浏览器暴露的所有对象组成的表示模型。BOM与DOM不同，其既没有标准的实现，也没有严格的定义, 所以浏览器厂商可以自由地实现BOM。
+
+作为显示文档的窗口, 浏览器程序将其视为对象的分层集合。当浏览器分析文档时, 它将创建一个对象的集合, 以定义文档, 并详细说明它应如何显示。浏览器创建的对象称为文档对象。它是浏览器使用的更大的对象集合的一部分。此浏览器对象集合统称为浏览器对象模型或BOM。
+
+BOM层次结构的顶层是窗口对象, 它包含有关显示文档的窗口的信息。某些窗口对象本身就是描述文档和相关信息的对象。
+
+## 1. window对象方法
+
+### 1.1. 系统对话框
+
+**消息框  alert()**
+
+**输入框   prompt(”text“，“”)**
+
+**确认框  confirm("text")**
+
+### 1.2. open()
+
+open打开本地窗口或远程窗口。可以指定方式打开。
+
+```JS
+window.open("url","_self");// _self,_blank
+```
+
+### 1.3. close()
+
+关闭窗口
+
+```JS
+window.close();
+```
+
+### 1.4. 事件函数
+
+#### 1.4.1. setTimeout()
+
+​	在指定毫秒数后调用函数或计算表达式。返回一个唯一标识；
+
+```JS
+setTimeout(fun,3000);// 3秒后调用fun函数。
+```
+
+#### 1.4.1. setInterval()
+
+​		按照指定的周期（以毫秒计）来调用函数或计算表达式，也可以根据返回的表示来结束。
+
+```JS
+setInterval(fun,1000); // 每隔1秒调用一下fun函数。
+```
+
+
+
+### 1.5. history对象
+
+*   back()
+
+    加载history列表中的前一个URL。
+
+*   forward()
+
+    加载历史列表的下一个URL。
+
+*   go(URL|number)
+
+    跳转到指定页面。number正数向前走，负数向后走。
+
+### 1.6. location对象
+
+#### 1.6.1. href属性
+
+设置或返回完整的URL。
+
+```JS
+window.location.href = www.baidu.com;
+```
+
+#### 1.6.2. reload()
+
+重新加载当前的文档。
+
+#### 1.6.3. replace()
+
+用新的文档替换当前文档。
+
+不能后退。
 
