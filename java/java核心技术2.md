@@ -6,7 +6,7 @@
 
 ## 第一章
 
-### 1.从迭代到流
+### 1. 从迭代到流
 
 流提供了一种可以比集合更高的概念级别上指定计算的数据视图。
 
@@ -52,7 +52,7 @@ Stream<Person> stream = peoples.stream();
 Stream<Person> personStream = peoples.parallelStream();  // parallelStream可以让流库以并行的方式执行过滤和计算
 ```
 
-### 2.创建流
+### 2. 创建流
 
 1.Collection接口的stream方法可以将任意一个集合转换为一个流。
 
@@ -106,7 +106,7 @@ Stream<Double> randomStream = Stream.generate(Math::random);
 Stream<BigInteger> integerStream = Stream.iterate(BigInteger.ZERO, n -> n.add(BigInteger.TEN));
 ```
 
-### 3.filter、map、flatmap
+### 3. filter、map、flatmap
 
 filter转换会产生一个流，它的元素与某种条件向匹配。filter的引元是Predicate<T>，从T到boolean的函数。
 
@@ -150,7 +150,7 @@ public static void main(String[] args) throws IOException{
 stream.flatMap(w->letters(w)).forEach(System.out::print);
 ```
 
-### 4.抽取和连接
+### 4. 抽取和连接
 
 >```java
 >Stream<T> limit(long maxSize)    // 产生一个流，从开始到maxSize结束，如果maxSize大于流内元素的长度，则返回全部元素组成的流
@@ -164,7 +164,7 @@ stream.flatMap(w->letters(w)).forEach(System.out::print);
 >static <T> Stream<T> concat(Stream<? extends T> a,Stream<? extends T> b)  // 产生一个流，它的元素是a的元素后跟b的元素 
 >```
 
-### 5.流的转换
+### 5. 流的转换
 
 >```java
 >Stream<T> distinct()   // 产生一个流，包含当前流的不同元素
@@ -188,7 +188,7 @@ list.stream()
     .forEach(System.out::println);
 ```
 
-### 6.简单约简
+### 6. 简单约简
 
 这些操作都是终结操作。
 
@@ -245,7 +245,7 @@ System.out.println(list.stream().noneMatch(s -> s.startsWith("a")));
 // false
 ```
 
-### 7.Optional
+### 7. Optional
 
 Optional是一种包装器对象，要么包装了T类型的对象，要么没有包装任何对象。Optional<T>类型被当作一种更安全的方式，来替代类型T的引用，这种引用要么引用某个对象，要么为null。
 

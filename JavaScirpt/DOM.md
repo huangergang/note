@@ -137,7 +137,7 @@ document.write("");
 | firstChild     | 返回元素的第一个子节点     |
 | lastChild      | 返回元素的最后一个子节点   |
 | nextSibing     | 返回元素的下一个兄弟节点   |
-| parentNode     | 返回元素的符节点           |
+| parentNode     | 返回元素的父节点           |
 | previousSibing | 返回元素的上一个兄弟节点   |
 
 ### 3.4.删除节点
