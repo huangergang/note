@@ -1,0 +1,181 @@
+show databases; 显示所有库
+create database `库名`; 创建一个库
+show create database `库名`; 显示创建库时的信息
+drop database `库名`; 删除库
+alter database 库名 charset=字符编码格式; 更改字符编码
+use 库名; 使用仓库
+show tables; 显示表
+create table 表名（参数1，参数2，参数3，......）； 创建表
+
+创建表(规范版)
+ create table if not exists teather(
+    -> id int auto_increment primary key comment '主键id',
+    -> name varchar(30) not null comment '老师的名字',
+    -> phone varchar(20) comment '电话号码',
+    -> address varchar(100) default '暂时未知' commnet '住址'
+
+id name phone address 字段
+auto_increment 自动增长
+primary key 主键 最重要的 唯一
+comment 注释
+
+
+desc 表名;  显示字段类型、默认值、null、、、等信息
+drop table if exists 表1，表2，表3;  删除表，可以为不存在的表
+
+alter table 表名 add 字段 字段类型; 增加字段
+alter table 表名 change 字段 新字段 新字段类型; 修改字段名和类型
+alter table 表名 modify 字段 新类型;     改字段类型
+alter table 表名 rename to 新表名;    修改表名
+insert into 表名 (字段1，字段2，字段3...) values(数据1，数据2，数据3.....);  插入数据 注意数据类型
+
+insert into 表名 values(数据1，数据2，数据3.....);  必须以，默认的数据列表;
+insert into 表名 values(数据1，数据2，数据3.....),数据1，数据2，数据3.....).....;插入多条数据
+
+delete from 表名 where 条件; 应该按唯一字段删除
+delete from 表名; 清空表中数据
+
+truncate table 表名; 销毁表,并创建一个新的空表
+truncate 和 delete 清空表有所区别:(delete 表中自增运算会接上前一个的数值,truncate 从1开始)
+
+update 表名 set 字段1=xxx,字段2=xxx... where 条件1 or 条件2; 条件可选1个或2个,也可以没有,没有表示更新每一条数据
+
+select 字段1，字段2,... from 表名;
+select * from 表名; 查询表中所有数据 (此语句性能不高)
+
+DDL data definition language 数据定义语言 create alter drop show
+DML data manipulation language 数据操纵语言 insert update delete select
+DCL data control language    数据库控制语言
+
+show variables like 'character_set_%'; 显示编码格式
+set character_set_client=utf8;  更改客户端编码格式
+
+字段 字段类型 primary key; 主键------确定唯一性,不应许为null,除自增外。
+
+alter table 表名 add primary key (字段1,字段2...);  为字段添加primary key;(确定尽可能为唯一不更改的字段添加主键)如学号,id,身份证号,两个以上为组合键,本质还是一个键   -----推荐主键添加给一个字段
+
+主键与其它表有联系,主键不能唯一
+
+alter table 表名 drop primary key;  删除主键
+
+字段 字段类型 unique; 唯一键 表中可以有多个唯一键,可以为空
+
+alter table 表名 add nuique(字段名);添加唯一键
+
+alter table 表名 drop index 字段; 删除唯一键
+
+数据库设计的完整性(创建表时)---1.应当有一个主键表示唯一性 2.选择合适的数据类型 3.default 设计 4.对外部表的引用
+
+主表---从表 (关联表)
+
+foreign key (字段) references 表名(字段);  ----外键 ,前一字段是此表中的它是后一个表中的字段.(关联了) (并发设计禁用外键)
+alter 表名 add foreign key (字段) referances 表名(字段);  添加外键(建议创建时就添加)
+
+show create table; 查外键
+alter table 表名 drop foreign key 前一步查询到的键名 ;
+
+置空操作---数据变为NULL(外键置空数据)  级联操作---删除，并删除绑定的外键(外键更新数据)
+
+foreign key(字段) references 主表名(字段) on delete set null on update cascade; 在创建字段时，使其删除时置空,更新时级联.
+
+select * from 表1，表2; 显示两张表的笛卡尔积;
+
+select 2*4; 可以做计算
+select 'XXXXX' as XXXX;  起别名
+
+select 2*7 as 别名 from dual; 默认的尾表
+select 2*7 from dual;
+
+where----筛选 > < <= >= or not= and
+
+select * from 表名 where 字段 in(数据1,数据2,...);  in 包含   not in 不包含
+
+select * from 表名 where 字段 between 数据1 and 数据2; 查询包含数据1和数据2之间的数据     not between 之外的数据
+
+select * from 表名 where 字段 is null; 查询null  is not null 查询非空
+
+聚合函数
+select sum(字段) from 表名;
+select avg(字段) from 表名;
+select max(字段) from 表名;
+select min(字段) from 表名;
+select count(字段) from 表名;
+select count(*) from 表名;
+
+select * from 表名 where 字段 like ‘值%’; 模糊查询 %表示一个或多个值
+select * from 表名 where 字段 like ‘值_’; _表示一个字符
+
+select * from 表名 order by 字段 asc; 升序排序
+select * from 表名 order by 字段 desc; 降序排序
+
+select avg(字段),字段 from 表名 group by 字段; group by 按谁去分组查
+select group_concat(字段1), 字段2 from 表名 group by 字段2; 聚合字段1按字段2分组
+
+having----对以查寻结果再次筛选;  
+select * from 表名 limit 起始位置,末尾位置; [a,b]
+
+select distinct 字段 from 表名;
+数据去重
+
+union 联合查询
+seclect * from 表名 inner join
+ 
+
+
+修改字段编码
+alter table 表名 change 字段名 字段名 字段类型 character set utf8;
+
+
+联合查询(内链接----公共字段)
+select 
+   字段1，
+   字段2
+from
+   表1
+   inner join 表2 on 表1.共有字段=表2.公共字段 ;
+
+左链接(左表全部显示，右表补NULL)
+select 
+   字段1，
+   字段2
+from
+   表1
+   left join 表2 on 表1.共公字段=表2.公共字段 ;
+
+右链接(右表全部显示，左表补NULL)
+select 
+   字段1，
+   字段2
+from
+   表1
+   rihgt join 表2 on 表1.共公字段=表2.公共字段 ;
+
+返回表1，表2的笛卡尔积
+select * from 表1 cross join 表2; 
+
+自然链接(按同名字段链接)
+select * from 表1 natural join 表2; (无同名字段返回笛卡尔积,有两个同名，用using(指定同名字段))
+select * from 表1 natural join 表2 using(指定字段);
+
+自然左链接
+select * from 表1 natural left join 表2;
+
+自然右链接
+select * from 表1 natural right join 表2;
+
+那个实用？  (inner join)
+
+子查询
+select * from 表1 where 字段1 in (select 返回字段 from 表2 where 条件);  // 用子语句查询返回的值做为字段1的所有情况
+in 为多个结果 (一个为 =)
+not in
+exists 如果有一个满足条件就全部返回
+not exists
+
+
+mysql 计算年龄：select name, TIMESTAMPDIFF(YEAR, birthday, CURDATE())  age from basic_info;
+
+
+
+
+

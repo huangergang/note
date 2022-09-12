@@ -156,7 +156,7 @@ TODO
 
 #### 1.6.1. 创建数据表
 
-<img src="..\spring\img\spring_jdbc.png">
+<img src=".\img\spring_jdbc.png">
 
 #### 1.6.2. 测试类
 
@@ -1203,7 +1203,6 @@ http://www.springframework.org/schema/aop/spring-aop.xsd
 ##### 3.3.2.3. 方法上添加事务注解
 
 ```java
-
 @Transactional
 public int updateAccountMoneyTransfer(Integer inId, Integer outId, Double money) {
     int code = 0;     // 状态码  1 成功  0 失败

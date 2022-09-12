@@ -40,10 +40,10 @@
 <body>
     <div class="container-fluid">
         <div class="row">
-        <div class="col-md-4" style="background-color: black;">4</div>
-        <div class="col-md-4" style="background-color: red;">4</div>
+            <div class="col-md-4" style="background-color: black;">4</div>
+            <div class="col-md-4" style="background-color: red;">4</div>
+        </div>
     </div>
-</div>
 </body>
 ```
 
@@ -250,10 +250,9 @@ form-control
 
    ```HTML
    <label for="" class="checkbox-line"><input type="checkbox" name="hobby" id="">唱歌</label> 
-         <label for="" class="checkbox-line"><input type="checkbox" name="hobby" id="">跳舞</label> 
-   
+   <label for="" class="checkbox-line"><input type="checkbox" name="hobby" id="">跳舞</label> 
    ```
-
+   
 5. **单选框radio**
 
 ​		垂直显示：
@@ -261,17 +260,17 @@ form-control
 ```HTML
 <div class="radio">
     <label for=""><input type="radio" name="sex" id="">男</label> 
- </div>
- <div class="radio">   
-      <label for=""><input type="radio" name="sex" id="">女</label> 
- </div>
+</div>
+<div class="radio">   
+    <label for=""><input type="radio" name="sex" id="">女</label> 
+</div>
 ```
 
 ​		水平显示：
 
 ```HTML
 <label for="" class="radio-line"><input type="radio" name="sex" id="">男</label> 
-      <label for="" class="radio-line"><input type="radio" name="sex" id="">女</label> 
+<label for="" class="radio-line"><input type="radio" name="sex" id="">女</label> 
 ```
 
 6. 按钮

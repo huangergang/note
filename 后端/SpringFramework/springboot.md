@@ -2329,7 +2329,7 @@ public class User implements Serializable {
 }
 ```
 
-### 5.3 缓存实现
+### 5.3. 缓存实现
 
 这里以 UserService 方法为例
 
