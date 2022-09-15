@@ -16,6 +16,24 @@ MVC 模式代表 Model-View-Controller（模型-视图-控制器） 模式。这
 
 ​		Spring MVC是服务到工作者思想的实现。前端控制器是DispatcherServlet；应用控制器拆为处理器映射器（Handler Mapping）进行处理器管理和视图解析器（View Resolver）进行视图管理；支持本地化/国际化（Locale）解析及文件上传等；提供了非常灵活的数据验证、格式化和数据绑定机制；提供了强大的约束大于配置（管惯例优先原则）的契约式编程支持。
 
+
+
+SpringMVC
+
+五大核心组件
+
+1.DispatcherServlet　　请求入口
+
+2.HandlerMapping　　 请求派发,负责请求和控制器建立一一对应的关系
+
+3.Controller　　　　　 处理器
+
+4.ModelAndView　　　 封装模型信息和视图信息
+
+5.ViewResolver　　　　视图处理器,定位页面
+
+
+
 ## 3. Spring MVC请求流程&环境搭建
 
 ### 3.1. Spring MVC请求处理程序分析
@@ -110,6 +128,18 @@ idea下创建springmvc工程
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
                              http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
          >
+    <!--  启动spring容器  -->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:spring.xml</param-value>
+    </context-param>
+
+
+    <!--  设置监听器  -->
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
 
     <!-- 编码过滤 utf-8-->
     <filter>
@@ -121,7 +151,6 @@ idea下创建springmvc工程
             <param-value>utf-8</param-value>
         </init-param>
     </filter>
-
     <filter-mapping>
         <filter-name>encodingFilter</filter-name>
         <url-pattern>/*</url-pattern>
@@ -893,7 +922,7 @@ public ModelAndView data10(User4 user4) {
 
 ### 4.3. 请求域对象
 
-#### 4.3.1. 返回ModelAndView
+#### 4.3.1. 返回 ModelAndView
 
 ```java
 @RequestMapping(value = "/model01")
@@ -901,7 +930,7 @@ public ModelAndView model01() {
 
     ModelAndView mv = new ModelAndView();
     // 设置数据模型 (请求域对象的数据)
-    mv.addObject("model", "model01 data ");
+    mv.addObject("model", "model01 data");
     // 设置视图
     mv.setViewName("model");
 
@@ -958,6 +987,8 @@ public String model05(HttpServletRequest request) {
     return "model";
 }
 ```
+
+
 
 ## 5. 请求转发与重定向
 
@@ -1129,6 +1160,8 @@ public ModelAndView view11(ModelAndView modelAndView) {
     return modelAndView;
 }
 ```
+
+
 
 ## 6. SpringMVC 之 JSON 数据开发
 
@@ -1373,7 +1406,6 @@ public class Interceptor01 implements HandlerInterceptor {
 
         System.out.println("postHandle.....");
 
-
     }
 
     @Override
@@ -1458,7 +1490,7 @@ public class Interceptor02 extends HandlerInterceptorAdapter {
         拦截器链（多个连接器）
                  如果有多个拦截满足拦截的要求，则会根据配置的先后顺序执行
  				 先配置的拦截器的方法先执行 
-     -->
+    -->
 <mvc:interceptors>
     <mvc:interceptor>
         <mvc:mapping path="/**"/>
@@ -1888,6 +1920,8 @@ public class FileController {
 }
 ```
 
+
+
 ## 3. SSM 框架集成与测试
 
 ### 3.1. 环境配置
@@ -2182,10 +2216,10 @@ public class FileController {
                            http://www.springframework.org/schema/context/spring-context.xsd http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
 
 
-    <!-- 开启自动化注入 -->
+    <!--  开启自动化注入  -->
     <context:annotation-config/>
 
-    <!-- 开启springIOC自动扫描 -->
+    <!--  开启springIOC自动扫描  -->
     <context:component-scan base-package="com.ssm2">
         <!--  过滤对某个注解的扫描  -->
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
@@ -2196,7 +2230,7 @@ public class FileController {
     <context:property-placeholder location="classpath:db.properties"/>
 
 
-    <!--声明数据源DataSource，作用是连接数据库-->
+    <!--  声明数据源DataSource，作用是连接数据库  -->
     <bean id="myDataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
 
         <!--set注入提供连接数据库信息-->
@@ -2209,17 +2243,17 @@ public class FileController {
 
     <bean id="SqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 
-        <!--set注入，把数据库连接池付给dataSource属性-->
+        <!--  set注入，把数据库连接池付给dataSource属性  -->
         <property name="dataSource" ref="myDataSource"/>
-        <!--mybatis主配置文件的位置
-            configLocation属性是Resource类型，读取配置文件
-            它的赋值使用的是value ， 指定文件的路径，使用的是classpath：表示文件的位置
-        -->
+        <!--  mybatis主配置文件的位置
+                  configLocation属性是Resource类型，读取配置文件
+                  它的赋值使用的是value ， 指定文件的路径，使用的是classpath：表示文件的位置
+          -->
         <property name="configLocation" value="classpath:mybatis.xml"/>
     </bean>
 
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <!--指定的是SqlSessionFactory对象的id-->
+        <!--  指定的是SqlSessionFactory对象的id  -->
         <property name="sqlSessionFactoryBeanName" value="SqlSessionFactory"/>
 
         <property name="basePackage" value="com.ssm2.dao"/>
@@ -2234,7 +2268,7 @@ public class FileController {
 </beans>
 ```
 
-#### 3.1.4. 配置servlet-context.xml  (springMVC)
+#### 3.1.4. 配置 servlet-context.xml  (springMVC)
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -2300,7 +2334,7 @@ public class FileController {
 </beans>
 ```
 
-#### 3.1.5. 配置mybatis.xml
+#### 3.1.5. 配置 mybatis.xml
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -2316,7 +2350,7 @@ public class FileController {
 </configuration>
 ```
 
-#### 3.1.6. 添加db.properties
+#### 3.1.6. 添加 db.properties
 
 ```properties
 driver=com.mysql.cj.jdbc.Driver
@@ -2325,7 +2359,7 @@ user=root
 password=123456
 ```
 
-#### 3.1.6. 配置web.xml
+#### 3.1.6. 配置 web.xml
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>

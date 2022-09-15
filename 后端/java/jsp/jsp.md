@@ -96,13 +96,13 @@
 ​		动态包含在代码的编译阶段，包含和被包含部分是两个独立的部分，只有当运行时，才会动态包含进来，好比方法的调用。
 
 ```jsp
-<jsp:include page="include. jsp"></jsp:include>
+<jsp:include page="include.jsp"></jsp:include>
 ```
 
 **注意**：动态包含，**中间不要加任何内容**，包括空格，除非确认要使用参数,否则报错!
 
 ```jsp
-<jsp:include page="include . html"></jsp:include>
+<jsp:include page="include.html"></jsp:include>
 <%
 String a = "hello.jsp";
 %>
@@ -207,9 +207,9 @@ ${applicationScope.name}
 
 ```jsp
 <%
-pageContext.setAttri bute ("uname" , "zhangsan"); // page作用域
-request.setAttri bute("uname"，"lisi"); // request作用域
-session.setAttri bute("uname" , "wangwu"); // session作用域
+pageContext.setAttribute ("uname" , "zhangsan"); // page作用域
+request.setAttribute("uname"，"lisi"); // request作用域
+session.setAttribute("uname" , "wangwu"); // session作用域
 application.setAttribute("uname"，" zaholiu"); // application
 %>
 ```
@@ -307,7 +307,7 @@ ${empty str}
 ​				包含Web应用的常见工作，比如:循环、表达式赋值、基本输入输出等。
 
 ​		**格式化标签库:**
-​		http://java.sun.com/jsp/jstl/fmt
+​				http://java.sun.com/jsp/jstl/fmt
 
 ​				用来格式化显示数据的工作，比如:对不同区域的日期格式化等。
 
@@ -400,7 +400,7 @@ ${empty str}
 
 ```jsp
 <c:forEach
-items=" <object>"
+items="<object>"
 begin="<int>"
 end="<int>”
 step="<int>""

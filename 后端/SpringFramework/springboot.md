@@ -920,11 +920,11 @@ spring:
 
 在 resources 目录下创建 static 或者 public 目录，存放images、js、css等静态资源文件
 
-<img src="..\spring\img\resources-static.png">
+<img src=".\img\resources-static.png">
 
 浏览器访问：
 
-<img src="..\spring\img\static1.png">
+<img src=".\img\static1.png">
 
 ### 7.2. 自定义静态资源路径
 
@@ -945,9 +945,9 @@ spring:
 
 ​		idea 下配置`clean compile package -Dmaven.test.skip=true`执行打包命令，target 目录得到待部署的项目文件。
 
-<img src="..\spring\img\springboot-jar.png">
+<img src=".\img\springboot-jar.png">
 
-<img src="..\spring\img\springboot-jar-target.png">
+<img src=".\img\springboot-jar-target.png">
 
 
 
@@ -957,11 +957,11 @@ spring:
 
 ​		命令如下：java  -jar  jar包所在目录
 
-<img src="..\spring\img\jar包部署cmd.png">
+<img src=".\img\jar包部署cmd.png">
 
 访问：
 
-<img src="..\spring\img\static1.png">
+<img src=".\img\static1.png">
 
 ### 8.2. war 包部署
 
@@ -973,7 +973,7 @@ spring:
 
     由于入门项目构造项目默认为 jar 应用，所以这里打 war 修要做如下修改
 
-    <img src="..\spring\img\pom-war.png"> 
+    <img src=".\img\pom-war.png"> 
 
 *   忽略内嵌 Tomcat
 
@@ -1017,7 +1017,7 @@ protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
 
 访问：
 
-<img src="..\spring\img\springboot-war.png">
+<img src=".\img\springboot-war.png">
 
 
 

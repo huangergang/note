@@ -477,7 +477,7 @@ arr.forEach(function (element, index) {
 
 
 
-## **10. 函数**
+## 10. 函数
 
 ### 10.1. 函数定义
 
@@ -1049,14 +1049,14 @@ BOM层次结构的顶层是窗口对象, 它包含有关显示文档的窗口的
 
 **输入框   prompt(”text“，“”)**
 
-**确认框  confirm("text")**
+**确认框   confirm("text")**
 
 ### 1.2. open()
 
 open打开本地窗口或远程窗口。可以指定方式打开。
 
 ```JS
-window.open("url","_self");// _self,_blank
+window.open("url","_self");  // _self,_blank
 ```
 
 ### 1.3. close()

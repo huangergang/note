@@ -83,7 +83,7 @@ git fetch    				# 获取远程最新状态
 ### 强制推送远程（不建议）
 
 ```bash
-git push -u  origin  master -f
+git push -u origin  master -f
 ```
 
  

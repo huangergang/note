@@ -31,11 +31,11 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-        https://www.springframework.org/schema/beans/spring-beans.xsd">
+        				   https://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <!-- 
+<!-- 
 
-配置javabean对象映射：
+	配置javabean对象映射：
 
 		bean标签的作用是映射JavaBean对象
   			id: 是类的类名（首字母小写）
@@ -126,7 +126,6 @@ public class MyBean {
 
 ```XML
 <?xml version="1.0" encoding="UTF-8" ?>
-
 <beans>
     <bean id="user" class="com.xxxx.dao.User"></bean>
     <bean id="student" class="com.xxxx.dao.Student"></bean>
@@ -261,6 +260,8 @@ public class Test {
     }
 }
 ```
+
+
 
 ## 3. Spring 加载配置文件
 
@@ -518,12 +519,11 @@ public class Service {
 ​	必须提供set方法。
 
 ```XML
-
 <!-- value : 具体的值，String ， int ， ... List, map ... -->
 
 <bean id="service" class="com.xxxx.service.Service">
         <property name="host" value="127.0.0.1"/>
-    	 <property name="port" value="8080"/>
+    	<property name="port" value="8080"/>
 </bean>
 ```
 
@@ -605,7 +605,6 @@ public class Service {
 ```XML
 <bean id="dao" class="com.xxxx.dao.Dao"></bean>
     
-
 <bean id="service" class="com.xxxx.service.Service">
     <constructor-arg name="dao" ref="dao"></constructor-arg>
 </bean>
@@ -667,20 +666,20 @@ public class Service {
 package com.xxxx.dao;
 
 public class UserService {
+    
     private Dao dao;
 
     public void setDao(Dao dao) {
         this.dao = dao;
     }
-
     
     private String host;
 
     public void setHost(String host) {
         this.host = host;
     }
+    
 }
-
 ```
 
 2. 在配置文件中引入p名称空间
@@ -722,9 +721,6 @@ xmlns:p="http://www.springframework.org/schema/p"
 <context:annotation-config/>
 
 <bean id="dao" class="com.xxxx.dao.Dao"></bean>
-
-</bean>
-
 ```
 
 3. 给注入的bean对象添加注解
@@ -790,10 +786,8 @@ xmlns:p="http://www.springframework.org/schema/p"
                            http://www.springframework.org/schema/context
                            http://www.springframework.org/schema/context/spring-context.xsd">
 
-
-    <!-- 扫描范围的配置 -->
-    <context:component-scan base-package="com.xxxx"/>
-
+    <!-- 扫描范围的配置 获取bean时类名小写-->
+    <context:component-scan base-package="com.xxxx"/>  
 
 </beans>
 ```
@@ -807,8 +801,11 @@ public class Dao {
     public void test(){
         System.out.println("Dao...");
     }
+    
 }
 ```
+
+
 
 ## 7. Bean的作用域和生命周期
 
@@ -1252,6 +1249,8 @@ proxy.doSomething();
 
 ​	在不修该原有应用程序代码的情况下，在程序运行期为类动态添加方法或者字段的过程称为引入
 
+
+
 ## 5. Spring AOP的实现
 
 ### 5.1. 环境搭建
@@ -1371,6 +1370,14 @@ public class LogCut02 {
     }
 }
 ```
+
+#### 5.2.2. spring.xml 开启配置
+
+```xml
+<aop:aspectj-autoproxy/>
+```
+
+
 
 ### 5.3. XML实现
 
