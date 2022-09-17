@@ -482,11 +482,13 @@ public class WebInitializer implements WebApplicationInitializer {
 
 配置拦截器：在配置类实现WebMvcConfigurationSupport
 
+
+
 ## 4. SpringBoot 概念与特点
 
 ### 4.1. 框架概念
 
-​		随着动态语言的流行(Ruby、Scala、NOdejs等)，java 开发变得相对笨重，配置繁琐，开发效率低下，部署流程复杂，以及第三方集成难度也相对较大，针对该环境，Spring Boot 被开发出来，其实用“习惯大于配置目标”，借助Spring Boot 能够让项目快速运行起来，同时借助 Spring Boot可以创建 web 应用并独立进行部署（jar包 war包方式，内嵌 Servlet 容器），同时借助 Spring Boot 在开发应用是可以不用或很少去进行相关 xml 环境配置，简化了开发，大大提高项目开发效率。
+​		随着动态语言的流行(Ruby、Scala、Nodejs等)，java 开发变得相对笨重，配置繁琐，开发效率低下，部署流程复杂，以及第三方集成难度也相对较大，针对该环境，Spring Boot 被开发出来，其实用“习惯大于配置目标”，借助Spring Boot 能够让项目快速运行起来，同时借助 Spring Boot可以创建 web 应用并独立进行部署（jar包 war包方式，内嵌 Servlet 容器），同时借助 Spring Boot 在开发应用是可以不用或很少去进行相关 xml 环境配置，简化了开发，大大提高项目开发效率。
 
 ​		Spring Boot 是由 Pivotal 团队提供的全新框架，其设计目的是用来简化 Spring 应用的初始搭建以及开发过程，该框架使用了特定的方式来进行配置，从而使开发人员不需要定义样板化的配置。通过这种方式，让Spring Boot 在快速开发领域（rapid application development）成为领导者。
 
@@ -510,7 +512,7 @@ public class WebInitializer implements WebApplicationInitializer {
 </parent>
 ```
 
-#### 4.3.3. 导入 Spring Boot 的web坐标与相关插件
+#### 4.3.3. 导入 SpringBoot 的web坐标与相关插件
 
 ```xml
 <!-- web支持，SpringMVC， Servlet支持等 -->
@@ -525,7 +527,6 @@ public class WebInitializer implements WebApplicationInitializer {
 ```java
 @Controller
 public class HelloController {
-
 
     @RequestMapping("/hello")
     @ResponseBody
@@ -553,11 +554,13 @@ public class Starter {
 
   在浏览器输入请求地址http://localhost:8080/hello
 
+
+
 ## 5. Spring Boot 核心配置
 
 ### 5.1. 设置 Banner 图标
 
-<img src="..\spring\img\banner.png">
+<img src=".\img\banner.png">
 
 ​		在搭建 Spring Boot 项目环境时，程序启动后会在控制台打印SpringBoot 图标，图标描述了SpringBoot 的版本信息，这是 Spring Boot项目与Sping 项目启动区别较大的地方， Spring Boot默认 Banner 在程序启动时显示应用图标，当然图标也可以自定义。
 
@@ -586,7 +589,7 @@ public class Starter {
 
 ### 5.2. Spring Boot 配置文件
 
-​		Spring Boot 默认会读取全局配置文件，配置文件名固定为：application.properties 或 application.yml，放在 src/main/resources 资源目录下，使用配置文件来修改 SpringBoot 自动配置的默认值。
+​		**Spring Boot 默认会读取全局配置文件**，配置文件名固定为：**application.properties** 或 **application.yml**，放在 src/main/resources 资源目录下，使用配置文件来修改 SpringBoot 自动配置的默认值。
 
 在 resources 资源目录下添加 application.properties 文件，配置信息如下：
 
@@ -689,9 +692,11 @@ server:
 
 #### 5.3.2. 自动化配置
 
+
+
 ### 5.4. Profile 配置
 
-​		Profile 是 Spring 用来针对不同环境对不同配置提供的全局 Profile 配置使用 application-{profile}.yml，比如 application-dev.yml，application-test.yml。
+​		Profile 是 Spring 用来针对不同环境对不同配置提供的全局 Profile 配置使用 **application-{profile}.yml**，比如 application-dev.yml，application-test.yml。
 
 通过在 aplication.yml 中设置 spring.profiles.active=test|dev|prod 来动态切换不同环境，具体配置如下：
 
@@ -722,7 +727,7 @@ server:
 # 切换环境配置
 spring: 
   profiles:
-    active: test
+    active: test  #不同环境
 ```
 
 ### 5.5. 日志配置
@@ -869,7 +874,6 @@ spring:
     @Controller
     public class IndexController02 {
     
-    
         @RequestMapping("/index02")
         public String index(Model model) {
             model.addAttribute("msg","Hello SpringBoot 02 ");
@@ -878,7 +882,7 @@ spring:
     
     }
     ```
-
+    
 *   html 目录下添加 index.html 视图
 
 ​		修改 Thymeleaf 模板默认存放路径 (在 resources 目录下的 html 文件夹)
@@ -888,7 +892,7 @@ spring:
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
     <head>
         <meta charset="UTF-8">
-        <title>Thymeleaf </title>
+        <title>Thymeleaf</title>
     </head>
     <body>
         <!-- 获取请求域的值 -->
@@ -905,7 +909,7 @@ spring:
 
 ​	从入门项目中可以看到：对于 Spring MVC 请求拦截规则 '/' ，Spring Boot   默认静态资源路径如下：
 
-​    <img src="..\spring\img\ResourceProperties.png">                                       
+​    <img src=".\img\ResourceProperties.png">                                       
 
 ```java
 "classpath:/META-INF/resources/", 
@@ -937,9 +941,11 @@ spring:
   	  static-locations: classpath:/os/,clsspath/static/
 ```
 
+
+
 ## 8. SpringBoot 应用打包与部署
 
-### 8.1 jar 包部署
+### 8.1. jar 包部署
 
 #### 8.1.1. 配置打包命令
 
@@ -1020,6 +1026,8 @@ protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
 <img src=".\img\springboot-war.png">
 
 
+
+<hr style="background-color:red"/>
 
 # SpringBoot  two
 

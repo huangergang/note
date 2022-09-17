@@ -694,7 +694,7 @@ public class MailTest04 {
 
 ### 3.2. 配置邮件发送bean
 
-创建配置文件
+创建配置文件mail.properties
 
 ```properties
 # 服务器主机
