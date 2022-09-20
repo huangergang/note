@@ -1274,17 +1274,17 @@ Pair<? extends Employee>
 
 ### 1.集合接口
 
-![](C:\Users\莫\Desktop\note\java\img\集合接口继承层次.png)
+![](.\img\集合接口继承层次.png)
 
 ### 2.实现类
 
 #### 2.1.AbstractCollection
 
-![](..\java\img\AbstractCollection继承层次.png)
+![](img\AbstractCollection继承层次.png)
 
 #### 2.2.AbstractMap
 
-![](..\java\img\AbstractMap.png)
+![](img\AbstractMap.png)
 
 ### 3.具体集合
 
@@ -1729,7 +1729,7 @@ interrupt方法可以用来请求终止线程。
 
 当线程处于被阻塞或等待状态时，它暂时不活动。它不运行任何代码且消耗最少的资源。直到线程调度器重新激活它。细节取决于它是怎么达到非活动状态的。
 
-<img src="..\java\img\线程转换.png" />
+<img src="img\线程转换.png" />
 
 ### 5.线程属性
 
