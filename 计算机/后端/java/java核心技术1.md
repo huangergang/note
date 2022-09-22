@@ -165,7 +165,7 @@ for (char i:name.toCharArray()         // for  each
 
 **中断控制流程语句**```break  continue```
 
-#### 9.数组
+#### 9. 数组
 
 ```JAVA
 int[] a = new int[5];
@@ -174,7 +174,7 @@ int[] a = {1,2,3,4};
 
 **创建一个数字数组，所有元素初始化为0，`boolean`数组元素初始化为`false`**
 
-#### 10.注意
+#### 注意
 
 1. java区分大小写。
 
@@ -1054,7 +1054,7 @@ protected Test clone() throws CloneNotSupportedException {
 **参数，箭头(->)以及一个表达式。**
 
 ```JAVA
- new TreeSet<>((Student o1,Student o2)-> o1.getId()-o2.getId());
+new TreeSet<>((Student o1,Student o2)-> o1.getId()-o2.getId());
 ```
 
 无需指定lambda表达式的返回类型，lambda表达式总是会由上下文推导得出。
@@ -1097,7 +1097,7 @@ Error类层次结构描述了java运行时系统的内部错误和资源耗尽�
 * 试图打开一个不存在的文件
 * 试图根据给定的字符串查找Class对象，而这个字符串表示的类并不存在
 
-**Java语言规法将派生于Error类或RuntimeException类的所有异常称为<font color="red">非受查异常</font>，所有其他异常称为<font color="red">受查异常</font>。**
+​			**Java语言规法将派生于Error类或RuntimeException类的所有异常称为<font color="red">非受查异常</font>，所有其他异常称为<font color="red">受查异常</font>。**
 
 ### 2.throw
 

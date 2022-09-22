@@ -374,7 +374,7 @@ select duration/60*money as salarys from salary  where dated like "2021-11%";  #
 #### 11.1.1. Upper()将文本转换为大写
 
 ```SQL
-select Upper(name) from user; # 将所有字母姓名转换为大写
+select Upper(name) from user; 			# 将所有字母姓名转换为大写
 ```
 
 #### 11.1.2. 一些函数
@@ -393,7 +393,7 @@ select Upper(name) from user; # 将所有字母姓名转换为大写
 |   Upper()   |  将串转换为大写   |
 
 ```SQL
-select left(name,1) from user; # 返回左边第一个字符
+select left(name,1) from user;				 # 返回左边第一个字符
 ```
 
 ​	SOUNDEX是一个将任何文 本串转换为描述其语音表示的字母数字模式的算法。SOUNDEX考虑了类似 的发音字符和音节，使得能对串进行发音比较而不是字母比较。
@@ -677,8 +677,8 @@ update <表名> set 字段名1 = "更改的字段值",字段名2 = "更改的字
 
 ​	为了从一个表中删除（去掉）数据，使用DELETE语句。可以两种方式使用DELETE：
 
-	 1. 从表中删除特定的行； 
-	 1.  从表中删除所有行。
+	 1.  从表中删除特定的行； 
+	 2.  从表中删除所有行。
 
 ```SQL
 delete from <表名> where id = "XXX";

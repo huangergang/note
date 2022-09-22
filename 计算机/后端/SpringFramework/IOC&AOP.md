@@ -938,7 +938,7 @@ ac.close();
 * **RealSubject**（真实对象）：真实对象的类
 * **ProxySubject**（代理对象）：代理类
 
-<img src="C:\Users\莫\Desktop\note\后端\SpringFramework\img\proxy.png">
+<img src=".\img\proxy.png">
 
 ​	代理模式（英语：Proxy Pattern）是程序设计中的一种设计模式。
 ​	所谓的代理者是指一个类别可以作为其它东西的接口。代理者可以作任何东西的接口：网络连接、存储器中的大对象、文件或其它昂贵或无法复制的资源。
