@@ -90,15 +90,15 @@ public class FirstSample
   */
 ```
 
-#### **3.数据类型**
+#### 3.数据类型
 
-##### **Java整型     `int(4)  short(2)  long(8)  byte(1)`**
+**Java整型     `int(4)  short(2)  long(8)  byte(1)`**
 
-##### **Java浮点     `float(4)   double(8)`**
+ **Java浮点     `float(4)   double(8)`**
 
-##### **Java没有`unsiged`形式的`int,long,short,byte`**
+**Java没有`unsiged`形式的`int,long,short,byte`**
 
-#### **4.变量**
+#### 4.变量
 
 `final`--->常量
 
