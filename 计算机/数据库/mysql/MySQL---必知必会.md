@@ -544,7 +544,7 @@ select name,cou_id,grade from student,sc where id=stu_id;  # 查询学生姓名�
 ```SQL
 select student.name,course.name,grade
 from student,course,sc 
-where student.id=sc.stu_id 
+where student.id = sc.stu_id 
 	and sc.cou_id = course.id;
 # 查询学生姓名和他所选的课程名和成绩
 ```
