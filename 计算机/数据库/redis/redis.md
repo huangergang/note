@@ -175,13 +175,69 @@ redis-cli [options] [commands]
 
 Github上有人编写了Redis的图形化桌面客户端，地址：
 
-s
+https://github.com/lework/RedisDesktopManager-Windows
 
 
 
 
 
 
+
+# Redis数据结构
+
+Redis是一个key-value的数据库，key一般是String类型，不过value的类型多种多样：
+
+>   基本类型
+
+String								
+
+Hash
+
+List
+
+Set
+
+SortedSet
+
+>   特殊类型
+
+GEO
+
+BitMap
+
+HyperLog
+
+
+
+其他类型...
+
+
+
+# 通用命令
+
+通用命令是不分数据类型的，都可以使用的命令，常见的有：
+
+*   KEYS：查看符合模板的所有key,不建议在生产环境设备上使用
+*   DEL：删除一个指定的key
+*   EXISTS：判断key是否存在
+*   EXPIRE：给一-个key设置有效期，有效期到期时该key会被自动删除
+*   TTL：查看一个KEY的剩余有效期
+
+# String类型
+
+String类型的常见命令
+String的常见命令有:
+
+*   SET：添加或者修改已经存在的一个String类型的键值对
+    公
+*   GET：根据key获取String类型的value
+*   MSET：批量添加多个String类型的键值对
+*   MGET: 根据多个key获取多个String类型的value
+*   INCR：让- -个整型的key自增1 
+*   INCRBY：让- 个整型的key自增并指定步长，例如: incrby num 2让num值自增2
+*   INCRBYFLOAT：让一个浮点类型的数字自增并指定步长
+*   SETNX：添加一个String类型的键值对，前提是这个key不存在,否则不执行
+*   SETEX：添加一个String类型的键值对，并且指定有效期
 
 
 

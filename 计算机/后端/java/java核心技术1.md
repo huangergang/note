@@ -122,7 +122,7 @@ public class FirstSample
 
 #### **6.String类**
 
-#####  ```substring```方法:从较大字符串提取子串 
+#####  ```substring```方法:从较大字符串提取子串
 
 **字符串拼接:"+"号 **
 
