@@ -120,7 +120,7 @@ public class FirstSample
 
 枚举类型  ```enum Size{red,green,blue,black}; ```  
 
-#### **6.String类**
+#### 6.String类
 
 #####  ```substring```方法:从较大字符串提取子串
 
