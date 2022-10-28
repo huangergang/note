@@ -117,13 +117,35 @@ JVM运行时指定栈(Stacks)大小命令
 ### 2.3. 线程运行诊断
 
 ​	案例1:  cpu 占用过多
+
+​		定位
+
+*   用top定位哪个进程对cpu的占用过高
+*   psH -eo pid,tid,%cpu | grep进程id (用ps命令进- 步定位是哪个线程引起的cpu占用过高)
+*   jstack 进程id
+*   可以根据线程id找到有问题的线程，进一步定位到问题代码的源码行号
+
+
+
 ​	案例2:  程序运行很长时间没有结果
+
+​		线程死锁
 
 
 
 ##  3. 本地方法栈
 
 <img src="./img/native-method-stacks.png">
+
+```java
+// 关键字 natvie 声明的方法表示调用本地方法（C、C++）
+
+native
+```
+
+
+
+
 
 ## 4. 堆
 
@@ -135,25 +157,49 @@ Heap堆
 
 *   通过pew关键字，创建对象都会使用堆内存
 *   特点
-    *   它是线程共享的，堆中对象都需要考虑线程安全的问题
+    *   它是<u>线程共享</u>的，堆中对象都需要考虑线程安全的问题
     *   有垃圾回收机制
 
 ### 4.2. 堆内存溢出
 
-jvm 修改堆内存大小 Xmx 8m
+jvm 修改堆内存大小
+
+```jvm
+-Xmx8m
+```
 
 
+
+堆内存溢出异常：
+
+```java
+// java.lang.OutOfMemoryError: Java heap space
+```
 
 
 
 ### 4.3. 堆内存诊断
 
 1. jps工具
-查看当前系统中有哪些java 进程
+  查看当前系统中有哪些java 进程
 2. jmap工具
-查看堆内存占用情况     -help  进程id
+  查看堆内存占用情况     -help  进程id
 3. jconsole工具
-图形界面的，多功能的监测工具，可以连续监测
+  图形界面的，多功能的监测工具，可以连续监测
+
+
+
+
+
+案例
+
+*   垃圾回收后，内存占用仍然很高
+
+​	
+
+jvisualvm
+
+
 
 ## 5. 方法区
 
@@ -163,7 +209,7 @@ jvm 修改堆内存大小 Xmx 8m
 
 *   1.8以前会导致永久代内存溢出
 
-```txt
+```jvm
 演示永久代内存溢出java.lang.OutOfMemoryError: PermGen space
 
 -XX:MaxPermSize=8m
@@ -171,7 +217,7 @@ jvm 修改堆内存大小 Xmx 8m
 
 *   1.8之后会导致元空间内存溢出
 
-```txt
+```jvm
 演示元空间内存溢出java.lang.OutOfMemoryError: Metaspace
 
 -XX:MaxMetaspaceSize=8m
@@ -181,18 +227,10 @@ jvm 修改堆内存大小 Xmx 8m
 
 <img src="./img/Stringtable.png">
 
-[https://docs.oracle.com/en/java/javase/11/tools/java.html]:
+[官方文档](https://docs.oracle.com/en/java/javase/11/tools/java.html)
 
-[https://docs.oracle.com/en/java/javase/11/tools/java.html]:
+### 5.5. 运行时常量池
 
-[https://docs.oracle.com/en/java/javase/11/tools/java.html]:
-
-[https://docs.oracle.com/en/java/javase/11/tools/java.html]:
-
-[https://docs.oracle.com/en/java/javase/11/tools/java.html]:
-
-[https://docs.oracle.com/en/java/javase/11/tools/java.html]:
-
-[https://docs.oracle.com/en/java/javase/11/tools/java.html]:
-
-[https://docs.oracle.com/en/java/javase/11/tools/java.html]:
+*   常量池，就是一张表，虚拟机指令根据这张常量表找到要执行的类名、方法名、参数类型、字面量等信息
+*   运行时常量池，常量池是*.class文件中的，当该类被加载，它的常量池信息就会放入运行时常量池，并
+    把里面的符号地址变为真实地址

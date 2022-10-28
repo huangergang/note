@@ -200,9 +200,9 @@ Optional<T> min(Comparator<? super T> comparator)  // 产生流的最小元素�
 ```java
 List<String> list = List.of("jack", "frank", "aim", "bob");
 Optional<String> max = list.stream()
-    .max(Comparator.comparing(String::length));
+   						   .max(Comparator.comparing(String::length));
 Optional<String> min = list.stream()
-    .min(Comparator.comparing(String::length));
+ 						   .min(Comparator.comparing(String::length));
 System.out.println(max);
 System.out.println(min);
 ```
