@@ -54,7 +54,9 @@ $ mvn -v
 
 目录结构
 
-<img src="..\maven\img\maven目录结构.png">
+ <img src="./img/maven-project.png" style="width:50%;">
+
+[官方解释](https://maven.apache.org/guides/introduction/introduction-to-the-standard-directory-layout.html)
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>

@@ -32,6 +32,8 @@
 
 **Java SE (Java的标准版)**
 
+
+
 ## 第二章
 
 ### 配置java环境
@@ -57,9 +59,11 @@
 java -vserion
 ```
 
+
+
 ## 第三章
 
-#### **1."Hello World"**
+#### **1. "Hello World"**
 
 ```java
 public class FirstSample {
@@ -80,14 +84,15 @@ public class FirstSample {
 
 编译过程
 
-1.   javac   Test.java
-2.   java   Test
+```bash
+$ javac Tesrt.java    # javac将Test.java文件转换成字节码（.class 文件）
+
+$ java Test           #  字节码文件有jvm执行
+```
 
 
 
-
-
-#### **2.注释**
+#### 2. 注释
 
 ```java
 // ...    行注释  
@@ -102,7 +107,7 @@ public class FirstSample {
   */
 ```
 
-#### 3.数据类型
+#### 3. 数据类型
 
 java整型
 
@@ -136,7 +141,7 @@ boolean类型有两个值：false和true，用来判定逻辑条件。整数与�
 
 
 
-#### 4.变量
+#### 4. 变量
 
 java中每一个变量都有一个类型（Type）。
 
@@ -180,7 +185,7 @@ Math.round(x)   // 舍入运算
 
 
 
-#### **5.类型转换**
+#### 5. 类型转换
 
 >   数值之间的合法转换
 
@@ -314,72 +319,117 @@ String str1 = new String("hello");
 
      
 
-####  8.输入输出
+####  8. 输入输出
 
-1.   标准输入流
+1.标准输入流
 
-     ```java
-     Scanner in = new Scanner(System.in);   // Scanner类位于java.util包
-     String in1 = in.nextLine();    // nextLine 读取整行内容，包含空格
-     String in2 = in.next();    // next 读取一个单词，以空格分隔
-     ```
-
-2.   标准输出流
-
-     ```java
-     System.out.prinln();
-     ```
-
-3.   格式化输出
-
-     ```java
-     System.out.prinf();
-     ```
-
-     
-
-     <img src="./img/printf.png">
-
-     
-
-     
-
-     用于prinf的转化符
-
-     | 转换符 | 类型           | 举例       |
-     | ------ | -------------- | ---------- |
-     | d      | 十进制整数     | 159        |
-     | x      | 十六进制整数   | 9f         |
-     | o      | 八进制整数     | 237        |
-     | f      | 定点浮点数     | 15.9       |
-     | e      | 指数浮点数     | 1.59e+01   |
-     | g      | 通用浮点数     | ——         |
-     | a      | 十六进制浮点数 | 0x1.fccdp3 |
-     | s      | 字符串         | Hello      |
-     | c      | 字符           | H          |
-     | b      | 布尔           | True       |
-     | h      | 散列码         | 42628b2    |
-     | %      | 百分号         | %          |
-     | n      | 换行           | ——         |
-
-     
-
-     用于printf的标志
-
-     | 标志               | 目的                                                         | 举例         |
-     | ------------------ | ------------------------------------------------------------ | ------------ |
-     | +                  | 打印正数和负数的符号                                         | +3333.33     |
-     | 空格               | 在整数之前添加空格                                           | \| 3333.33\| |
-     | 0                  | 数字前面补0                                                  | 003333.33    |
-     | -                  | 左对齐                                                       | \|3333.33 \| |
-     | (                  | 将负数括在括号内                                             | (3333.33)    |
-     | ,                  | 添加分组分隔符                                               | 3,333.33     |
-     | #  (对于f格式)     | 包含小数点                                                   | 3,333.       |
-     | # （对于x或0格式） | 添加前缀 0x 或 0                                             | 0xcafe       |
-     | $                  | 给定被格式化的参数索引。例如，%1$d，%1\$x将以十进制和十六进制格式打印第一个参数 | 159    9F    |
-     | <                  | 格式化前面说明的数值。例如，%d%<x以十进制和十六进制打印同一个数值 | 159    9F    |
+```java
+Scanner in = new Scanner(System.in);   // Scanner类位于java.util包
+String in1 = in.nextLine();    // nextLine 读取整行内容，包含空格
+String in2 = in.next();    // next 读取一个单词，以空格分隔
+```
 
 
+
+2.标准输出流
+
+```java
+System.out.prinln();
+```
+
+
+
+3.格式化输出
+
+```java
+System.out.prinf();
+```
+
+
+
+<img src="./img/printf.png">
+
+
+
+用于prinf的转化符
+
+| 转换符 | 类型           | 举例       |
+| ------ | -------------- | ---------- |
+| d      | 十进制整数     | 159        |
+| x      | 十六进制整数   | 9f         |
+| o      | 八进制整数     | 237        |
+| f      | 定点浮点数     | 15.9       |
+| e      | 指数浮点数     | 1.59e+01   |
+| g      | 通用浮点数     | ——         |
+| a      | 十六进制浮点数 | 0x1.fccdp3 |
+| s      | 字符串         | Hello      |
+| c      | 字符           | H          |
+| b      | 布尔           | True       |
+| h      | 散列码         | 42628b2    |
+| %      | 百分号         | %          |
+| n      | 换行           | ——         |
+
+
+
+用于printf的标志
+
+| 标志               | 目的                                                         | 举例         |
+| ------------------ | ------------------------------------------------------------ | ------------ |
+| +                  | 打印正数和负数的符号                                         | +3333.33     |
+| 空格               | 在整数之前添加空格                                           | \| 3333.33\| |
+| 0                  | 数字前面补0                                                  | 003333.33    |
+| -                  | 左对齐                                                       | \|3333.33 \| |
+| (                  | 将负数括在括号内                                             | (3333.33)    |
+| ,                  | 添加分组分隔符                                               | 3,333.33     |
+| #  (对于f格式)     | 包含小数点                                                   | 3,333.       |
+| # （对于x或o格式） | 添加前缀 0x 或 0                                             | 0xcafe       |
+| $                  | 给定被格式化的参数索引。例如，%1$d，%1\$x将以十进制和十六进制格式打印第一个参数 | 159    9F    |
+| <                  | 格式化前面说明的数值。例如，%d%<x以十进制和十六进制打印同一个数值 | 159    9F    |
+
+
+
+日期和时间的转换符（日期的转换符要在前加t，如：System.out.printf("%tc",new Date());） 
+
+| 转换符 | 类型                                          | 举例                           |
+| ------ | --------------------------------------------- | ------------------------------ |
+| c      | 完整的日期和时间                              | 周六 10月 29 09:24:05 CST 2022 |
+| F      | ISO 8601 日期                                 | 2022-10-29                     |
+| D      | 美国格式日期（月/日/年）                      | 10/29/22                       |
+| T      | 24小时时间                                    | 09:28:16                       |
+| r      | 12小时时间                                    | 09:28:39 上午                  |
+| R      | 24小时时间没有秒                              | 09:29                          |
+| Y      | 4位数字的年（前面补0）                        | 2022                           |
+| y      | 年的后两位数字（前面补0）                     | 22                             |
+| C      | 年的前两位数字（前面补0）                     | 20                             |
+| B      | 月的完整拼写                                  | 十月                           |
+| b或h   | 月的缩写                                      | 10月                           |
+| m      | 两位数字的月（前面补0）                       | 10                             |
+| d      | 两位数字的日（前面补0）                       | 09                             |
+| e      | 两位数字的日（前面不补0）                     | 9                              |
+| A      | 星期几的完整拼写                              | 星期六                         |
+| a      | 星期几的缩写                                  | 周六                           |
+| j      | 三位数的年中的日子（前面补0），在001到366之间 | 302                            |
+| H      | 两位数字的小时（前面补0），在0到23之间        | 18                             |
+| k      | 两位数字的小时（前面不补0），在0到23之间      | 18                             |
+| I      | 两位数字的小时（前面补0），在0到12之间        | 09                             |
+| l      | 两位数字的小时（前面不补0），在0到12之间      | 9                              |
+| M      | 两位数字的分钟（前面补0）                     | 41                             |
+| S      | 两位数字的秒（前面补0）                       | 52                             |
+| L      | 三位数字的毫秒（前面补0）                     | 308                            |
+| N      | 九位数的毫微秒（前面补0）                     | 923000000                      |
+| p      | 上下午的标志                                  | 上午      pm                   |
+| z      | 从GMT起，RFC822数字位移                       | +0800                          |
+| Z      | 时区                                          | CST                            |
+| s      | 从格林威治时间 1970-01-01 00:00:00 起的秒数   | 1667007969                     |
+| Q      | 从格林威治时间 1970-01-01 00:00:00 起的毫秒数 | 1667008009322                  |
+
+
+
+在printf中使用索引，索引必须紧跟%后，并以$终止。从1开始。
+
+```java
+System.out.printf("%1$tr %1$tA", new Date());   // 09:51:34 上午 星期六
+```
 
 打印发票单
 
@@ -396,23 +446,130 @@ map.forEach((k, v) -> {
 });
 ```
 
+String.format方法创建一个格式化字符串，而不打印输出。
 
-
-2.   
-
-
-
-**打印时间``` System.out.printf("%tc",new Date());```**
-
-**文件输入输出**
+```java
+String message = String.format("hello, my name is %s price is %.2f$", "Tom",33.5);
+```
 
 
 
-#### 9.控制流程
+4.文件输入输出
 
-**块(block)作用域--------------``` {  }```**
+对文件的读取需要一个用File对象构造一个Scanner对象。
 
-```if      for    while     do-while   swith             ```
+```java
+Scanner in = new Scanner(Paths.get("D:\\note\\Test_Study\\src\\file.txt"), "utf8");
+```
+
+如果文件名中包含反斜杠符号，就必须在每个反斜杠符之前再加一个反斜杠符："D:\\\note\\\Test_Study\\\src\\\file.txt"；
+
+
+
+如果要写入文件，就要构造一个PrintWriter 对象。在构造器中只需提供文件名。
+
+```java
+// PrintWriter 可以使用和System.out一样的print，printf，println方法，会覆盖文件内容写入
+PrintWriter pw = new PrintWriter("D:\\note\\Test_Study\\src\\file.txt", "utf8");
+pw.printf("%1$tr %1$tA", new Date());
+pw.close();
+
+// FileWriter 可以实现文件内容的追加写入
+FileWriter fw = new FileWriter("D:\\note\\Test_Study\\src\\file.txt", true);
+fw.write(String.format("%1$tr %1$tA", new Date()));
+fw.close();
+```
+
+
+
+#### 9. 控制流程
+
+1.块(block)作用域  {}
+
+```java
+class Test{
+
+	static
+    {
+          //  ...
+    }
+    
+	public void test()
+    {
+      	  // ...
+    }
+    
+}
+```
+
+2.条件语句
+
+if
+
+```java
+if(){
+    // ...
+} else() {
+    // ...
+    if(){
+        // ...
+    }
+    
+} 
+```
+
+for
+
+```java
+for(;;){
+    // ...
+}
+```
+
+while
+
+```java
+while(true){
+    
+   int  a = 10;
+    
+   if(a < 0)
+       break;
+    
+    a--;
+}
+```
+
+do-while
+
+```java
+do{
+    
+}while(true)
+```
+
+swith
+
+```java
+switch(choice){
+        
+    case 1:
+        // ...
+        break;
+    case 2:
+        // ...
+        break;
+    default:
+        // ...
+        break;
+}
+```
+
+switch语句中的case标签可以是：
+
+1.   类型为char、byte、short或int的常量表达式
+2.   枚举常量
+3.   从java7开始支持字符串字面量
 
 **增强循环------```for  each```**
 
@@ -425,105 +582,215 @@ for (char i:name.toCharArray()         // for  each
 }
 ```
 
-**中断控制流程语句**```break  continue```
 
-#### 10. 数组
 
-```JAVA
-int[] a = new int[5];
-int[] a = {1,2,3,4};
+**中断控制流程语句**
+
+break   直接跳出，结束循环
+
+```java
+for (int a = 0; ; a++) {
+
+    System.out.println("a = " + a);
+
+    if (a > 2) break;
+}
 ```
 
-**创建一个数字数组，所有元素初始化为0，`boolean`数组元素初始化为`false`**
+continue   跳出当次循环，下次循环继续执行
 
-#### 注意
+```java
+for (int a = 0; a < 10; a++) {
 
-1. java区分大小写。
+    if (a == 2) continue;        // 不输出2
 
-2. 类名命名规范为驼峰命名。
+    System.out.println("a = " + a);
 
-3. 源代码文件名必须与公共类的类名相同，以.java作为扩展名。
+}
+```
 
-4. main方法必须声明为public。
 
-5. 整型，允许是负数。
 
-   ```java
-   int 	    //  4字节
-   short		//  2字节
-   long 		//  8字节
-   byte 		//  1字节
-   ```
+#### 10. 大数据
 
-6. 浮点型
+​		如果基本的整数和浮点数精度不能够满足需求，那么可以使用java.math包中的两个很有用的类：BigInteger和BigDecimal。这两个类可以处理任意长度数字序列的数值。BigInteger类实现了任意精度的整数运算，BigDecimal实现了任意精度的浮点数运算。
 
-   ```java
-   float     	 //  4字节
-   double    	 //  8字节
-   ```
+```java
+BigInteger a = new BigInteger("2342342342234234");   // 创建一个大数值整数
 
-   浮点类型**float**类型的数值后加**F**或**f**区分，若没加默认为**double**类型。
+BigInteger b =  BigInteger.valueOf(123);     // 静态方法valueOf()可以将普通数值装换为大数值
 
-7. NaN不是一个数字。计算0/0或负数的平方根时结果是NaN。
+BigInteger c = a.add(b);                   // 加法
+```
 
-8. char表示单个字符
+大整数
 
-9. boolen类型。整型值与布尔值之间不能互相转换。
+>   API  java.math.BigInteger 1.1
 
-10. 变量名必须是一个以字母开头并由字母或数字构成的序列。
+*   BigInteger  add(BigInteger  other)                 加法
 
-11. final关键字表明一个常量。
+*   BigInteger  subtract(BigInteger  other)          减法
 
-12. 强制类型转换通过截断小数部分将浮点数值转换为整型。
+*   BigInteger  multiply(BigInteger  other)         乘法
 
-13. 用Math.round()方法对浮点数进行舍入运算。
+*   BigInteger divide(BigInteger  other)              除法
 
-14. java没有内置字符串类型，在标准java类库中提供了一个String类。
+*   BigInteger  mod(BigInteger  other)                取余
 
-15. 字符串不能用==做判断，而用str.equals(otherStr)方法判断。
+*   int  compareTo(BigIneger  other)
 
-16. 空串""，指长度为0的字符串。
+    比较，相等返回0，大于返回负数，小于返回整数
 
-17. null指空对象。
 
-18. 需要由较短的字符构建字符串时，使用StringBuilder类处理。
 
-19. 格式化输出System.out.printf()。
+```java
+BigDecimal a1 = new BigDecimal("2342342342234234.2");
+BigDecimal b1 = BigDecimal.valueOf(123.2);
 
-20. 文件读取，需要用File对象构建Scanner对象。
+BigDecimal c1 = a1.add(b1);
+System.out.println("c = " + c1);
+```
 
-    ```JAVA
-    Scanner in = new Scanner(Path.get("文件路径"),"UTF-8");
-    ```
+大实数
 
-21. 文件写入。
+>   API  java.math.BigDecimal  1.1
 
-    ```JAVA
-    PrintWriter out = new PrintWriter("文件路径","UTF-8");
-    ```
+*   BigDecimal  add(BigDecimal  other)                 加法
 
-    
+*   BigDecimal  subtract(BigDecimal  other)          减法
 
-22. switch语句中的case标签可以是char、byte、short、int。从javaSE 7开始，case标签值支持字符串字面量。
+*   BigDecimal  multiply(BigDecimal  other)         乘法
 
-23. java提供大数值处理类。
+*   BigDecimal  divide(BigDecimal  other)              除法
 
-    ```JAVA
-    class BigInterger   // 实现任意精度的整数运算。
-    class BigDecimal    // 实现任意精度的浮点数运算。
-    ```
+*   BigDecimal  mod(BigDecimal  other)                取余
 
-24. 匿名数组。
+*   int  compareTo(BigDecimal  other)
 
-    ```JAVA
-    smallPrimes = new int[]{1,2,3,4,5};
-    ```
+    比较，相等返回0，大于返回负数，小于返回整数
 
-25. jdk提供Arrays.sort()方法用于排序数组。源码实现为快速排序。
+
+
+#### 11. 数组
+
+​		数组是一种数据结构，存储同一类型的值的集合。
+
+```JAVA
+int[] arr = new int[5];
+int[] arr1 = {1, 2, 3, 4};
+```
+
+创建一个数字数组，所有元素初始化为0，boolean数组元素初始化为false。对象数组初始化值为null。
+
+
+
+数组拷贝（Arrays.copyOf() ）
+
+```java
+int[] arry = new int[]{1, 2, 3, 4, 5};
+int[] ints = Arrays.copyOf(arry, arry.length);   // 重新为数据分配空间存储
+```
+
+
+
+>   API    java.util.Arrays  1.2
+
+*   static String toString(type[]  a)       5.0
+
+*   static typr copyOf(typr[] a,  int  length)   6
+
+*   static typr copyOf(typr[] a,  int  start,  int  end)   6
+
+*   static  void  sort(type[]  a)
+
+    快速排序数组
+
+*   static  int  binarySearch(type[]  a, type   v)
+
+*   static typr binarySearch((typr[] a,  int  start,  int  end,  type   v)   6
+
+    使用二分查找在a数组中查找v，start为起始下标，end为结束下标，如果查找成功返回对应下标值，反之返回负数。
+
+*   static  void  fill(type[]  a, type  v)
+
+    将数组的所有元素值都设置为v。
+
+*   static boolean equals(type[] a, type[] b)
+
+    如果两个数组大小相等，并且下标相同的元素都对应相等，返回true。
+
+
+
+#### 12. 多维数组
+
+​		二维数组
+
+```java
+int[][] arr = {{1, 2, 4}, {4, 5, 6}, {7, 8, 9}};
+
+int[][] arr = new int[][]{{1, 2, 4}, {4, 5, 6}, {7, 8, 9}};
+```
+
+
+
+遍历每一个元素
+
+```java
+for (int[] ints : arr) {
+    for (int anInt : ints) {
+        System.out.println("anInt = " + anInt);
+    }
+}
+```
+
+快速打印一个二维数组
+
+```java
+System.out.println(Arrays.deepToString(arr));
+```
+
+
+
+>   不规则数组
+
+​	java实际上没有多维数组，只有一维数组。多维数组被解释为数组的数组。
+
+```java
+int[][] arr1 = {{1}, {2, 2}, {3, 3, 3}};
+
+for (int[] ints : arr1) {
+    for (int anInt : ints) {
+        System.out.print(anInt +" ");
+    }
+    System.out.println();
+}
+/*  输出结果
+1 
+2 2 
+3 3 3 
+*/
+```
+
+
+
+#### 13. 注意
+
+1. NaN不是一个数字。计算0/0或负数的平方根时结果是NaN。
+2. char表示单个字符
+3. boolen类型。整型值与布尔值之间不能互相转换。
+4. 变量名必须是一个以字母开头并由字母或数字构成的序列。
+5. 强制类型转换通过截断小数部分将浮点数值转换为整型。
+6. java没有内置字符串类型，在标准java类库中提供了一个String类。
+7. 字符串不能用==做判断，而用str.equals(otherStr)方法判断。
+8. 空串""，指长度为0的字符串。
+9. null指空对象。
+10. jdk提供Arrays.sort()方法用于排序数组。源码实现为快速排序。
+
+
 
 ## 第四章
 
-### 1.oop编程
+### 1. oop编程
 
 **面向对象程序设计**（英语：Object-oriented programming，缩写：OOP）是种具有对象概念的编程典范，同时也是一种程序开发的抽象方针。它可能包含数据、特性、代码与方法。对象则指的是类（class）的实例。它将对象作为程序的基本单元，将程序和数据封装其中，以提高软件的重用性、灵活性和扩展性，对象里的程序可以访问及经常修改对象相关连的数据。在面向对象程序编程里，计算机程序会被设计成彼此相关的对象。
 
@@ -726,6 +993,8 @@ public class Test {
    5. 将职责过多的类分解
    6. 类名和方法名做到见名知意
    7. 优先使用不可变类
+
+
 
 ## 第五章
 
