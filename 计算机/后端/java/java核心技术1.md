@@ -796,7 +796,23 @@ for (int[] ints : arr1) {
 
 面向对象程序设计可以看作一种在程序中包含各种独立而又互相调用的对象的思想，这与传统的思想刚好相反：传统的程序设计主张将程序看作一系列函数的集合，或者直接就是一系列对电脑下达的指令。面向对象程序设计中的每一个对象都应该能够接受数据、处理数据并将数据传达给其它对象，因此它们都可以被看作一个小型的“机器”，即对象。目前已经被证实的是，面向对象程序设计推广了程序的灵活性和可维护性，并且在大型项目设计中广为应用。此外，支持者声称面向对象程序设计要比以往的做法更加便于学习，因为它能够让人们更简单地设计并维护程序，使得程序更加便于分析、设计、理解。反对者在某些领域对此予以否认。
 
-### 2.对象的三个特性
+
+
+面向过程与面向对象程序设计的比较
+
+<img src="./img/面向过程与面向对象的比较.png">
+
+
+
+### 2. class (类)
+
+​		类（class）是构造对象的版图或蓝图。由类构造（construct）对象的过程称为创建类的实例（instance）。封装（encapsulation，有时称为数据隐藏），指将数据和行为组合在一个包中，并对对象的使用者隐藏了数据和实现方法。对象中的数据称为实例域（instance field）。操纵数据的过程称为方法（method）。对于每个特定的类实例（对象）都有一组特定的实例域值。这些值的集合就是这个对象的当前状态（state）。
+
+java中所有的类都源于Object类。通过扩展一个类来建立另外一个类的过程称为继承（inheritance）。
+
+
+
+### 2. 对象的三个特性
 
 * 行为(behavior)
 
@@ -810,40 +826,179 @@ for (int[] ints : arr1) {
 
   如何辨别具有相同行为与状态不同的对象？
 
-### 3.类与类之间的关系
+<u>如果不经过方法调用就可以改变类的状态，就说明封装性遭到了破坏。</u>
+
+### 3. 类与类之间的关系
 
 * 依赖("uses-a")
+
+    如一个类的方法操纵另一个类的对象。
+
+    ```java
+    class A {            // A依赖B
+        public void fun1(B b) {
+            // ...
+        }
+        public B fun2() {
+            // ...
+            return new B();
+        }
+    }
+    class B { }
+    
+    ```
 * 聚合("has-a")
+
+    类A的对象包含类B的对象。
+
+    ```java
+    class A {            // A聚合B
+        private B b;     
+    }
+    
+    class B { }
+    ```
+
 * 继承("is-a")
 
-**减少“依赖”关系的类，从而降低代码耦合度。**
+    ```java
+    class A {
+        private String a;
+    }
+    
+    class B extends A {       // B继承A
+        private String b;
+    }
+    ```
 
-### 4.创建对象
+<u>减少"依赖"关系的类，从而降低代码耦合度。</u>
+
+
+
+表达类关系的UML符号
+
+| 关系     | UML链接符             |
+| -------- | --------------------- |
+| 继承     | ——————\|>             |
+| 接口实现 | ------------------\|> |
+| 依赖     | ------------------>   |
+| 聚合     | <>—————               |
+| 关联     | ———————               |
+| 直接关联 | ———————>              |
+
+
+
+### 4. 创建对象
+
+要想使用对象，就必须首先构造对象，指定其初始状态。在java中使用构造器（constructor）构造新实例。
 
 ```JAVA
-new Student();		// new 关键字用于创建对象
+new Date();		// new 关键字用于创建对象
 ```
 
 new 操作符调用构造器返回一个实例。
 
 ```JAVA
-Student frank = new Student();
+Date today = new Date();   // today为对象引用
 ```
 
-### 5.构造器
+
+
+java标准类库分别包含了两个类
+
+1.   Date                用来表示时间点
+2.   LocalDate       用来表示日历
+
+```java
+// 创建一个日历类
+LocalDate.now();
+
+// 构造一个指定日期的日历类
+LocalDate.of(1999, 12, 31);
+
+// plusDays()方法
+LocalDate now = LocalDate.now();
+LocalDate after100 = now.plusDays(100);   // plusDays() 返回指定天数后的一个新的LocalDate实例
+```
+
+>   设计一个日历的打印程序
+
+```java
+package test.com.javaSE1.fourthUnit;
+
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+
+public class LocalDateTest {
+
+    public static void main(String[] args) {
+
+        LocalDate date = LocalDate.now();
+        int month = date.getMonthValue();
+        int today = date.getDayOfMonth();
+
+        date = date.minusDays(today - 1);
+        DayOfWeek weekday = date.getDayOfWeek();
+        int value = weekday.getValue();
+
+        System.out.println("Mon Tue Wed Thu Fri Sat Sun");
+        for (int i = 1; i < value; i++)
+            System.out.print("    ");
+
+        while (date.getMonthValue() == month) {
+            System.out.printf("%3d", date.getDayOfMonth());
+            if (date.getDayOfMonth() == today) {
+                System.out.print("*");
+            } else
+                System.out.print(" ");
+            date = date.plusDays(1);
+            if (date.getDayOfWeek().getValue() == 1) System.out.println();
+
+        }
+        if (date.getDayOfWeek().getValue() != 1) System.out.println();
+    }
+
+}
+```
+
+>   API    java.time.LocalDate    8
+
+*    static LocalTime now()
+
+*   static LocalTime of(int  year, int  month, int  day)
+
+*   int  getYear()
+
+*   int  getMonthvalue()  
+
+*   int  getDayOfMonth()
+
+    获得当前日期的年、月、日
+
+*   DayOfWeek  getDayOfWeek
+
+    得到当前日期是星期几，作为DayOfWeek类的一个实例返回。调用 getValue 来得到 1 ~ 7 之间的一个数，表示这是星期几，1 表示星期一，7 表示星期日。
+
+*   LocalDate  plusDays(int  n)
+
+*   LocalDate  minusDays(int  n)
+
+    生成当前日期之后前 n 天的日期。
+
+#### 4.1. 构造器
 
 构造器是特殊的方法，构造器用来构造新实例，可以用来初始化实例。**构造器名与类名必须相同，无返回值。**
 
 ```JAVA
 new Student();   // 无参构造器
 
-new Student("frank",12,"男");   // 有参构造器
+new Student("frank", 12, "男");   // 有参构造器
 ```
 
 ***对象引用不包含一个对象，而仅仅引用一个对象。***
 
 ```JAVA
-Student frank;      // 创建一个对象引用   frank引用null
+Date today;      // 创建一个对象引用   frank引用null
 ```
 
 构造器调用构造器：
@@ -855,7 +1010,19 @@ public Student(String id,String name){
 }
 ```
 
-### 6.访问器
+
+
+关于构造器
+
+*   构造器与类同名
+*   每个类可以有一个以上的构造器
+*   构造器可以有0个、1个或多个参数
+*   构造器没有返回值
+*   构造器总是伴随  new 操作一起调用
+
+
+
+#### 4.2. 访问器
 
 **只访问而不修改对象的方法称为访问器。**
 
@@ -870,13 +1037,13 @@ int month = date.getMonthValue();
 int day = date.getDayOfMonth();
 ```
 
-### 7.更改器
+#### 4.3.  更改器
 
 改变实例状态的方法称为更改器。
 
 set方法
 
-### 8.隐式参数与显示参数
+#### 4.4. 隐式参数与显示参数
 
 ```JAVA
 public void setName(String name) {
@@ -886,23 +1053,37 @@ public void setName(String name) {
 
 this为隐式参数，name为显示参数。
 
-### 9.访问权限
+
+
+>    设计原则
+
+*   一个私有的数据域
+*   一个公有的域访问器方法       （get）
+*   一个公有的域更改器方法       （set）
+
+
+
+### 5. 基于类访问权限
 
 一个方法可以访问所属类的所有私有数据。
 
 私有方法不会被外部的其他类调用，私有方法通常做辅助方法。
 
-### 10.final实例域
+
+
+
+
+### 6. final实例域
 
 ```JAVA
-final double PT = 3.1415926;
+final double PI = 3.1415926;
 ```
 
 final域必须在构建对象是初始化。final修饰符大都应用于基本类型域，或不可变类的域。
 
 不可变类：类中的每个方法都不会改变其对象。
 
-### 11.静态域与静态方法
+### 7. 静态域与静态方法
 
 ```JAVA
 static final double PT = 3.1415926;
