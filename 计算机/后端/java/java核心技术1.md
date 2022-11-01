@@ -1448,6 +1448,8 @@ public class Object {
     @HotSpotIntrinsicCandidate
     public Object() {}
 
+    
+    // native 关键字修饰的方法由本地方法实现
     @HotSpotIntrinsicCandidate
     public final native Class<?> getClass();
 
@@ -1500,7 +1502,7 @@ public class Object {
 }
 ```
 
-
+getclass()方法返回对象的完全限定名。
 
 #### 10.1. equals方法
 
@@ -1542,9 +1544,50 @@ Object中的equals方法。用于检测一个对象是否等于另一个对象�
 static Boolean equals(type[] a,type[] b);    // 如果两个数组长度相同，并且对应位置上的元素也均相同，将返回true
 ```
 
+
+
+>   关于equals方法实现的建议
+
+1.   显示参数命令为otherObject，稍后需要将它转换成另一个叫做other的变量。
+
+2.   检测 this 与 otherObject 是否引用同一个对象。
+
+     ```java
+     if (this == otherObject)  return true;
+     ```
+
+3.   检测 otherObject 是否为 null ，如果为null 返回 false 。
+
+     ```java
+     if (otherObject == null)  return false;
+     ```
+
+4.   比较 otherObject 与 this 是否属于同一个类。
+
+     如果 equals 的语义在每个子类中有所改变，就使用 getClass检测：
+
+     ```java
+     if (getClass() != otherObject.getClass())  return false;
+     ```
+
+     如果所有的子类都拥有统一的语义，就用 instanceof 检测：
+
+     ```java
+     if (!(otherObject instanceof ClassName)) return false;
+     ```
+
+5.   将 otherObject 转化为相应的类类型变量：
+     ```java
+     ClassName other = (ClassName)otherObject;
+     ```
+
+6.   对域进行比较时，使用 == 比较基本类型域，使用 equals 比较对象域。如果在子类中重写 equals ，就要调用 super.equals(other);
+
+
+
 #### 10.2. hashCode方法
 
-散列码（hash code）是对象导出的一个整型值。
+​		散列码（hash code）是对象导出的一个整型值。每个对象都有一个默认的散列码，字符串的散列码是由内容导出的。
 
 ```JAVA
 // String 类的hashCode计算算法，字符串的散列码由内容导出
@@ -1569,15 +1612,65 @@ public String toString() {
 
 
 
+### 11. 泛型数组列表
+
+java提供ArrayList类用于动态创建泛型数组。可以动态的增加或减少数组容量。
+
+ArrayList采用了类型参数（type parameter）的泛型类（generic class）。
+
+```java
+ArrayList<String> al = new ArrayList<>();     // 类型参数必须是对象，基本数据类型使用其包装类
+```
+
+```java
+ArrayList<String> al = new ArrayList<>(100);   // 指定初始容量
+```
 
 
-### 14.泛型数组列表
 
-java提供ArrayList用于动态创建泛型数组。
+>   API   java.util.ArrayList\<E\>   1.2
 
-### 15.包装器与自动装箱
+*   ArrayList\<E>()
 
-包装器类为final类。在作用算时自动拆箱或装箱。
+*   ArrayList\<E>(int  initialCapacity)
+
+*   boolean  add(E  obj)
+
+    在数组列表尾端添加一个元素。永远返回true。
+
+*   int  size()
+
+    返回数组列表中当前元素的数量。（小于等于数组容量）
+
+*   void  ensureCapacity(int  capacity)
+
+    确保数组列表在不重新分配存储空间的情况下就能够保存给定数量的元素。
+
+*   void  trimToSize()
+
+    将数组列表的存储容量消减到当前尺寸。
+
+*   void  set(int  index, E  obj )
+
+    设置数组列表指定位置的元素值，覆盖这个位置的原有内容。
+
+*   E  get(int  index)
+
+    获取指定位置的元素
+
+*   void   add(int  index, E obj)
+
+    向后移动元素，以便插入元素。
+
+*   E remove(int  index)
+
+    删除一个元素，并将后面的元素向前移动。
+
+
+
+### 12. 包装器与自动装箱
+
+包装器类为final类。在作用算时自动拆箱或自动装箱（autoboxing）。
 
 包装类对象可以与 基本数据类型直接用运算符进行运算，运算时自动拆箱为基本数据类型。
 
@@ -1594,7 +1687,11 @@ java提供ArrayList用于动态创建泛型数组。
 
 **当Integer中存储的数位于-128到127之间的short和int被包装到固定的对象中。如果通过自动装箱并且是范围在-128到127之间得到的Integer对象指向该固定的对象。通过 `new` 运算符一定是新建立的对象。**
 
-### 16.参数可变的方法
+包装器对象使用equals方法进行比较。
+
+
+
+### 13. 参数可变的方法
 
 这里的参数实际上是一个数组。
 
@@ -1603,8 +1700,6 @@ java提供ArrayList用于动态创建泛型数组。
 System.out.printf("%d",number);
 System.out.printf("%d %f",number,number2);
 ```
-
-
 
 使用可变参数设计一个筛选名字长度大于5字符的姓名。
 
@@ -1626,26 +1721,26 @@ public class Test {
 }
 ```
 
-### 17.反射
+
+
+### 14. 反射
 
 能够分析类能力的程序称为反射（reflective）。
 
-> 反射机制可以用来：
->
-> * 在运行时分析类的能力
-> * 在运行时查看对象
-> * 实现通用的数组操作代码
-> * 利用Method对象
+>    反射机制可以用来
+
+* 在运行时分析类的能力
+* 在运行时查看对象
+* 实现通用的数组操作代码
+* 利用Method对象
 
 **java.lang.reflect**包中有三个类**Field**、**Method**和**Constructor**分别用于描述类的**public**域、方法和构造器。
 
-#### 17.1.Class
+#### 14.1. Class
 
  java运行时系统为所有的对象维护一个被称为运行时的类型标识，java的Class保存了每个类型的信息。
 
 Object的get.Class()方法返回一个Class实例。
-
-
 
 获取Class对象的三种方法：
 
@@ -1671,39 +1766,39 @@ Class<?> cls3 = Print.class;
 
 
 
-> java.lang.Class 1.0
->
-> * Filed[]   getFields()
->
->   返回一个包含Field对象的数组，每个对象记录了这个类或超类的共有域。
->
-> * Field[]   getDeclaredFields()
->
->   返回一个包含Field对象的数组，每个对象记录了这个类的全部域。
->
-> * Method[]  getMethods()
->
->   返回包含Method对象的数组，包含所有公有方法，包括从超类继承的公有方法。
->
-> * Method[]  getDeclaredMethods()
->
->   包含这个类或接口的全部方法，不包括由超类继承的方法。
->
-> * Constructor[]  getConstructors()
->
->   返回包含Constructor的数组，包含了Class对象描述类的所有公有构造器。
->
-> * Constructor[]  getDeclaredConstructor()
->
->   返回所有构造器。
+> API   java.lang.Class 1.0
+
+* Filed[]   getFields()
+
+    返回一个包含Field对象的数组，每个对象记录了这个类或超类的共有域。
+
+* Field[]   getDeclaredFields()
+
+    返回一个包含Field对象的数组，每个对象记录了这个类的全部域。
+
+* Method[]  getMethods()
+
+    返回包含Method对象的数组，包含所有公有方法，包括从超类继承的公有方法。
+
+* Method[]  getDeclaredMethods()
+
+    包含这个类或接口的全部方法，不包括由超类继承的方法。
+
+* Constructor[]  getConstructors()
+
+    返回包含Constructor的数组，包含了Class对象描述类的所有公有构造器。
+
+* Constructor[]  getDeclaredConstructor()
+
+    返回所有构造器。
 
 
 
-#### 17.2.Field
+#### 14.2. Field
 
-> getName会返回属性名
->
-> getType会返回属性类型（完全限定名）
+getName会返回属性名
+
+getType会返回属性类型（完全限定名）
 
 ```java
 Class<?> cls1 = Double.class;
@@ -1716,11 +1811,11 @@ for (Field field : fields) {
 }
 ```
 
-#### 17.3.Method
+#### 14.3. Method
 
-> getName返回方法名
->
-> getParameters返回方法的参数列表
+getName返回方法名
+
+getParameters返回方法的参数列表
 
 ```java
 Class<?> cls1 = Double.class;
@@ -1738,7 +1833,7 @@ for (Method method : methods) {
 }
 ```
 
-#### 17.4.Constructor
+#### 14.4. Constructor
 
 构造一个对象
 
@@ -1767,37 +1862,49 @@ public class Print {
 }
 ```
 
-#### 17.5.Modifier
+
+
+反射机制的默认行为受限于 java 的访问控制。覆盖访问控制需要调用Filed、Method或Constructor 对象的setAccessible方法：
+
+```java
+declaredConstructor.setAccessible(true);
+```
+
+setAccessible 方法是 AccessibleObject 类中的一个方法，它是 Filed、Method或Constructor 类的公共超类。这个特性是为调试、持久存储和相似机制提供的。
+
+
+
+#### 14.5. Modifier
 
 Field、Method、Constructor三个类有一个getModifiers的方法，它返回一个整数值。Modifier类的静态方法用来判断修饰符的类型。
 
-> java.lang.reflect.Modifier 1.1
->
-> * static String toString(int  modifiers)
->
->   返回对应modifiers中对应的修饰符的字符串表示
->
-> * static boolean isAbstract(int  modifiers)
->
-> * static boolean isFinal(int  modifiers)
->
-> * static boolean isInterface(int  modifiers)
->
-> * static boolean isNative(int  modifiers)
->
-> * static boolean isPrivate(int  modifiers)
->
-> * static boolean isPublic(int  modifiers)
->
-> * static boolean isProtected(int  modifiers)
->
-> * static boolean isStatic(int  modifiers)
->
-> * static boolean isStrict(int  modifiers)
->
-> * static boolean isSynchronized(int  modifiers)
->
-> * static boolean isVolatile(int  modifiers)
+> API   java.lang.reflect.Modifier 1.1
+
+* static String toString(int  modifiers)
+
+    返回对应modifiers中对应的修饰符的字符串表示
+
+* static boolean isAbstract(int  modifiers)
+
+* static boolean isFinal(int  modifiers)
+
+* static boolean isInterface(int  modifiers)
+
+* static boolean isNative(int  modifiers)
+
+* static boolean isPrivate(int  modifiers)
+
+* static boolean isPublic(int  modifiers)
+
+* static boolean isProtected(int  modifiers)
+
+* static boolean isStatic(int  modifiers)
+
+* static boolean isStrict(int  modifiers)
+
+* static boolean isSynchronized(int  modifiers)
+
+* static boolean isVolatile(int  modifiers)
 
 对包装类Double方法的修饰符显示
 
@@ -1811,7 +1918,36 @@ for (Method m :
 }
 ```
 
-### 18.枚举类
+
+
+>   使用反射对（任意类型）数组进行扩容
+
+```java
+public class Test {
+
+    public static Object copyOf(Object a, int newLength) {
+        Class<?> aClass = a.getClass();
+        if (!aClass.isArray()) return null;
+        Class<?> componentType = aClass.getComponentType();
+        int length = Array.getLength(a);
+        Object newArray = Array.newInstance(componentType, newLength);
+        System.arraycopy(a, 0, newArray, 0, Math.min(length, newLength));
+        return newArray;
+    }
+
+    public static void main(String[] args){
+
+        String[] list = {"1", "2", "3", "4", "5"};
+        list = (String[]) copyOf(list, 10);     // 扩容成功
+
+    }
+
+}
+```
+
+
+
+### 15. 枚举类
 
 枚举类都继承自Enum类，每个枚举值都是一个实例。
 
@@ -1839,25 +1975,26 @@ Size size = Size.valueOf(Size.class, "SMALL");
 Size[] values = Size.values();
 ```
 
-> java.lang.Enum<E> 5.0
->
-> * static Enum valueOf(Class enumClass, String name)
->
->   返回指定名字、给定类的枚举常量
->
-> * String toString()
->
->   返回枚举常量值
->
-> * int  ordinal()
->
->   返回枚举常量在enum声明中的位置，位置从0开始计数
->
-> * int compareTo(E  other)
->
->   如果枚举常量出现在other之前，则返回一个负值；如果this==other，则返回0；否则，返回正值。枚举常量的出现次序在enum声明中给出。
+> API   java.lang.Enum\<E> 5.0
 
-### 19.继承设计技巧
+* static Enum valueOf(Class enumClass, String name)
+
+    返回指定名字、给定类的枚举常量
+
+* String toString()
+
+    返回枚举常量值
+
+* int  ordinal()
+
+    返回枚举常量在enum声明中的位置，位置从0开始计数
+
+* int compareTo(E  other)
+
+    如果枚举常量出现在other之前，则返回一个负值；如果this==other，则返回0；否则，返回正值。枚举常量的出现次序在enum声明中给出。
+
+
+### 16. 继承设计技巧
 
 1. 将公共操作和域放在超类
 2. 不要使用受保护的域
@@ -1869,19 +2006,20 @@ Size[] values = Size.values();
 
 
 
-## **第六章**
+## 第六章
 
-### 1.接口概念
+### 1. 接口概念
 
-接口不是类，而是对类的一组需求的描述。
+<u>接口不是类，而是对类的一组需求的描述。</u>
 
 一个类可以实现一个或多个接口。
 
 ```JAVA
-// Student类实现Desc、Comparable接口
+// Student类实现 Desc、Comparable 接口
 interface Desc{
     String desc();
 }
+
 class Student implements Desc,Comparable{
     @Override
     public String desc() {
@@ -1897,11 +2035,11 @@ class Student implements Desc,Comparable{
 
 接口中的所有方法自动地都属于public，不需用提供public关键字。
 
-接口不能含有实例域。
+接口不能含有实例域。接口没有实例。
 
-### 2.比较器接口
+### 2. 比较器接口
 
-#### 2.1.Comparable
+#### 2.1. Comparable
 
 Comparable接口的compareTo方法返回一个整型数值。如果两个对象不相等，则返回一个正值或负值。在想使用Arrays类的数组排序方法时，必须要实现Comparable接口。排序的规则可以通过对象的属性来指定。
 
@@ -1911,12 +2049,12 @@ class Student implements Comparable{
     @Override
      public int compareTo(Object o) {
          Student other = (Student) o;
-         return this.getId()-other.getId();
+         return getId() - other.getId();
      }
 }
 ```
 
-#### 2.2.Comparator
+#### 2.2. Comparator
 
 Comparable是排序接口，若一个类实现了Comparable接口，就意味着“该类支持排序”。而Comparator是比较器，我们若需要控制某个类的次序，可以建立一个“该类的比较器”来进行排序。
 
@@ -1925,26 +2063,52 @@ Comparable相当于“内部比较器”，而Comparator相当于“外部比较
 ```JAVA
 //实现比较器接口以学生ID排序
 new Comparator<Student>() {  
-            @Override
-            public int compare(Student o1, Student o2) {
-                return o1.getId()- o2.getId();
-            }
+    @Override
+    public int compare(Student o1, Student o2) {
+        return o1.getId() - o2.getId();
+    }
 }
 ```
 
-### 3.接口特性
+### 3. 接口特性
 
 1. 不能实例化一个接口
 2. 可以声明接口变量
 3. 接口变量必须引用实现了接口的类对象
-4. 接口中的域自动设为`public static final`
+4. 接口中的域自动设为 public static final
 5. 每个类只能继承一个超类，却可以实现多个接口
 
-### 4.接口的静态方法
+
+
+可以使用instanceof检查一个对象是否实现了某个特定接口
+
+```java
+new Student() instanceof Comparable
+```
+
+<u>接口可以提供多重继承的大多数好处，同时还能避免多重继承的复杂性和低效性。</u>
+
+接口的静态方法
 
 javaSE 8中，允许在接口中增加静态方法。
 
-### 5.默认方法
+```java
+interface Comter {
+    
+    String A = "hello";        // public static final
+
+    void getA();			   // public
+
+    static void hello() {	   // 静态实现方法
+        System.out.println(A);
+    }
+
+}
+```
+
+
+
+### 5. 默认方法
 
 可以为接口提供一个默认实现，必须用default修饰符修饰。
 
@@ -1956,31 +2120,31 @@ interface Comparable<T>{
 }
 ```
 
-### 6.对象克隆
+### 6. 对象克隆
 
 如果希望建议一个新对象，它的初始状态与已经创建的某个对象相同，但之后会有各自的状态，就可以使用clone方法。
 
 Object类提供了浅拷贝的clone方法。
 
-#### 6.1.浅拷贝
+#### 6.1. 浅拷贝
 
 只拷贝基本类型的数据域，不会拷贝引用的对象。
 
 ```JAVA
- protected Test clone() throws CloneNotSupportedException {
-        return this;
- }
-```
-
-#### 6.2.深拷贝
-
-```JAVA
 protected Test clone() throws CloneNotSupportedException {
-        return new Test(id,name);
+    return this;
 }
 ```
 
-### 7.lamba表达式
+#### 6.2. 深拷贝
+
+```JAVA
+protected Test clone() throws CloneNotSupportedException {
+    return new Test(id,name);
+}
+```
+
+### 7. lamba表达式
 
 **形式：**
 
@@ -1992,13 +2156,13 @@ new TreeSet<>((Student o1,Student o2) -> o1.getId() - o2.getId());
 
 无需指定lambda表达式的返回类型，lambda表达式总是会由上下文推导得出。
 
-### 8.函数式接口
+### 8. 函数式接口
 
 对于只有一个抽象方法的接口，需要这种接口的对象时，就可以提供一个lambda表达式。这种接口称为函数式接口。
 
-### 9.常用函数式接口
+### 9. 常用函数式接口
 
-### 10.内部类
+### 10. 内部类
 
 内部类是定义在另一个类中的类。
 
@@ -2014,7 +2178,7 @@ new TreeSet<>((Student o1,Student o2) -> o1.getId() - o2.getId());
 
 ## 第七章
 
-### 1.异常分类
+### 1. 异常分类
 
 ![](..\java\img\java异常层次简化.png)
 
@@ -2036,7 +2200,7 @@ Error类层次结构描述了java运行时系统的内部错误和资源耗尽�
 
 ​			**Java语言规法将派生于Error类或RuntimeException类的所有异常称为<font color="red">非受查异常</font>，所有其他异常称为<font color="red">受查异常</font>。**
 
-### 2.throw
+### 2. throw
 
 throw关键字用于抛出一个受查异常。
 
@@ -2044,7 +2208,7 @@ throw关键字用于抛出一个受查异常。
 throw new ClassCastException();
 ```
 
-### 3.捕获异常
+### 3. 捕获异常
 
 ```JAVA
 try{
@@ -2058,7 +2222,7 @@ try{
 
 try语句可以只有finally子句，而没有catch子句。
 
-### 4.使用断言
+### 4. 使用断言
 
 两种形式：
 
@@ -2066,13 +2230,13 @@ assert   条件；
 
 assert    条件:表达式；
 
-### 5.三种处理错误的机制
+### 5. 三种处理错误的机制
 
 1. 抛出一个异常
 2. 日志
 3. 使用断言
 
-### 6.记录日志
+### 6. 记录日志
 
 
 
@@ -2080,7 +2244,7 @@ assert    条件:表达式；
 
 ## 第八章
 
-### 1.泛型类
+### 1. 泛型类
 
 泛型（Generic Programming）的实质是**类型参数化**。
 
@@ -2115,7 +2279,7 @@ class Test<T, U> {
 }
 ```
 
-### 2.泛型方法
+### 2. 泛型方法
 
 泛型方法可以定义在普通类中，也可以定义在泛型类中。
 
@@ -2130,7 +2294,7 @@ class ArrayAlg {
 }
 ```
 
-### 3.类型变量的限定
+### 3. 类型变量的限定
 
 ```JAVA
 public static <T extends Comparable> Pair<T> minmax(T[] a) {}
@@ -2144,24 +2308,24 @@ T表示是Comparable的子类型，T和绑定类型可以是类，也可以是�
 T extends Comparable & Serializable
 ```
 
-### 4.泛型代码与虚拟机
+### 4. 泛型代码与虚拟机
 
 虚拟机没有泛型类型对象，所有的类都属于普通类。
 
-#### 4.1.类型擦除
+#### 4.1. 类型擦除
 
 在进入jvm之前，泛型会被擦除，变为原始类型。
 
 原始类型用第一个限定的类型变量来替换，如果没有给定限定就用Object替换。
 
-#### 4.2.Java泛型转换的事实
+#### 4.2. Java泛型转换的事实
 
 * 虚拟机中没有泛型，只有普通的类和方法
 * 所有的类型参数都用它们的限定类型替换
 * 桥方法被合成来保持多态
 * 为保持类型的安全性，必要时插入强制类型转换
 
-### 5.约束与局限型
+### 5. 约束与局限型
 
 不能用基本数据类型实例化类型参数。
 
@@ -2175,11 +2339,11 @@ new T(),new T[]
 
 不能抛出或捕获泛型类的实例。
 
-### 6.泛型类型继承规则
+### 6. 泛型类型继承规则
 
 泛型类可以扩展或实现其他泛型类。
 
-### 7.通配符类型
+### 7. 通配符类型
 
 ```JAVA
 Pair<? extends Employee>
@@ -2187,9 +2351,9 @@ Pair<? extends Employee>
 
 表示任何泛型的Pair类型。
 
-### 8.Class
+### 8. Class
 
-### 9.注意
+### 9. 注意
 
 1. 在java库中，E表示集合的元素类型，K和V分别表示表的关键字和值得类型。T、U、S表示任意类型。
 
@@ -2217,23 +2381,23 @@ Pair<? extends Employee>
 
 ## 第九章
 
-### 1.集合接口
+### 1. 集合接口
 
 ![](.\img\集合接口继承层次.png)
 
-### 2.实现类
+### 2. 实现类
 
-#### 2.1.AbstractCollection
+#### 2.1. AbstractCollection
 
 ![](img\AbstractCollection继承层次.png)
 
-#### 2.2.AbstractMap
+#### 2.2. AbstractMap
 
 ![](img\AbstractMap.png)
 
-### 3.具体集合
+### 3. 具体集合
 
-#### 3.1.ArrayList
+#### 3.1. ArrayList
 
 **ArrayList，一种可以动态增长和缩减的索引序列。**
 
@@ -2303,7 +2467,7 @@ Object[]	toArray()  			      // 以正确的顺序（从第一个元素到最后
 void	trimToSize()                  // 将此 ArrayList 实例的容量修剪为列表的当前大小。
 ```
 
-#### 3.2.LinkedList
+#### 3.2. LinkedList
 
 **LinkedList，一种可以在任意位置进行高效插入和删除操作的有序序列。**
 
@@ -2354,7 +2518,7 @@ void	trimToSize()                  // 将此 ArrayList 实例的容量修剪为�
 //        }
 ```
 
-#### 3.3.ArrayDeque
+#### 3.3. ArrayDeque
 
 **ArrayDeque，一种用循环数组实现的双端队列。**
 
@@ -2396,7 +2560,7 @@ void	trimToSize()                  // 将此 ArrayList 实例的容量修剪为�
         // <T> T[]	toArray(T[] a)      以正确的顺序（从第一个元素到最后一个元素）返回包含此双端队列中所有元素的数组；返回数组的运行时类型是指定数组的运行时类型。
 ```
 
-#### 3.4.HashSet
+#### 3.4. HashSet
 
 **HashSet，一种没有重复元素的无序集合。**
 
@@ -2419,7 +2583,7 @@ void	trimToSize()                  // 将此 ArrayList 实例的容量修剪为�
 //        }
 ```
 
-#### 3.5.TreeSet
+#### 3.5. TreeSet
 
 **TreeSet，一种有序集。**
 
@@ -2460,7 +2624,7 @@ void	trimToSize()                  // 将此 ArrayList 实例的容量修剪为�
 //        }
 ```
 
-#### 3.6.HashMap
+#### 3.6. HashMap
 
 **HashMap，一种存储键/值关联的数据结构。**
 
@@ -2485,7 +2649,7 @@ void	trimToSize()                  // 将此 ArrayList 实例的容量修剪为�
 //        map.forEach((k, v) -> System.out.println(k +"  "+ v));
 ```
 
-#### 3.7.TreeMap
+#### 3.7. TreeMap
 
 **TreeMap，一种键/值有序排列的映射表。**
 
@@ -2522,7 +2686,7 @@ void	trimToSize()                  // 将此 ArrayList 实例的容量修剪为�
 //        treeMap.forEach((k, y) -> System.out.println(k +"   " + y));
 ```
 
-### 4.注意
+### 4. 注意
 
 * List是一个有序集合。元素会增加到容器的特定位置。可以采用两种方式访问元素：1. 迭代器。2.整数索引。
 
