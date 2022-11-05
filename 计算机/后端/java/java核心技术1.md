@@ -2004,15 +2004,17 @@ Size[] values = Size.values();
 6. 使用多态，而非类型信息
 7. 不要过多的使用反射
 
+ 
+
 
 
 ## 第六章
 
 ### 1. 接口概念
 
-<u>接口不是类，而是对类的一组需求的描述。</u>
+<u>接口不是<font color="red">类</font>，而是对类的一组需求的描述。</u>
 
-一个类可以实现一个或多个接口。
+一个类可以实现一个或多个接口。implements表示实现某个接口。
 
 ```JAVA
 // Student类实现 Desc、Comparable 接口
@@ -2033,7 +2035,7 @@ class Student implements Desc,Comparable{
 }
 ```
 
-接口中的所有方法自动地都属于public，不需用提供public关键字。
+<u>接口中的所有方法自动地都属于public，不需用提供public关键字。</u>
 
 接口不能含有实例域。接口没有实例。
 
@@ -2041,7 +2043,15 @@ class Student implements Desc,Comparable{
 
 #### 2.1. Comparable
 
-Comparable接口的compareTo方法返回一个整型数值。如果两个对象不相等，则返回一个正值或负值。在想使用Arrays类的数组排序方法时，必须要实现Comparable接口。排序的规则可以通过对象的属性来指定。
+```java
+public interface Comparable<T> {
+  
+    public int compareTo(T o);   
+    
+}
+```
+
+​		Comparable接口的compareTo方法返回一个整型数值。如果两个对象不相等，则返回一个正值或负值。在想使用Arrays类的数组排序方法时，必须要实现Comparable接口。排序的规则可以通过对象的属性来指定。
 
 ```JAVA
 // 通过实现compareTo方法实现以学生学号比较两个学生
@@ -2056,9 +2066,11 @@ class Student implements Comparable{
 
 #### 2.2. Comparator
 
-Comparable是排序接口，若一个类实现了Comparable接口，就意味着“该类支持排序”。而Comparator是比较器，我们若需要控制某个类的次序，可以建立一个“该类的比较器”来进行排序。
+​		Comparable是排序接口，若一个类实现了Comparable接口，就意味着“该类支持排序”。而Comparator是比较器，我们若需要控制某个类的次序，可以建立一个“该类的比较器”来进行排序。
 
 Comparable相当于“内部比较器”，而Comparator相当于“外部比较器”。
+
+ 比较器较灵活，可以提供不同的比较器对对象实现比较逻辑。
 
 ```JAVA
 //实现比较器接口以学生ID排序
@@ -2120,15 +2132,110 @@ interface Comparable<T>{
 }
 ```
 
+java API 中很多接口都有相应的伴随类，伴随类实现了部分或全部方法，如 Colletion/AbstractCollection或 MouseListener/MouseAdapter。
+
+<hr>
+
+>   问题的产生
+
+​		在原先的接口中添加新方法的定义，会导致项目中已实现的类编译错误，解决此问题的方法是在接口中将定义的方法提供默认实现。
+
+#### 5.1. 解决默认方法的冲突
+
+​		当类继承了两个接口，两个接口中都定义了相同的方法并且都提供了默认实现，或者继承的超类中也有与接口相同的方法实现，这种情况下解决冲突的方式：
+
+1.   超类优先。超类的方法会覆盖接口的默认方法。
+2.   接口冲突。在实现类中覆盖方法即可。
+
+```java
+interface Hello{
+    default void hello(){
+          System.out.println("hello");
+    }
+}
+
+interface Hello2{
+    default void hello(){
+          System.out.println("hello2");
+    }
+}
+
+public class Test  implements Hello,Hello2{
+
+    public void hello() {
+            Hello2.super.hello();   // 可以指定某个接口的默认实现
+    }
+
+    public static void main(String[] args) {
+        new Test().hello();         // 控制台打印hello2
+    }
+
+}
+```
+
+#### 5.2. 接口回调
+
+​		回调接口ActionListener。实现该接口的actionPerformed方法。
+
+```java
+public interface ActionListener extends EventListener {
+
+    /**
+     * Invoked when an action occurs.
+     * @param e the event to be processed
+     */
+    public void actionPerformed(ActionEvent e);
+
+}
+```
+
+​		Timer类的构造器传入一个时间（毫秒）和一个ActionListener引用，表示每隔多少秒执行ActionListener的actionPerformed方法。
+
+```java
+public class Test {
+
+    public static void main(String[] args) {
+
+        ActionListener listener = new TimerPrinter();
+        Timer timer = new Timer(1,listener);   // 构造一个计时器类
+        timer.start();
+ 
+        JOptionPane.showMessageDialog(null,"Quit program?");  // 弹出一个提示框
+        Toolkit.getDefaultToolkit().beep();					  // 发出一声系统响铃
+        System.exit(0); 		// 退出程序
+
+    }
+
+}
+
+class TimerPrinter implements ActionListener {
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        System.out.println(new Date());
+
+    }
+
+}
+```
+
+>   API    javax.swing.Timer   1.2  
+
+*   Timer( int interval，ActionLisener listener)
+*   void start()
+*   void stop()
+
+
+
 ### 6. 对象克隆
 
-如果希望建议一个新对象，它的初始状态与已经创建的某个对象相同，但之后会有各自的状态，就可以使用clone方法。
+​		如果希望建议一个新对象，它的初始状态与已经创建的某个对象相同，但之后会有各自的状态，就可以使用clone方法。
 
-Object类提供了浅拷贝的clone方法。
+Object类提供了浅拷贝的protected T clone方法。
 
 #### 6.1. 浅拷贝
 
-只拷贝基本类型的数据域，不会拷贝引用的对象。
+只拷贝基本类型的数据域，**<u>不会拷贝引用的对象</u>**。
 
 ```JAVA
 protected Test clone() throws CloneNotSupportedException {
@@ -2136,13 +2243,28 @@ protected Test clone() throws CloneNotSupportedException {
 }
 ```
 
-#### 6.2. 深拷贝
+#### 6.2. 深拷贝（需自己实现）
 
 ```JAVA
 protected Test clone() throws CloneNotSupportedException {
-    return new Test(id,name);
+    return new Test(this.id, this.name);
 }
 ```
+
+
+
+对于每一个类，需要定义：
+
+1.   默认的clone方法是否满足要求
+2.   是否可以在可变的子对象上调用clone来修补默认的clone方法
+3.   是否不该使用clone
+
+上面第三个选项是默认选项。如果选择1和2，类必须：
+
+1.   实现 Cloneable 接口
+2.   重新定义 clone 方法，并指定 public 访问修饰符
+
+
 
 ### 7. lamba表达式
 
@@ -2155,6 +2277,10 @@ new TreeSet<>((Student o1,Student o2) -> o1.getId() - o2.getId());
 ```
 
 无需指定lambda表达式的返回类型，lambda表达式总是会由上下文推导得出。
+
+
+
+
 
 ### 8. 函数式接口
 

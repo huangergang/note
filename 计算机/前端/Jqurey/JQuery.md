@@ -242,7 +242,7 @@ $("元素").事件名(function(){
 
 ​							data：发送到服务器返回服务器的数据
 
-​							dataType：预期服务器返回的 数据类型
+​							dataType：预期服务器返回的数据类型
 
 ​							contentType：设置请求头
 
