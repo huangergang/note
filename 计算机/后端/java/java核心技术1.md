@@ -2268,9 +2268,19 @@ protected Test clone() throws CloneNotSupportedException {
 
 ### 7. lamba表达式
 
-**形式：**
+lambda 表达式是一个可以传递的代码块，可以在以后执行一次或多次。
 
-**参数，箭头(->)以及一个表达式。**
+>   形式
+
+```java
+() -> {          // () 里可以有参数，也可以没有参数
+    
+    //  do thing ...                
+	//  return   如果函数式接口有返回值，必须提供return语句
+}
+```
+
+
 
 ```JAVA
 new TreeSet<>((Student o1,Student o2) -> o1.getId() - o2.getId());
@@ -2278,15 +2288,291 @@ new TreeSet<>((Student o1,Student o2) -> o1.getId() - o2.getId());
 
 无需指定lambda表达式的返回类型，lambda表达式总是会由上下文推导得出。
 
+#### 7.1. 函数式接口
+
+​		对于只有一个抽象方法的接口，需要这种接口的对象时，就可以提供一个lambda表达式。这种接口称为函数式接口。如 ActionListener 或 Comparator。
+
+​		最好把lambda表达式看作是一个函数，而不是一个对象，另外要接受lambda表达式可以传递到函数式接口。
+
+
+
+lambda表达式可以转化为接口：
+
+```java
+Timer t = new Timer(1000, event -> {
+    
+    System.out.println("time is " + new Date());
+    Toolkit.getDefaultToolkit().beep(); 
+    
+});
+```
+
+
+
+#### 7.2. 常用函数式接口
+
+>    java API 在java.util.function 包中定义了很多非常有用通用的函数式接口。
+
+*   BiFuction\<T,U,R>   描述参数类型为T和U而且返回类型为R的函数。
+
+    ```java
+    BiFunction<String, String, Integer> comp = (first, second) ->
+        first.length() - second.length();
+    ```
+
+*   Predicate  接口
+
+    ```java
+    @FunctionalInterface
+    public interface Predicate<T> {
+    
+        boolean test(T t);
+        
+    }
+    ```
+
+    ArrayList类有一个 removeIf方法，他的参数是一个 Predicate 
+
+    ```java
+    // list删除其中的null值
+    list.removeIf(e -> e == null);
+    ```
+
+#### 7.3. 方法引用
+
+有时，可能已经有现成的方法可以完成代码块的某个动作。如：
+
+```java
+Timer t = new Timer(1000, e -> System.out.println(e));
+```
+
+方法引用模式
+
+```java
+Timer t = new Timer(1000, System.out::prinln);
+```
+
+对字符串排序，而不考虑字母的大小写。
+
+```java
+Arrays.sort(strings, String::compareToIgnoreCase);
+```
+
+>Test
+
+```java
+@FunctionalInterface
+interface Lambda3 {         
+    double first(int a, int b);  // 声明一个函数式接口
+}
+
+public class Test {
+    
+    public static void main(String[] args) {
+
+        new Test3(3, 2, Math::pow);       // 实现函数功能为计算a的b次方，输出为9.0
+    }
+}
+
+class Test3 {
+
+    public Test3(int a, int b, Lambda3 lambda3) {   // Test3 类构造器需要一个 Lambda3引用
+        System.out.println(lambda3.first(a, b)); 
+    }
+}
+```
+
+
+
+>    方法引用的三种形式
+
+1.   *object::instanceMethod*
+2.   *Class::staticMethod*
+3.   *Class::instanceMethod*
+
+前两种情况中，方法引用等价于提供了方法参数的 lambda 表达式。
+
+```java
+// System.out::println 等价于     e -> System.out.println(e)
+// Math::pow           等价于     (x, y) -> Math::pow(x, y)
+```
+
+第三种情况，第一个参数会成为方法的目标。
+
+```java
+// String::compareToIgnoreCase  等价于 (x, y) -> x.compareToIgnoreCase(y)
+```
+
+可以在方法引用中使用this参数，和super
+
+```java
+// this::qeuals 等同于 x -> this.equals(x)
+```
+
+
+
+#### 7.4. 构造器引
+
+构造器引用使用new如：
+
+```java
+Person::new
+```
+
+```java
+public class Person {
+    private String name;
+    public Person(String name) {
+        this.name = name;
+    }
+    
+    public static void main(String[] args) {
+
+        String[] names = {"frank", "alan", "tom", "aim"};
+		// Arrays.stream方法将一个数组转换为流(Stream)，map方法为每一个对象执行一个方法，这里执行的是 new Person(String) 方法。collect(Collectors.toList())会将一个流转换为List集合
+        List<Person> people = Arrays.stream(names)
+                                                 .map(Person::new)
+                                                 .collect(Collectors.toList());
+        people.forEach(System.out::println);
+    }
+}
+```
+
+​		使用Stream的toArray方法将一个流转换为数组时，可以为其提供一个数组的构造器引用，使其转化为相应的数组类型，toArray默认为Object数组。
+
+```java
+Stream<Person> stream = Stream.of(new Person("小明"),
+                                  new Person("小红"),
+                                  new Person("李华"),
+                                  new Person("小刚"));
+Object[] objects = stream.toArray();  
+
+// 对象数组引用，类似的有 int[]::new 等等
+Person[] people = stream.toArray(Person[]::new);    
+```
+
+
+
+#### 7.5. 变量作用域
+
+>    lambda表达式有三个部分
+
+1.   一个代码块
+2.   参数
+3.   自由变量的值，这是指非参数而且不在代码中定义的变量
+
+```java
+public class Test8 {
+
+    public static void repeatMessage(String text, int delay) {
+
+        ActionListener listener = event -> {
+            System.out.println(text);      			  // 无法打印
+            Toolkit.getDefaultToolkit().beep();
+        };
+
+        new Timer(delay, listener).start();
+    }
+}
+```
+
+
+
+使用lambda表达式的重点是延迟执行（*deferred execution*）。延迟执行的原因：
+
+*   在一个单独的线程中运行代码
+*   多次运行代码
+*   在算法的适当位置运行代码（例如，排序中的比较操作）
+*   发生在某种情况时执行代码（如，点击一个按钮，数据到达，等等）
+*   只要必要时才运行的代码
+
+重复一个动作 n 次
+
+```java
+repeat(10, () -> System.out.println("hello world"));
+```
+
+提供一个函数式接口
+
+```java
+public static void repeat(int n, Runnable action) {
+    for (int i = 0; i < n; i++) action.run();
+}
+```
+
+### 8. 常用函数式接口
+
+| 函数式接口          | 参数类型 | 返回类型 | 抽象方法名 | 描述                         | 其他方法                   |
+| ------------------- | -------- | -------- | ---------- | ---------------------------- | -------------------------- |
+| Runnable            | 无       | void     | run        | 作为无参数或返回值的动作运行 |                            |
+| Supplier<T>         | 无       | T        | get        | 提供一个T类型的值            |                            |
+| Consumer<T>         | T        | void     | accept     | 处理一个T类型的值            | andThen                    |
+| BiConsumer<T, U>    | T, U     | void     | accept     | 处理T和U类型的值             | andThen                    |
+| Function<T, R>      | T        | R        | apply      | 有一个T类型参数的函数        | cpmpose, andThen, identity |
+| BiFunction<T, U, R> | T, U     | R        | apply      | 有T和U类型参数的函数         | andThen                    |
+| UnaryOperator<T>    | T        | T        | apply      | 类型T上的一元操作符          | compose, andThen, identity |
+| BinaryOperator<T>   | T, T     | T        | apply      | 类型T上的二元操作符          | andThen, maxBy, minBy      |
+| Predicate<T>        | T        | boolean  | test       | 布尔值函数                   | and, or, negate, isEqual   |
+| BiPredicate<T, U>   | T, U     | boolean  | test       | 有两个参数的布尔值函数       | and, or, negate            |
+
+改进版本
+
+```java
+public static void repeat(int n, IntConsumer action) {
+    for (int i = 0; i < n; i++) action.accept(i);
+}
+```
+
+调用
+
+```java
+repeat(10, i -> System.out.println("Countdown: " + (9 - i)));
+```
+
+基本类型的函数式接口
+
+| 函数式接口            | 参数类型  | 返回类型 | 抽象方法名   |
+| --------------------- | --------- | -------- | ------------ |
+| BooleanSupplier       | none      | boolean  | getAsBoolean |
+| *P*Supplier           | none      | *p*      | getAsp       |
+| *P*Consumer           | *p*       | void     | accept       |
+| Obj*P*Consumer<T>     | T, *p*    | void     | accept       |
+| *P*Function\<T>       | *p*       | T        | apply        |
+| *P*To*Q*Function<T>   | *p*       | *q*      | applyAs*Q*   |
+| To*P*Function<T>      | T         | *p*      | applyAs*P*   |
+| To*P*BiFunction<T, U> | T, U      | *p*      | applyAs*P*   |
+| *P*UnaryOperator      | *p*       | *p*      | applyAs*P*   |
+| *P*BinaryOperator     | *p*,  *p* | *p*      | applyAs*P*   |
+| *P*Predicate          | *p*       | boolean  | test         |
+
+注：*p*, *q* 为  int, long, double;     *P*, *Q*  为  Int,  Long,  Double
+
+
+
+### 9. 再谈 Comparator
+
+​		Comparator 接口包含很多方便的静态方法来创建比较器。这些方法可以用于 lambda 表达式或方法引用。静态的 comparing 方法取一个 "键提取器" 函数，将类型 T 映射为一个可以比较的类型（如 String）。
+
+按名字排序：
+
+```java
+Arrays.sort(people, Comparator.comparing(Person::getName));
+```
+
+可以把比较器与thenComparing方法串起来。如果姓相同，就会调用第二个方法。
+
+```java
+Arrays.sort(people, Comparator.comparing(Person::getLastName)
+            				  .thenComparing(Person::getFirstName));
+```
 
 
 
 
-### 8. 函数式接口
 
-对于只有一个抽象方法的接口，需要这种接口的对象时，就可以提供一个lambda表达式。这种接口称为函数式接口。
 
-### 9. 常用函数式接口
+
+
 
 ### 10. 内部类
 
