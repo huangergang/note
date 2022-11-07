@@ -63,7 +63,7 @@ java -vserion
 
 ## 第三章
 
-#### **1. "Hello World"**
+### 1. "Hello World"
 
 ```java
 public class FirstSample {
@@ -87,12 +87,12 @@ public class FirstSample {
 ```bash
 $ javac Tesrt.java    # javac将Test.java文件转换成字节码（.class 文件）
 
-$ java Test           #  字节码文件有jvm执行
+$ java Test           #  字节码文件由jvm执行
 ```
 
 
 
-#### 2. 注释
+### 2. 注释
 
 ```java
 // ...    行注释  
@@ -107,7 +107,7 @@ $ java Test           #  字节码文件有jvm执行
   */
 ```
 
-#### 3. 数据类型
+### 3. 数据类型
 
 java整型
 
@@ -141,7 +141,7 @@ boolean类型有两个值：false和true，用来判定逻辑条件。整数与�
 
 
 
-#### 4. 变量
+### 4. 变量
 
 java中每一个变量都有一个类型（Type）。
 
@@ -155,13 +155,9 @@ public class Test{
     public static void main(String[] args){
         
          final double PI = 3.141592;
-        
     }
-    
 }
 ```
-
-
 
 Math类
 
@@ -185,7 +181,7 @@ Math.round(x)   // 舍入运算
 
 
 
-#### 5. 类型转换
+### 5. 类型转换
 
 >   数值之间的合法转换
 
@@ -222,12 +218,12 @@ byte b = (byte)a;   //  b为44
 
 
 
-#### 6. 运算符
+### 6. 运算符
 
 1.   二元赋值运算符
 
 ```java
-x += 4 ;  // 等价于 x = x + 4;
+x += 4 ;  // 等价于 x = x + 4
 ```
 
 2.   自增与自减
@@ -278,7 +274,7 @@ x < y ? x : y;   // 返回x，y中较小者
 
 
 
-#### 7. String类
+### 7. String类
 
 java 为字符串操作专门设计了一个类String。String不属于基本类型。
 
@@ -311,7 +307,7 @@ String str1 = new String("hello");
 
 4.    equals方法
 
-     检测两个字符串是否相等```s.equals(t)```    s和t可以是字符串变量，也可以是字面量
+     检测两个字符串是否相等```s.equals(t)``` ，s 和 t 可以是字符串变量，也可以是字面量
 
      ```java
      "".equals(null);   // false
@@ -319,7 +315,7 @@ String str1 = new String("hello");
 
      
 
-####  8. 输入输出
+###  8. 输入输出
 
 1.标准输入流
 
@@ -329,23 +325,17 @@ String in1 = in.nextLine();    // nextLine 读取整行内容，包含空格
 String in2 = in.next();    // next 读取一个单词，以空格分隔
 ```
 
-
-
 2.标准输出流
 
 ```java
 System.out.prinln();
 ```
 
-
-
 3.格式化输出
 
 ```java
 System.out.prinf();
 ```
-
-
 
 <img src="./img/printf.png">
 
@@ -480,9 +470,7 @@ fw.write(String.format("%1$tr %1$tA", new Date()));
 fw.close();
 ```
 
-
-
-#### 9. 控制流程
+### 9. 控制流程
 
 1.块(block)作用域  {}
 
@@ -508,13 +496,17 @@ if
 
 ```java
 if(){
+    
     // ...
+    
 } else() {
+    
     // ...
+    
     if(){
+        
         // ...
     }
-    
 } 
 ```
 
@@ -522,7 +514,9 @@ for
 
 ```java
 for(;;){
+    
     // ...
+    
 }
 ```
 
@@ -530,12 +524,11 @@ while
 
 ```java
 while(true){
-    
-   int  a = 10;
-    
-   if(a < 0)
-       break;
-    
+
+    int  a = 10;
+
+    if(a < 0)  break;
+
     a--;
 }
 ```
@@ -582,8 +575,6 @@ for (char i:name.toCharArray()         // for  each
 }
 ```
 
-
-
 **中断控制流程语句**
 
 break   直接跳出，结束循环
@@ -605,15 +596,14 @@ for (int a = 0; a < 10; a++) {
     if (a == 2) continue;        // 不输出2
 
     System.out.println("a = " + a);
-
 }
 ```
 
-
-
-#### 10. 大数据
+### 10. 大数据
 
 ​		如果基本的整数和浮点数精度不能够满足需求，那么可以使用java.math包中的两个很有用的类：BigInteger和BigDecimal。这两个类可以处理任意长度数字序列的数值。BigInteger类实现了任意精度的整数运算，BigDecimal实现了任意精度的浮点数运算。
+
+#### 10.1. 大整数
 
 ```java
 BigInteger a = new BigInteger("2342342342234234");   // 创建一个大数值整数
@@ -622,8 +612,6 @@ BigInteger b =  BigInteger.valueOf(123);     // 静态方法valueOf()可以将�
 
 BigInteger c = a.add(b);                   // 加法
 ```
-
-大整数
 
 >   API  java.math.BigInteger 1.1
 
@@ -641,7 +629,7 @@ BigInteger c = a.add(b);                   // 加法
 
     比较，相等返回0，大于返回负数，小于返回整数
 
-
+#### 10.2. 大实数
 
 ```java
 BigDecimal a1 = new BigDecimal("2342342342234234.2");
@@ -650,8 +638,6 @@ BigDecimal b1 = BigDecimal.valueOf(123.2);
 BigDecimal c1 = a1.add(b1);
 System.out.println("c = " + c1);
 ```
-
-大实数
 
 >   API  java.math.BigDecimal  1.1
 
@@ -671,16 +657,16 @@ System.out.println("c = " + c1);
 
 
 
-#### 11. 数组
+### 11. 数组
 
-​		数组是一种数据结构，存储同一类型的值的集合。
+数组是一种数据结构，存储同一类型的值的集合。
 
 ```JAVA
 int[] arr = new int[5];
 int[] arr1 = {1, 2, 3, 4};
 ```
 
-创建一个数字数组，所有元素初始化为0，boolean数组元素初始化为false。对象数组初始化值为null。
+创建一个数字数组，所有元素初始化为 0，boolean 数组元素初始化为 false。对象数组初始化值为 null。
 
 
 
@@ -721,9 +707,9 @@ int[] ints = Arrays.copyOf(arry, arry.length);   // 重新为数据分配空间�
 
 
 
-#### 12. 多维数组
+### 12. 多维数组
 
-​		二维数组
+二维数组
 
 ```java
 int[][] arr = {{1, 2, 4}, {4, 5, 6}, {7, 8, 9}};
@@ -756,11 +742,11 @@ System.out.println(Arrays.deepToString(arr));
 ​	java实际上没有多维数组，只有一维数组。多维数组被解释为数组的数组。
 
 ```java
-int[][] arr1 = {{1}, {2, 2}, {3, 3, 3}};
+int[][] arr = {{1}, {2, 2}, {3, 3, 3}};
 
-for (int[] ints : arr1) {
-    for (int anInt : ints) {
-        System.out.print(anInt +" ");
+for (int[] ints : arr) {
+    for (int a : ints) {
+        System.out.print(a +" ");
     }
     System.out.println();
 }
@@ -773,7 +759,7 @@ for (int[] ints : arr1) {
 
 
 
-#### 13. 注意
+### 13. 注意
 
 1. NaN不是一个数字。计算0/0或负数的平方根时结果是NaN。
 2. char表示单个字符
@@ -835,7 +821,8 @@ java中所有的类都源于Object类。通过扩展一个类来建立另外一�
     如一个类的方法操纵另一个类的对象。
 
     ```java
-    class A {            // A依赖B
+    // A 依赖 B
+    class A {            
         public void fun1(B b) {
             // ...
         }
@@ -845,14 +832,14 @@ java中所有的类都源于Object类。通过扩展一个类来建立另外一�
         }
     }
     class B { }
-    
     ```
 * 聚合("has-a")
 
     类A的对象包含类B的对象。
 
     ```java
-    class A {            // A聚合B
+    // A 聚合 B 
+    class A {            
         private B b;     
     }
     
@@ -862,12 +849,13 @@ java中所有的类都源于Object类。通过扩展一个类来建立另外一�
 * 继承("is-a")
 
     ```java
+    // B 继承 A
     class A {
-        private String a;
+      
     }
     
-    class B extends A {       // B继承A
-        private String b;
+    class B extends A {      
+    
     }
     ```
 
@@ -957,7 +945,6 @@ public class LocalDateTest {
         }
         if (date.getDayOfWeek().getValue() != 1) System.out.println();
     }
-
 }
 ```
 
@@ -1012,7 +999,7 @@ public Student(String id,String name){
 
 
 
-关于构造器
+>   关于构造器
 
 *   构造器与类同名
 *   每个类可以有一个以上的构造器
@@ -1104,7 +1091,7 @@ private 修饰的私有方法不会被外部调用，只能在被本类的其他
 
 ### 6. final实例域
 
-​		<u>final修饰实例域时，必须确保在每一个构造器执行之后，这个域被实例化。</u>
+<u>final修饰实例域时，必须确保在每一个构造器执行之后，这个域被实例化。</u>
 
 ```JAVA
 final double PI = 3.1415926;
@@ -1122,7 +1109,7 @@ final域必须在构建对象是初始化。final修饰符大都应用于基本�
 static final double PT = 3.1415926;
 ```
 
-静态域属于类，不属于任何独立的对象。
+静态域属于类，不属于任何独立的实例。
 
 静态方法是一种不能向对象实施操作的方法。
 
@@ -1538,7 +1525,7 @@ Object中的equals方法。用于检测一个对象是否等于另一个对象�
 
 5. 对于任意的对象，x.equals(null)返回false。
 
-***Arrays类提供的equals方法用于检测两个数组是否相等。***
+***Arrays 类提供的 equals 方法用于检测两个数组是否相等。***
 
 ```JAVA
 static Boolean equals(type[] a,type[] b);    // 如果两个数组长度相同，并且对应位置上的元素也均相同，将返回true
@@ -1597,7 +1584,7 @@ for (int i = 0;i<length();i++){
 }
 ```
 
-**如果重新定义equals方法，就必须重新定义hashCode方法。**
+**如果重新定义 equals 方法，就必须重新定义 hashCode 方法。**
 
 #### 10.3. toString方法
 
@@ -1864,7 +1851,7 @@ public class Print {
 
 
 
-反射机制的默认行为受限于 java 的访问控制。覆盖访问控制需要调用Filed、Method或Constructor 对象的setAccessible方法：
+反射机制的默认行为受限于 java 的访问控制。覆盖访问控制需要调用Filed、Method或Constructor 对象的setAccessible 方法：
 
 ```java
 declaredConstructor.setAccessible(true);
@@ -1941,7 +1928,120 @@ public class Test {
         list = (String[]) copyOf(list, 10);     // 扩容成功
 
     }
+}
+```
 
+
+
+>   通过反射获取一个类的所有信息 
+
+  <a download="download" href="./util/Reflection.java">Reflection.java</a>
+
+```java
+package test.com.javaSE1.fifthUnit;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.Scanner;
+
+public class Reflection {
+
+    public static void main(String[] args) {
+        String name;
+        if (args.length > 0) name = args[0];
+        else {
+            Scanner in = new Scanner(System.in);
+            System.out.println("Enter class name (e.g  java.util.Date):  ");
+            name = in.next();       // 控制台输入类的全路径名
+        }
+        try {
+            Class cl = Class.forName(name);
+            Class superCl = cl.getSuperclass();
+            String modifiers = Modifier.toString(cl.getModifiers());
+            if (modifiers.length() > 0) System.out.print(modifiers + " ");
+            System.out.print("class " + cl.getSimpleName());
+            if (superCl != null && superCl != Object.class) System.out.print(" extends " + superCl.getSimpleName());
+
+            System.out.print("\n{\n");
+            printFields(cl);
+            System.out.println();
+            printConstructors(cl);
+            System.out.println();
+            printMethods(cl);
+            System.out.println("}");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        System.exit(0);
+    }
+
+    /**
+     * 获取所有构造器
+     *
+     * @param cl
+     */
+    public static void printConstructors(Class cl) {
+        Constructor[] constructors = cl.getDeclaredConstructors();
+        for (Constructor c : constructors) {
+            String name = cl.getSimpleName();
+            System.out.print("  ");
+            String modifiers = Modifier.toString(c.getModifiers());
+            if (modifiers.length() > 0) System.out.print(modifiers + " ");
+            System.out.print(name + "(");
+
+            // print parameter types
+            Class[] paramTypes = c.getParameterTypes();
+            for (int i = 0; i < paramTypes.length; i++) {
+                if (i > 0) System.out.print(", ");
+                System.out.print(paramTypes[i].getName());
+            }
+            System.out.println(");");
+        }
+    }
+
+    /**
+     * Print all methods of a class
+     *
+     * @param cl
+     */
+    public static void printMethods(Class cl) {
+        Method[] methods = cl.getDeclaredMethods();
+
+        for (Method m : methods) {
+            Class retType = m.getReturnType();
+            String name = m.getName();
+
+            System.out.print("  ");
+            String modifiers = Modifier.toString(m.getModifiers());
+            if (modifiers.length() > 0) System.out.print(modifiers + " ");
+            System.out.print(retType.getName() + " " + name + "(");
+
+            Class[] paramTypes = m.getParameterTypes();
+            for (int i = 0; i < paramTypes.length; i++) {
+                if (i > 0) System.out.print(", ");
+                System.out.print(paramTypes[i].getName());
+            }
+            System.out.println(");");
+        }
+    }
+
+    /**
+     * Prints all fields of a class
+     */
+    public static void printFields(Class cl) {
+        Field[] fields = cl.getDeclaredFields();
+
+        for (Field f : fields) {
+            Class type = f.getType();
+            String name = f.getName();
+            System.out.print("  ");
+            String modifiers = Modifier.toString(f.getModifiers());
+            if (modifiers.length() > 0) System.out.print(modifiers + " ");
+            System.out.println(type.getName() + " " + name + ";");
+        }
+    }
 }
 ```
 
@@ -1957,13 +2057,13 @@ public enum Size{ SMALL, MEDIUM, LARGE, EXTRA, EXTRA_LARGE};
 
 枚举的比较用==号。
 
-Enum类的toString方法可以将实例的类名转换为String。
+Enum 类的 toString 方法可以将实例的类名转换为 String。
 
 ```java
 System.out.println(Size.SMALL.toString);
 ```
 
-使用Enum类的valueOf反向生成枚举实例。
+使用 Enum 类的 valueOf 反向生成枚举实例。
 
 ```java
 Size size = Size.valueOf(Size.class, "SMALL");
@@ -2189,7 +2289,7 @@ public interface ActionListener extends EventListener {
 }
 ```
 
-​		Timer类的构造器传入一个时间（毫秒）和一个ActionListener引用，表示每隔多少秒执行ActionListener的actionPerformed方法。
+​		Timer 类的构造器传入一个时间（毫秒）和一个 ActionListener 引用，表示每隔多少秒执行 ActionListener 的  actionPerformed 方法。
 
 ```java
 public class Test {
@@ -2200,12 +2300,11 @@ public class Test {
         Timer timer = new Timer(1,listener);   // 构造一个计时器类
         timer.start();
  
-        JOptionPane.showMessageDialog(null,"Quit program?");  // 弹出一个提示框
+        JOptionPane.showMessageDialog(null, "Quit program?");  // 弹出一个提示框
         Toolkit.getDefaultToolkit().beep();					  // 发出一声系统响铃
         System.exit(0); 		// 退出程序
 
     }
-
 }
 
 class TimerPrinter implements ActionListener {
@@ -2215,7 +2314,6 @@ class TimerPrinter implements ActionListener {
         System.out.println(new Date());
 
     }
-
 }
 ```
 
@@ -2280,12 +2378,6 @@ lambda 表达式是一个可以传递的代码块，可以在以后执行一次�
 }
 ```
 
-
-
-```JAVA
-new TreeSet<>((Student o1,Student o2) -> o1.getId() - o2.getId());
-```
-
 无需指定lambda表达式的返回类型，lambda表达式总是会由上下文推导得出。
 
 #### 7.1. 函数式接口
@@ -2303,7 +2395,6 @@ Timer t = new Timer(1000, event -> {
     
     System.out.println("time is " + new Date());
     Toolkit.getDefaultToolkit().beep(); 
-    
 });
 ```
 
@@ -2327,12 +2418,11 @@ Timer t = new Timer(1000, event -> {
     public interface Predicate<T> {
     
         boolean test(T t);
-        
     }
     ```
-
+    
     ArrayList类有一个 removeIf方法，他的参数是一个 Predicate 
-
+    
     ```java
     // list删除其中的null值
     list.removeIf(e -> e == null);
@@ -2566,11 +2656,28 @@ Arrays.sort(people, Comparator.comparing(Person::getLastName)
             				  .thenComparing(Person::getFirstName));
 ```
 
+可以为comparing和thenComparing方法提取的键指定一个比较器。如，按人名完成排序：
 
+```java
+Arrays.sort(people, Comparator.comparing(Person::getName,
+                                         (s, t) -> Integer.compare(s.length(),t.length())));
+```
 
+另外，comparing和thenComparing方法都有变形形式，可以避免 int、long或者double值的装箱。
 
+```java
+Arrays.sort(people, Comparator.comparingInt(p -> p.getName().length()));
+```
 
+如果键函数可以返回 null ，可以就要用到 nullsFirst 和 nullsLast 适配器。这些静态方法会修改现有的比较器，从而在遇到 null 值时不会抛出异常，而是将这个值标记为小于或大于正常值。如当一个没有中名时 getMiddleName 会返回一个 null ，就可以使用：
 
+```java
+// Comparator.comparing(Person::getName, Comparator.nullsFirst(...))
+```
+
+nullsFirst 方法需要一个比较器。naturalOrder 方法可以为任何实现了 Comparable 的类建立了一个比较器。
+
+静态的 reverseOrder 方法会提供自认排序的逆序。要让比较器逆序比较，可以使用 reversed 实例方法。例如 naturalOrder().reversed() 等同于 reverseOrder()。
 
 
 
@@ -2578,13 +2685,264 @@ Arrays.sort(people, Comparator.comparing(Person::getLastName)
 
 内部类是定义在另一个类中的类。
 
-使用内部类的原因：
+>    使用内部类的原因：
 
 1. 内部类方法可以访问该类定义所在的作用域中的数据，包括私有数据。
 2. 内部类可以对同一包中的其他类隐藏起来。
-3. 当想要定义一个回调函数且不想编写大量代码时，使用匿名内部类比较便捷。
+3. 当想要定义一个回调函数且不想编写大量代码时，使用匿名（anonymous）内部类比较便捷。
+
+#### 10.1. 内部类访问对象状态
+
+```java
+public class TalkingClock {
+
+    private int interval;
+    private boolean beep;
+
+    public TalkingClock(int interval, boolean beep) {
+        this.interval = interval;
+        this.beep = beep;
+    }
+
+    public void start() {
+    }
+
+    public class TimePrinter implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            System.out.println(new Date());
+            if (beep) Toolkit.getDefaultToolkit().beep();
+        }
+    }
+}
+```
+
+内部类中有个隐式引用，它指向创建它的外部类（outer）。
+
+<img src="./img/innerclassouter.png">
+
+外围类的引用在构造器中设置。编译器修改了所有的内部类的构造器，添加了一个外围类引用参数。
+
+```java
+/* 伪码
+public TimePrinter(TalkingClock clock){
+    outer = clock;
+}
+*/
+```
+
+在Start中创建TimePrinter对象后，编译器会将this引用传递给当前的构造器；
+
+```java
+ActionListener listener = new TimePrinter(this);
+```
+
+>    内部类的外围类引用的正规语法
+
+*OuterClass*.this
+
+因此，可以写成
+
+```java
+public void actionPerformed(ActionEvent e) {
+    
+    System.out.println(new Date());
+    if (TalkingClock.this.beep) Toolkit.getDefaultToolkit().beep();
+}
+```
+
+反过来可以更明确编写内部类的构造器
+
+*outerObject*.new *InnerClass(construction  parameters)*
+
+```java
+ActionListener listener = this.new TimePrinter(this);
+```
+
+在外围类的作用域之外，可以这样引用内部类
+
+*OuterClass.InnerClass*
+
+注意：
+
+*   内部类中声明的所有静态域都必须是 final
+*   内部类不能有 static 方法
 
 
+
+**内部类是一种编译器现象，与虚拟机无关。编译器会把内部类翻译成 $ 分隔外部类名与内部类名的常规文件，而虚拟机对此一无所知。**
+
+javap反编译内部类
+
+>   javap -private innerclass
+
+<img src="./img/javapinnerclass.png">
+
+生成了一个附加的域 this$0 ，还可以看到构造器TalkingClock参数。
+
+#### 10.2. 局部内部类
+
+可以在一个方法中定义局部类
+
+局部类不能用private或public访问修饰符进行声明。它的作用域被限定在声明这个局部类的块中。
+
+局部类可以对外部世界完全隐藏器起来。起始外部类中的其他代码也不能访问它。
+
+与其他内部类相比，局部类还有一个优点。它不仅能够访问包含他们的内部类，还可以访问局部变量。局部变量为final。
+
+```java
+public void start(int interval, boolean beep) {
+    class TimePrinter implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            System.out.println("At the tone, the time is " + new Date());
+            if (beep) Toolkit.getDefaultToolkit().beep();
+        }
+    }
+    ActionListener listener = new TimerPrinter();
+    Timer timer = new Timer(interval, listener);
+    timer.start();
+}
+```
+
+#### 10.3. 匿名内部类
+
+只创建类的一个对象，而不命名，这种类称为匿名内部类（anonymous inner class）。
+
+```java
+public void start(int interval, boolean beep) {
+
+    ActionListener listener = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            System.out.println("At the tone, the time is " + new Date());
+            if (beep) Toolkit.getDefaultToolkit().beep();
+        }
+    };
+    
+    Timer timer = new Timer(interval, listener);
+    timer.start();
+}
+```
+
+匿名类不能有构造器，取而代之的是将构造器参数传递给超类（spuerclass）的构造器。尤其是在内部类实现接口的时候，不能有任何构造参数。
+
+#### 10.4. 静态内部类
+
+有时候，使用内部类只是为了把一个类隐藏在另一个类的内部，并不需要内部类引用外部类对象。为此可以将内部类声明为 static ，以便取消产生的引用。
+
+```java
+package test.com.javaSE1.sixUnit;
+
+public class StaticInnerClass {
+
+    public static void main(String[] args) {
+        double[] d = new double[20];
+        for (int i = 0; i < d.length; i++)
+            d[i] = 100 * Math.random();
+        ArrayAlg.Pair p = ArrayAlg.minmax(d);
+        System.out.println("min = " + p.getFirst());
+        System.out.println("max = " + p.getSecond());
+
+    }
+
+    static class ArrayAlg {
+
+        static class Pair {
+            private double first;
+            private double second;
+
+            public Pair(double f, double s) {
+                first = f;
+                second = s;
+            }
+            public double getFirst() {
+                return first;
+            }
+            public double getSecond() {
+                return second;
+            }
+        }
+
+        public static Pair minmax(double[] values) {
+            double min = Double.POSITIVE_INFINITY;
+            double max = Double.NEGATIVE_INFINITY;
+
+            for (double v : values) {
+                if (min > v) min = v;
+                if (max < v) max = v;
+            }
+            return new Pair(min, max);
+        }
+    }
+}
+```
+
+
+
+### 11. 代理
+
+​		利用代理可以在运行时创建一个实现了一组给定接口的新类。这种功能只有在编译时无法确定实现那个接口时才有必要使用。
+
+>   创建一个代理类，需要使用 Proxy 类的 newProxyInstance 方法。此方法有三个参数
+
+*   一个类加载器（class loader）。null 表示默认的类加载器。
+*   一个Class对象数组，每个元素都是需要实现的接口
+*   一个调用处理器
+
+```java
+package test.com.javaSE1.sixUnit;
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.Arrays;
+import java.util.Random;
+
+public class ProxyTest {
+
+    public static void main(String[] args) {
+
+        Object[] elements = new Object[1000];
+
+        for (int i = 0; i < elements.length; i++) {
+            Integer value = i + 1;
+            InvocationHandler handler = new TraceHandler(value);
+            Object proxy = Proxy.newProxyInstance(null, new Class[]{Comparable.class}, handler);
+            elements[i] = proxy;
+        }
+
+        Integer key = new Random().nextInt(elements.length) + 1;
+        int result = Arrays.binarySearch(elements, key);
+        if (result >= 0) System.out.println(elements[result]);
+    }
+
+
+    static class TraceHandler implements InvocationHandler {
+
+        private Object target;
+
+        public TraceHandler(Object target) {
+            this.target = target;
+        }
+
+        @Override
+        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+            System.out.print(target);
+            System.out.print("." + method.getName() + "(");
+            if (args != null) {
+                for (int i = 0; i < args.length; i++) {
+                    System.out.print(args[i]);
+                    if (i < args.length - 1) System.out.print(", ");
+                }
+            }
+            System.out.println(")");
+
+            return method.invoke(target, args);
+        }
+    }
+}
+```
 
 
 
@@ -3273,7 +3631,3 @@ java语言中，每个线程都有一个优先级。默认境况下，一个线�
 守护线程的唯一用途是为其他线程提供服务。当只剩下守护线程时，虚拟机就退出了。
 
 ### 6.同步
-
-
-
-[".\img\目录结构.png"]:

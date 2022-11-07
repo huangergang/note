@@ -175,11 +175,11 @@ setBounds(0,0,d,h)
 上、下、左、右、中
 
 ``` java
-        contentPane.add(l1,BorderLayout.NORTH);
-        contentPane.add(l2,BorderLayout.CENTER);
-        contentPane.add(l3,BorderLayout.EAST);
-        contentPane.add(l4,BorderLayout.SOUTH );
-        contentPane.add(l5,BorderLayout.WEST);
+contentPane.add(l1,BorderLayout.NORTH);
+contentPane.add(l2,BorderLayout.CENTER);
+contentPane.add(l3,BorderLayout.EAST);
+contentPane.add(l4,BorderLayout.SOUTH );
+contentPane.add(l5,BorderLayout.WEST);
 ```
 
 边界可调

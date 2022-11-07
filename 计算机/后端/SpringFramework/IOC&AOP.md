@@ -346,7 +346,6 @@ ApplicationContext ac = new ClassPathXmlApplicationContext("spring.xml","bean.xm
 ```java
 package com.xxxx.factory;
 
-
 /* 定义静态工厂类，用来实例化Student类 */
 public class StudentFactory {
 
@@ -356,7 +355,6 @@ public class StudentFactory {
         return new Student();
     }
 }
-
 ```
 
 2. 设置配置文件
@@ -398,7 +396,6 @@ public class PersonFactory {
         return new Person();
     }
 }
-
 ```
 
 2. 设置配置文件
@@ -980,7 +977,6 @@ public class RealSubject implements Subject {
         //  System.out.println("doSomething...");
 
     }
-
 }
 ```
 
@@ -992,11 +988,9 @@ public class ProxySubject implements Subject {
     // 引用真实类
     private Subject target;
 
-    
     public ProxySubject(Subject target) {
         this.target = target;
     }
-
 
     @Override
     public void doSomething() {
@@ -1008,7 +1002,6 @@ public class ProxySubject implements Subject {
         after();
 
     }
-
 
     private void before() {
 
@@ -1027,9 +1020,7 @@ public class ProxySubject implements Subject {
         System.out.println("Proxy after...");
 
     }
-
 }
-
 ```
 
 **弊端：**
@@ -1077,11 +1068,9 @@ public class JDKHandler implements InvocationHandler {
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
         // System.out.println("调用前增强...");
-
         
         // 调用目标对象中的方法
-        Object object = method.invoke(target, args);
-        
+        Object object = method.invoke(target, args);     
 
         // System.out.println("调用后增强...");
 
@@ -1094,7 +1083,6 @@ public class JDKHandler implements InvocationHandler {
         Object object = Proxy.newProxyInstance(this.getClass().getClassLoader(), target.getClass().getInterfaces(),this);
         return object;
     }
-
 }
 ```
 
@@ -1172,7 +1160,6 @@ public class CglibInterceptor implements MethodInterceptor {
 
         return object;
     }
-    
 }
 ```
 
