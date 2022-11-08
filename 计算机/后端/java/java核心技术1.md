@@ -67,8 +67,7 @@ java -vserion
 
 ```java
 public class FirstSample {
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
         System.out.println("Hello World");
     }
 }
@@ -231,8 +230,8 @@ x += 4 ;  // 等价于 x = x + 4
 ```java
 int m = 7;
 int n = 7;
-int a = 2 * ++m;  // a=18,m=8
-int b = 2 * n++;  // b=14,n=7
+int a = 2 * ++m;  // a=16, m=8
+int b = 2 * n++;  // b=14, n=7
 ```
 
 3.   关系运算符
