@@ -1985,6 +1985,8 @@ exit $var
 
 **退出码值的范围在0~255之间。当大于这个范围后，实际退出码的值是用退出码与256取余得到的。**
 
+
+
 ## 12. 使用结构化命令
 
 ### 12.1. if-then语句
@@ -2203,7 +2205,7 @@ fi
 >
 > (( expression ))
 
-expression可以是任意的数学赋值或比较表达式。
+<u>expression可以是任意的数学赋值或比较表达式。</u>
 
 双括号支持的一些运算符。
 
@@ -2645,6 +2647,8 @@ users.csv文件
 4	christine,Christine Bresnahan
 ```
 
+
+
 ## 14. 处理用户输入
 
 ### 14.1. 命令行参数
@@ -2653,7 +2657,7 @@ users.csv文件
 
 #### 14.1.1. 读取参数
 
-bash shell接受位置参到脚本中，位置参数是标准的数字：$0是程序名，$1是第一个参数，$2是第二个参数...一直到第九个参数$9。变量之间用空格分隔。
+bash shell接受位置参到脚本中，位置参数是标准的数字：\$0是程序名，$1是第一个参数，\$2是第二个参数...一直到第九个参数\$9。变量之间用空格分隔。
 
 传递的参数可以是字符串，当字符串中包含空格时，需要将字符串用单双引号括起来。
 
@@ -2678,7 +2682,7 @@ $0参数可以获取shell脚本在命令行启动的脚本名。<img src="..\Lin
 
 <img src="..\Linux命令行与shell脚本大全\img\脚本名2.png">
 
-还有当传递给$0变量的实际字符串不仅仅是脚本名，而是完整脚本路径时，变量$0会使用整个路径。
+还有当传递给\$0变量的实际字符串不仅仅是脚本名，而是完整脚本路径时，变量\$0会使用整个路径。
 
 >  解决方法：
 >
@@ -2762,7 +2766,7 @@ $*和$@变量可以访问所有参数。
 
 <img src="..\Linux命令行与shell脚本大全\img\抓取所有数据.png">
 
-> $* 变量将所有参数当作一个单词保存，$*会将这些参数视为一个整体，而不是多个个体
+> \$* 变量将所有参数当作一个单词保存，\$*会将这些参数视为一个整体，而不是多个个体
 >
 > $@变量会将所有参数当做同一字符中的多个独立的单词，可以用for对其进行遍历
 
@@ -2835,55 +2839,330 @@ shift number
 
 2. 分离参数和选项
 
- 
+在shell中同时使用选项和参数的情况。Linux处理的标准方式是用特殊字符来将二者分开，该字符会告诉脚本何时选项结束以及普通参数何时开始。这个特殊字符就是（--）。
+
+```bash
+#!/bin/bash
+
+echo
+while [ -n "$1" ]; do
+    case "$1" in
+        -a) echo "Found the -a option";;
+        -b) echo "Found the -b option";;
+        -c) echo "Found the -c option";;
+        --) shift
+            break ;;
+        *)  echo "$1 is not an option";;
+    esac
+    shift
+done
+```
+
+在命令行中未键入（--）时，脚本没有输出参数信息，只是将其当作非脚本输出。
+
+<img src="./img/14-16.png">
+
+3.   处理带值的选项
+
+有些选项要求带上一个额外的参数值。
+
+-b 选项需要一个参数，在case 代码段的 -b 处打印参数，并且参数向前移动一位。
+
+```bash
+#!/bin/bash
+
+echo
+while [ -n "$1" ]; do
+    case "$1" in
+        -a) echo "Found the -a option";;
+        -b) param="$2"
+            echo "Found the -b option, with parameter value $param"
+            shift;;
+        -c) echo "Found the -c option";;
+        --) shift
+            break ;;
+        *)  echo "$1 is not an option";;
+    esac
+    shift
+done
+
+#
+count=1
+for param in $@
+do
+    echo "Parameter #$count: $param"
+    count=$[ $count + 1 ]
+done
+```
+
+ <img src="./img/14-17.png">
+
+#### 14.4.2. getopt
+
+##### 1. 命令行使用
+
+getopt 是一个在处理命令行选项和参数时非常方便的工具。
+
+>   命令格式
+
+```bash
+getopt optstring parameters
+```
+
+optstring 是整个过程的关键所在。它定义了命令行的有效的选项字母，还定义了那些选项需要参数值。
+
+在optstring中列出需要合并的选项，在需要参数的选项字母后添加一个（:) 。
+
+示例：
+
+```bash
+getopt ab:cd -a -b test -cd test2 test3
+```
+
+<img src="./img/getopt.png">
+
+忽略一个不再optstring中的选项，可以使用 -e 参数。
 
 
 
+##### 2. 在脚本中使用 getopt
+
+在脚本中用getopt命令生成的格式化后的版本替换已有的命令行选项和参数。再用set命令处理shell中的各种变量。
+
+set命令的选项之一就是双破折线（--），它将命令行参数替换成set命令的命令行值。
+
+```bash
+set -- $(getopt -q ab:cd "$@")
+```
+
+```bash
+#!/bin/bash
+#
+#
+set -- $(getopt -q ab:cd "$@")
+#
+echo
+while [ -n "$1" ]; do
+    case "$1" in
+        -a) echo "Found the -a option";;
+        -b) param="$2"
+            echo "Found the -b option, with parameter value $param"
+            shift;;
+        -c) echo "Found the -c option";;
+        --) shift
+            break ;;
+        *)  echo "$1 is not an option";;
+    esac
+    shift
+done
+
+#
+count=1
+for param in $@
+do
+    echo "Parameter #$count: $param"
+    count=$[ $count + 1 ]
+done
+```
+
+测试：
+
+```bash
+bash 3.sh -a -b test -cd test2 test3
+```
+
+<img src="./img/14-18.png">
+
+getopt 命令不擅长处理带空格和引号的参数值。它会将空格当作参数分隔符，而不是将引号中的参数当作一个参数。
+
+<img src="./img/14-20.png">
+
+#### 14.4.4. getopts
+
+getopts命令内建于bash shell。
+
+getopts命令解析命令行选项时会移除开头的破折线，所以在case中不用使用破折线，此外它还解决了引号中的参数问题。
+
+```bash
+echo
+while getopts :ab:c: opt
+do
+    case "$opt" in
+        a) echo "Found the -a option";;
+        b) echo "Found the -b option, with value $OPTARG";;
+        c) echo "Found the -c option";;
+        *) echo "Unknown option: $opt";;
+    esac
+done
+```
+
+<img src="./img/getopts.png">
+
+还可以将选项字母和参数值放在一起使用，不用加空格。
+
+getopts 还能将在命令行上未找到的未定义选项统一输出成为问号。
+
+<img src="./img/getopts2.png">
+
+在getopts处理每个选项时，它会将OPTIND环境变量增一。
+
+>    完全功能命令行选项和参数的处理工具。
+
+```bash
+#!/bin/bash
+#
+#
+#
+echo
+while getopts :ab:cd opt
+do
+    case "$opt" in
+        a) echo "Found the -a option";;
+        b) echo "Found the -b option, with value $OPTARG";;
+        c) echo "Found the -c option";;
+        d) echo "Found the -d option";;
+        *) echo "Unknown option: $opt";;
+    esac
+done
+#
+shift $[ $OPTIND - 1 ]
+#
+echo
+count=1
+for param in "$@"
+do
+    echo "Parameter $count: $param"
+    count=$[ $count + 1 ]
+done
+```
+
+<img src="./img/全功能.png">
 
 
 
+### 14.5.  选项标准化
+
+​    有些选项在linux里已经拥有了某种程度的标准含义。
+
+| 选项 | 描述                           |
+| ---- | ------------------------------ |
+| -a   | 显示所有对象                   |
+| -c   | 生成一个计数                   |
+| -d   | 指定一个目录                   |
+| -e   | 扩展一个对象                   |
+| -f   | 指定读入数据的文件             |
+| -h   | 显示命令的帮助信息             |
+| -i   | 忽略文本大小写                 |
+| -l   | 产生输出的长格式版本           |
+| -n   | 使用非交互模式（批处理）       |
+| -o   | 将所有输出重定向到指定输出文件 |
+| -q   | 以安静模式运行                 |
+| -r   | 递归地处理目录和文件           |
+| -s   | 以安静模式运行                 |
+| -v   | 生成详细输出                   |
+| -x   | 排除某个对象                   |
+| -y   | 对所有问题回答yes              |
+
+### 14.6. 获取用输入
+
+##### 14.6.1. read
+
+read命令从客户端读入字符并保存在指定变量中。
+
+```bash
+#!/bin/bash
+
+echo -n "Enter your name: "
+read name
+echo "Hello $name, welcome to my program."
+```
+
+read命令包含-p选项，允许直接在read命令行中指定提示符
+
+```bash
+#!/bin/bash
+
+read -p "Enter your name: " name
+echo "Hello $name, welcome to my program."
+```
+
+可以在read指定多个变量和。
+
+也可以不指定变量，这样read命令接受的所有数据都保存在特殊环境变量REPLY中。
+
+```bash
+#!/bin/bash
+
+read -p "Enter your name: "
+echo "Hello $REPLY, welcome to my program."
+```
+
+##### 14.6.2. 超时
+
+   -t参数可以指定read输入的等待时间，超时后read命令会返回一个非零退出状态码。
+
+```bash
+#!/bin/bash
+
+if read -t 5 -p "Enter your name: " name
+then
+    echo "Hello $name, welcome to my script."
+else
+    echo "Sorry, too slow!"
+fi
+```
+
+也可以指定输出的字符数。通过-n参数后面紧跟数值，表示要限制的字符数。
+
+```bash
+#!/bin/bash
+
+read -n1 -p "Do you want to continue [Y/N]? " answer
+case $answer in
+Y | y) echo
+       echo "fine, continue on...";;
+N | n) echo
+       echo "OK, gooogbye"
+       exit;;
+esac
+echo "END ..."
+```
+
+<img src="./img/14-22.png">
+
+##### 16.6.3. 隐藏文件读取
+
+read命令的-s选项可以隐藏读入的字符，这一点可以应用到用户输入密码上，shell会将读入的密码颜色设置成和背景颜色一样。
+
+```bash
+#!/bin/bash
+#
+read -s -p "Enter your password: " pass
+echo
+echo "Is your password really $pass ? "
+```
+
+##### 16.6.4. 从文件获取
+
+通过管道将cat到的文件输出传入read命令，并用line变量记录每一行的字符，while接受每一read命令返回状态码，直到文件中没有数据时，read返回为零状态码。
+
+```bash
+#!/bin/bash
+#
+count=1
+cat test | while read line
+do
+    echo "Line $count: $line"
+    count=$[ $count + 1]
+done
+echo "Finished processing the file."
+```
+
+<img src="./img/readfile.png">
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+## 15. 呈现数据
 
 
 
