@@ -994,7 +994,7 @@ Date today;      // 创建一个对象引用   frank引用null
 构造器调用构造器：
 
 ```JAVA
-public Student(String id,String name){
+public Student(String id, String name){
     this(id);	// 调用已有构造
     this.name = name;
 }
@@ -1934,7 +1934,7 @@ public class Test {
 }
 ```
 
-
+#### 14.6. Reflection
 
 >   通过反射获取一个类的所有信息 
 
@@ -2951,13 +2951,39 @@ public class ProxyTest {
 
 ## 第七章
 
-### 1. 异常分类
+​	程序开发中的出现 bug 时，应当做到：
 
-![](..\java\img\java异常层次简化.png)
+*   向用户告知错误
+*   保存所有的工作结果
+*   允许用户以妥善的形式退出程序
 
-Error类层次结构描述了java运行时系统的内部错误和资源耗尽错误。
+### 1. 处理错误
 
-由程序错误导致的异常属于RuntimeException。
+由于出现错误而使得某些操作没有完成，程序应该：
+
+*   返回一种安全状态，并能让用户执行一些其他命令；或者
+*   允许用户保存所有操作的结果，并以妥善的方式终止程序
+
+常见错误
+
+1.   用户输入错误
+2.   设配错误
+3.   物理限制
+4.   代码错误
+
+### 2. 异常分类
+
+在java中，异常对象都是派生于 Throwable 类的一个实例。
+
+![](.\img\java异常层次简化.png)
+
+>   Error
+
+​		Error类层次结构描述了java运行时系统的内部错误和资源耗尽错误。应用程序不应该抛出这种类型的对象。
+
+>   Exception
+
+​		Exception 有分为由<u>程序错误导致</u>的错误属于 RuntimeException 和像 I/O 错误的这样的类属于其他异常。
 
 几种RuntimeException情况：
 
@@ -2971,9 +2997,58 @@ Error类层次结构描述了java运行时系统的内部错误和资源耗尽�
 * 试图打开一个不存在的文件
 * 试图根据给定的字符串查找Class对象，而这个字符串表示的类并不存在
 
-​			**Java语言规法将派生于Error类或RuntimeException类的所有异常称为<font color="red">非受查异常</font>，所有其他异常称为<font color="red">受查异常</font>。**
 
-### 2. throw
+
+​			Java语言规法将派生于 Error 类或 RuntimeException 类的所有异常称为 <font color="red">非受查（unchecked）异常</font>，所有其他异常称为 <font color="red">受查（checked）异常</font>。
+
+
+
+>   何时使用 throws 声明异常 ？
+
+1.   调用一个抛出受查异常的方法
+2.   程序运行时发现错误，并且利用 throw 语句抛出一个受查异常
+3.   程序出现错误
+4.   Java 虚拟器和运行时库出现的内部错误
+
+前两者其一必须告知程序员可能抛出异常。如果没有处理器捕获这个异常，当前线程就会结束。
+
+
+
+>   异常规法（exception specification）
+
+在方法的首部抛出异常
+
+```java
+public void readFile() throws IOException {
+
+}
+```
+
+多个异常由逗号隔开
+
+```java
+public void readFile() throws IOException, EOFException, FileNotFoundException {
+
+}
+```
+
+不需要声明 java 从 Error类和 RuntimeException类继承的非受查异常。
+
+错误形式：
+
+```java
+public void test() throws ArrayIndexOutOfBoundsException{
+
+}
+```
+
+
+
+​		一个方法必须声明所有可能抛出的受查异常，而非受查异常要么不可控制（Error），要么应该避免发生（RuntimeException）。
+
+
+
+### 3. 抛出异常
 
 throw关键字用于抛出一个受查异常。
 
@@ -2981,7 +3056,11 @@ throw关键字用于抛出一个受查异常。
 throw new ClassCastException();
 ```
 
-### 3. 捕获异常
+ 
+
+
+
+###  4. 捕获异常
 
 ```JAVA
 try{
@@ -2995,7 +3074,7 @@ try{
 
 try语句可以只有finally子句，而没有catch子句。
 
-### 4. 使用断言
+### 5. 使用断言
 
 两种形式：
 
