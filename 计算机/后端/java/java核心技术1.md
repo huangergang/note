@@ -3050,29 +3050,303 @@ public void test() throws ArrayIndexOutOfBoundsException{
 
 ### 3. 抛出异常
 
-throw关键字用于抛出一个受查异常。
+EOFException异常描述是“在输入的过程中，遇到一个未预期的EOF后的信号”。
 
 ```JAVA
-throw new ClassCastException();
+// throw关键字用于抛出一个受查异常。
+throw new EOFException();
+
+// 或者
+EOFEcxception e = new EOFEcxception();
+throw e;
 ```
 
- 
+ 对于一个已经存在的异常类，将其抛出非常容易。抛出步骤：
+
+1.   找到一个合适的异常类。
+2.   创建此类的对象。
+3.   将对象抛出。
+
+>    创建异常
+
+要创建属于自己的异常类，就需从Exception或者Exception子类中派生。派生的异常类应该包含两个构造器，一个是默认构造，另一个包含详细的描述信息。
+
+```java
+public class Test{   
+
+	public static void main(String[] args) throws IOException {
+        throw new MyException("This is my exception");
+    }
+}
+class MyException extends IOException {
+    public MyException() {
+    }
+
+    public MyException(String message) {
+        super(message);
+    }
+}
+```
+
+>   API    java.lang.Throwable   1.0
+
+*   Throwable()
+
+    构造一个新的Throwable对象，这个对象没有详细的描述信息。
+
+*   Throwable(String message)
+
+    构造一个新的throwable对象，这个对象带有详细信息。习惯上，所有的派生异常类都应该有一个默认构造器和一个带有详细描述信息的构造器。
+
+*   String getMessage()
+
+    获取 Throwable对象的详细描述信息。
 
 
 
 ###  4. 捕获异常
 
+​		如果某个异常发生的时候在任何地方都没有被捕获，程序就会终止执行，并在控制台上打印异常信息，其中包括异常的类型和堆栈的内容。
+
+捕获异常用到try/catch语句：
+
 ```JAVA
 try{
-    // 捕获代码
-}catch(Exception e){
-    // 抛出异常
-}finally{
-    // 关闭资源
+    // code 
+    // more code
+}catch(ExceptionType e){
+    
 }
 ```
 
-try语句可以只有finally子句，而没有catch子句。
+如果在try语句块中的任何代码抛出了一个在 catch 子句中说明的类，那么：
+
+1.   程序将跳过 try 语句块的其余代码。
+2.   程序将执行catch中的处理器代码。
+
+如果 try 语句块中的代码没有抛出任何异常，那么程序将跳过 catch 子句。
+
+如果方法中的任何代码抛出了一个在 catch 子句中没有声明的异常类型，那么这个方法就会立刻退出。
+
+
+
+如果不想处理异常，而是希望方法的调用者处理异常，就可以使用 throws 传递异常。throws 可以抛出多个异常。
+
+```java
+public void readData(String fileName) throws IOException { 
+    // ...
+}
+```
+
+不允许在子类的 throws 说明符中出现超过超类方法所列出的异常类范围。
+
+#### 4.1. 捕获多个异常
+
+<u>注意捕获的范围由子类再到超类，不能先捕获超类在捕获子类。</u>
+
+```java
+try {
+
+} catch (IndexOutOfBoundsException e) {
+
+} catch (RuntimeException e) {
+
+} catch ( Exception e) {
+    
+}
+```
+
+另一种形式，只有当异常类型彼此之间不存在子类关系时，才可以使用。
+
+```java
+try {
+
+} catch (IndexOutOfBoundsException | ArrayStoreException e) {
+
+}
+```
+
+
+
+#### 4.2. finally
+
+不管异常是否被捕获，finally子句中的代码都会被执行。finally语句块通常用于释放调用本地方法的资源。
+
+```java
+public static void main(String[] args) throws IOException {
+
+    InputStream in = new FileInputStream("file.txt");
+    try {
+        //
+    } catch (Exception e) {
+
+    } finally {
+        in.close();
+    }
+}
+```
+
+#### 4.3. 执行顺序
+
+```txt
+InputStream in = new FileInputStream(...);
+try{
+ 	// 1
+ 	code that might throw exception
+ 	// 2
+} catch (IOException e){
+	// 3
+	show error message
+	// 4
+} finally {
+	// 5
+	in.close();
+}
+// 6
+```
+
+1.   当代码没有抛出异常。
+
+     1、2、5、6
+
+2.   抛出了一个在catch子句中捕获的异常。
+
+     1.   如果catch子句没有抛出异常
+
+          1、3、4、5、6
+
+     2.   如果抛出一个异常
+
+          1、3、5
+
+3.   代码抛出了一个异常，但不是catch子句捕获的。
+
+     1、5
+
+
+
+try语句可以只有 finally 子句，而没有 catch 子句。
+
+>   注意
+
+如果在 try 语句中退出，在方法返回前，finally 子句的内容将会被执行。如果在finally 子句中也有一个 return 语句，返回值会将原先的返回值覆盖。
+
+#### 4.4. 带资源的try语句
+
+当try 中有需要关闭的资源时，可使用如下形式：
+
+```java
+try (Scanner in = new Scanner(new FileInputStream("file.txt"), "utf-8");
+     PrintWriter out = new PrintWriter("out.txt")) 
+{
+    while (in.hasNext())
+        out.println(in.next().toUpperCase());
+}
+```
+
+不论这个块如何退出，in 和 out 都会关闭。
+
+#### 4.5. 分析堆栈轨迹元素
+
+​		堆栈轨迹（stack trace） 是一个方法调用过程的列表。包含程序执行过程中方法调用的特定位置。
+
+可以调用 Throwable 类的 printStackTrace 方法访问堆栈轨迹的文本描述信息。
+
+```java
+Throwable t = new Throwable();
+StringWriter out = new StringWriter();
+t.printStackTrace(new PrintWriter(out));
+String desc = out.toString();
+```
+
+getStackTrace方法可以得到 StackTraceElement 对象的一个数组。
+
+StackTraceElement 类含有能够获取文件名和当前执行的代码行号的方法。toString方法产生一个格式化字符串，包含所获得的信息。
+
+静态的 Thread.getAllStackTrace 方法可以产生所有线程的堆栈轨迹。
+
+
+
+>   API  java.lang.Throwable  1.0
+
+*   Throwable(Throwable  cause)
+
+*   Throwable(String  message, Throwabl cause)
+
+    用给定的“原因” 构造一个 Throwable 对象
+
+*   Throwable  initCause(Throwabl cause)
+
+    将这个对象设置为"原因"。如果这个对象已经被设置为"原因"，则抛出一个异常。返回this引用。
+
+*   Throwable  getCause()
+
+    获得设置为这个对象的"原因"的异常对象。如果没有设置"原因"，则返回null。
+
+*   StackTraceElement[]   getStackTrace()
+
+    获取构造这个对象时调用堆栈的跟踪。
+
+*   void  addSuppressed(Throwable  t)
+
+    为这个异常增加一个"抑制"异常。
+
+*   Throwable[]   getSuppressed()
+
+    得到这个异常的所有"抑制"异常。
+
+>   API   java.lang.Exception
+
+*   Exception(Throwable cause)
+
+*   Exception(String message, Throwable cause)
+
+    用给定"原因"构造一个异常对象。
+
+>   API   java.lang.RuntimeException
+
+*   RuntimeException(Throwable cause)
+
+*   RuntimeException(String message, Throwable cause)
+
+    用给定"原因"构造一个 RuntimeException 对象。
+
+>   API    java.lang.StackTraceElement
+
+*   String getFilebName()
+
+    返回这个元素运行时对应的元文件名。如果这个信息不存在，则返回null。
+
+*   int  getLineNumbe()
+
+    返回这个元素运行时对应的源文件行数。如果这个信息不存在，则返回-1.
+
+*   String getClassName()
+
+    返回这个元素运行时对应类的完全限定名
+
+*   String getMethodName()
+
+    返回这个元素运行时对应的方法名。构造器时\<init>；静态初始化器是\<clinit>。这里无法区分重载方法。
+
+*   boolean isNativeMethod()
+
+    如果这个元素运行时在一个本地方法中，返回 true。
+
+*   String toString()
+
+    如果存在的化，返回一个包括类名、方法名、文件名和行数的格式化字符串。
+
+#### 4.6. 使用异常技巧
+
+1.   异常处理不能代替简单的测试
+2.   不要过分地细化异常
+3.   利用异常层次结构
+4.   不要压制异常
+5.   在检测错误时，"苛刻"比放任更好
+6.   不要羞于传递异常
+
+ 
 
 ### 5. 使用断言
 
