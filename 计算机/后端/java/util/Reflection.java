@@ -1,4 +1,4 @@
-package test.com.javaSE1.fifthUnit;
+package util;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -6,35 +6,25 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Scanner;
 
-public class ReflectionTest {
 
-    public static void main(String[] args) {
-        String name;
-        if (args.length > 0) name = args[0];
-        else {
-            Scanner in = new Scanner(System.in);
-            System.out.println("Enter class name (e.g  java.util.Date):  ");
-            name = in.next();       // 控制台输入类的全路径名
-        }
-        try {
-            Class cl = Class.forName(name);
-            Class superCl = cl.getSuperclass();
-            String modifiers = Modifier.toString(cl.getModifiers());
-            if (modifiers.length() > 0) System.out.print(modifiers + " ");
-            System.out.print("class " + cl.getSimpleName());
-            if (superCl != null && superCl != Object.class) System.out.print(" extends " + superCl.getSimpleName());
+public class Reflection {
 
-            System.out.print("\n{\n");
-            printFields(cl);
-            System.out.println();
-            printConstructors(cl);
-            System.out.println();
-            printMethods(cl);
-            System.out.println("}");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        System.exit(0);
+    public static void run(Class cl) {
+
+        Class superCl = cl.getSuperclass();
+        String modifiers = Modifier.toString(cl.getModifiers());
+        if (modifiers.length() > 0) System.out.print(modifiers + " ");
+        System.out.print("class " + cl.getSimpleName());
+        if (superCl != null && superCl != Object.class) System.out.print(" extends " + superCl.getSimpleName());
+
+        System.out.print("\n{\n");
+        printFields(cl);
+        System.out.println();
+        printConstructors(cl);
+        System.out.println();
+        printMethods(cl);
+        System.out.println("}");
+
     }
 
     /**
@@ -103,3 +93,4 @@ public class ReflectionTest {
         }
     }
 }
+
