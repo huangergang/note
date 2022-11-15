@@ -114,8 +114,6 @@ public class JDBCUtil {
         }
 
     }
-
-
 }
 ```
 
@@ -153,7 +151,6 @@ public class JdbcImpl02 {
         JDBCUtil.close(connection, preparedStatement, resultSet);
 
     }
-
 }
 ```
 
@@ -275,7 +272,7 @@ public class JdbcImpl02 {
 
 ## 2.Apache DBUtils
 
--   [ ] TODO
+-   [x] TODO
 
 ## 3.Spring JDBC
 

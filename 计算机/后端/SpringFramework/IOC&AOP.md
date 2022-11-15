@@ -59,8 +59,7 @@ public class Test {
          // 2. 获取JavaBean的实例
         User user = (User) application.getBean("user");  
 
-        user.test();
-    
+        user.test();S
     }
 }
 ```
@@ -106,15 +105,14 @@ public class MyBean {
 ### 2.2. 添加dom4j和XPath依赖
 
 ```XML
-// dom4j依赖
+<!-- dom4j依赖 --> 
 <dependency>
     <groupId>dom4j</groupId>
     <artifactId>dom4j</artifactId>
     <version>1.1</version>
 </dependency>
 
-
-// XPATH 依赖
+<!-- XPATH 依赖 -->
 <dependency>
     <groupId>jaxen</groupId>
     <artifactId>jaxen</artifactId>
@@ -152,10 +150,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.dom4j.*;
 import org.dom4j.io.SAXReader;
-
 
 public class MyApplicationContext implements BeanFactory {
 
@@ -165,23 +161,19 @@ public class MyApplicationContext implements BeanFactory {
     // 存放从xml中解析到的类名和类的class值
     private List<MyBean> list;
 
-
     public MyApplicationContext(String filName) {
         this.parseXML(filName);
         this.instanceBean();
     }
 
-
     // 解析配置文件
     private void parseXML(String fileName) {
-
 
         // 解析器
         SAXReader saxReader = new SAXReader();
 
         // 获取文件路径
         URL url = this.getClass().getClassLoader().getResource(fileName);
-
 
         try {
 
@@ -215,16 +207,14 @@ public class MyApplicationContext implements BeanFactory {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
-
 
     // 实例化Bean，并且存放到map
     private void instanceBean() {
         if (list.size() > 0 && list != null) {
             for (MyBean b : list) {
                 try {
-
+                    
                     // 将类名和类的实例存放进map
                     map.put(b.getId(), Class.forName(b.getClazz()).getDeclaredConstructor().newInstance());
 
@@ -233,7 +223,6 @@ public class MyApplicationContext implements BeanFactory {
                 }
             }
         }
-
     }
 
     @Override
@@ -242,7 +231,6 @@ public class MyApplicationContext implements BeanFactory {
         return object;
     }
 }
-
 ```
 
 ### 2.6. 测试模拟的IOC容器
@@ -298,7 +286,7 @@ ApplicationContext ac = new ClassPathXmlApplicationContext("spring.xml");
 #### 3.1.2. 根据绝对路径加载资源
 
 ```java
-    ApplicationContext ac = new FileSystemXmlApplicationContext( "C:\\Users\\turing\\Desktop\\spring\\src\\main\\resources\\spring.xml");
+ApplicationContext ac = new FileSystemXmlApplicationContext( "C:\\Users\\turing\\Desktop\\spring\\src\\main\\resources\\spring.xml");
 ```
 
 ### 3.2. 加载多个配置文件
@@ -447,9 +435,7 @@ public class UserService {
     public void setUser(User user) {
         this.user = user;
     }
-
 }
-
 ```
 
 ​	在一个类中需要为作为类属性的其他类使用set方法完成实例化，从外部传参进行的实例化称为注入。
@@ -675,7 +661,6 @@ public class UserService {
     public void setHost(String host) {
         this.host = host;
     }
-    
 }
 ```
 
@@ -757,7 +742,7 @@ xmlns:p="http://www.springframework.org/schema/p"
 
 简化自动化注入，无需手动配置bean标签
 
-```md
+```yml
 1. 设置自动化扫描的范围
 	如果bean对象未在指定包范围，即使声明了注解也无法实例化
 2. 使用指定的注解（声明在类级别）
@@ -798,7 +783,6 @@ public class Dao {
     public void test(){
         System.out.println("Dao...");
     }
-    
 }
 ```
 
@@ -864,7 +848,6 @@ Sping bean初始化的两种方式：
      public void init(){
          System.out.println("User init ...");
      }
-     
  }
  ```
 
@@ -975,7 +958,6 @@ public class RealSubject implements Subject {
         // ...
 
         //  System.out.println("doSomething...");
-
     }
 }
 ```
@@ -1018,7 +1000,6 @@ public class ProxySubject implements Subject {
         // ...
 
         System.out.println("Proxy after...");
-
     }
 }
 ```

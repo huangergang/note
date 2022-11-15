@@ -3693,7 +3693,7 @@ public static Comparable T min(T[] a)
 
 
 
-方法的擦除带来了两个复杂的问题。
+>    方法的擦除带来了两个复杂的问题。
 
 有一个继承自 Pair 的子类 DateInterval。
 
@@ -3741,6 +3741,8 @@ public void setSecond(Object second){
 
 ### 5. 约束与局限型
 
+#### 5.1. 基本约束
+
 >   不能用基本数据类型实例化类型参数。用对应的包装类取代。
 
 ```java
@@ -3752,9 +3754,9 @@ Pair<double>     // error
 ```java
 Pair<String> a = new Pair<>();
 
-if (a instanceof Pair<String>)    // error
+if (a instanceof Pair<String>)    // error          a instanceof Pair   right
     
-if (a instanceof Pair<T>)         // error
+if (a instanceof Pair<T>)         // error		    a instanceof Pair   right
     
 Pair<String> p = (Pair<String>) a;     // error
 ```
@@ -3769,23 +3771,111 @@ if (stringPair.getClass() == employeePair.getClass())    // true  返回都是 P
 
 
 
->   不能实例化参数化类型的数组。java不支持泛型类型数组。
+>   不能实例化<font style="color:red;">参数化类型（Pair<String>）</font>的数组。java不支持泛型类型数组。
 
 ```java
 Pair<String>[] table = new Pair<>(String)[10];   // error
 
-Pair<String>[] table ;                           // 声明合法
+Pair<String>[] table;                            // 声明合法
+```
+
+#### 5.2. Varargs
+
+问题：向参数可变的方法传递一个泛型类型的实例。
+
+```java
+public static <T> void addAll(Collection<T> coll, T... ts) {
+    for (T t : ts) coll.add(t);
+}
+```
+
+```java
+Collection<Pair<String>> table = new ArrayList<>();
+Pair<String> pair1 = new Pair<>();
+Pair<String> pair2 = new Pair<>();
+
+addAll(table, pair1, pair2);
+```
+
+调用，java虚拟机必须建立一个Pair\<String>数组。这违反了前面的规则，不过，对于这种情况，规则有所放松，只会发出警告，不是错误。
+
+可以采用两种方式抑制警告：
+
+```java
+@SuppressWarnings("unchecked")
+public static <T> void addAll(Collection<T> coll, T... ts) { for (T t : ts) coll.add(t);}
+```
+
+```java
+@SafeVarargs
+public static <T> void addAll(Collection<T> coll, T... ts) { for (T t : ts) coll.add(t);}
 ```
 
 
 
-不能实例化类型变量。
+>   不能实例化<font style="font-weight:bold;">类型变量</font>。
 
 ```JAVA
-new T(),new T[]
+new T(...)       // Error
+new T[...]       // Error
+T.class          // Error
+
+public Pair() { first = new T(); second = new T();}   // Error
 ```
 
-不能抛出或捕获泛型类的实例。
+在Java SE 8之后，最好的解决办法是让调用者提供一个构造器表达式。
+
+```java
+Pair<String> pair = Pair.makePair(String::new);
+```
+
+```java
+public static <T> Pair<T> makePair(Supplier<T> constr) {
+    return new Pair<>(constr.get(), constr.get());
+}
+```
+
+或者
+
+```java
+Pair<String> pair = Pair.makePair(String.class);
+```
+
+```java
+public static <T> Pair<T> makePair(Class<T> cl) {
+    try {
+        return new Pair<>(cl.newInstance(), cl.newInstance());
+    } catch (Exception e) {
+        return null;
+    }
+}
+```
+
+
+
+>   不能构造泛型数组
+
+
+
+>   泛型类的静态上下文中类型变量无效
+
+```java
+public class Singleton<T> {
+    
+    private static T singInstance;    // Error
+
+    public static T getSingInstance() {     // Error
+        if (singInstance == null)
+            return singInstance;
+    }
+}
+```
+
+
+
+>   不能抛出或捕获泛型类的实例。
+
+
 
 
 
@@ -3793,39 +3883,210 @@ new T(),new T[]
 
 ### 6. 泛型类型继承规则
 
-泛型类可以扩展或实现其他泛型类。
+泛型中通常 Pair\<S>与Pair\<T>没有什么关系。
+
+<img src="./img/Pair.png">
+
+Employee是Manager的父类，但Pair\<Employee>不是Pair\<Manager>的父类。
+
+>    泛型类可以扩展或实现其他泛型类。
+
+有 ArrayList\<Manager>、 ArrayList\<Employee>、List\<Manager>和 List\<Employee> 几个类，它们的关系如下：
+
+<img src="./img/泛型列表类型中子类型间的关系.png">
 
 ### 7. 通配符类型
 
+通配符类型中，允许类型参数化。
+
 ```JAVA
-Pair<? extends Employee>
+Pair<? extends Employee>    // 表示任何泛型的Pair类型。
 ```
 
-表示任何泛型的Pair类型。
+类型 Pair\<Manager> 是 Pair<? extends Employee> 的子类型。
 
-### 8. Class
+<img src="./img/通配符继承.png">
 
-### 9. 注意
+#### 7.1. 通配符的超类型限定
 
-1. 
+通配符限定与类型变量限定十分类似。
 
-2. 从泛型类派生子类
+```java
+? super Manager     // 限定为 Manager 的所有超类
+```
 
-   * 子类也是泛型类，子类和父类的泛型类型要一致
+可以为方法提供参数，但不能使用返回值。
 
-     ```JAVA
-     class Child<T> extends Parent<T>      
-     ```
+>   直观的说，带有超类型限定的通配符可以向泛型对象写入，带有子类型限定的通配符可以从泛型对象读取。
 
-   * 子类不是泛型类，父类要明确泛型的参数类型
 
-     ```JAVA
-     class Child   extends Parent<String>
-     ```
 
-3. 类型擦除
 
-   泛型是java1.5版本引进的概念，为了与之前的版本的代码兼容，泛型信息只存在于代码的编译阶段，在进入JVM之前，与泛型相关的信息会被擦除。
+
+### 8. 无限定通配符
+
+```java
+Pair<?>
+```
+
+通配符不是类型变量。
+
+
+
+### 9. 反射和泛型
+
+#### 9.1. 泛型 Class 类
+
+Class类是泛型类。例如：String.class 实际上是一个 Class\<String>类的对象。
+
+>   API    java.lang.Class\<T>  1.0
+
+*   T newInstance()
+
+    返回无参数构造器的一个新实例。
+
+*   T cast(Object  obj)
+
+    如果 obj 为 null 或者可能转换为类型 T ，则返回 Obj；否则抛出 BadCastException 异常。
+
+*   T[ ]  getEnumConstants()
+
+    如果 T 是枚举类型，则返回所有则组成的数组，否则返回 null；
+
+*   Class<? super T>  getSuperclass()
+
+    返回这个类的超类，如果 T 不是一个类或 Object 类，则返回 null;
+
+*   Constructor\<T>  getConstructor(Class...  paramTypes)
+
+*   Constructor\<T>  getDeclaredConstructor(Class...  paramTypes)
+
+    获取公有构造器，或带有给定参数类型的构造器。
+
+>   API   java.lang.reflect.Constuctor\<T>  1.1
+
+*   T   newInstance(Object...   parameters)
+
+    返回用指定参数构造的新实例。
+
+#### 9.2. 使用 Class\<T> 参数进行类型匹配
+
+有时，匹配泛型方法中的 Class\<T> 参数的类型变量很有实用价值。
+
+```java
+public static <T> Pair<T> makePair(Class<T> cl) throws InstantiationException, IllegalAccessException {
+    return new Pair<>(cl.newInstance(), cl.newInstance());
+}
+```
+
+```java
+makePair(Employee.calss);   // 调用
+```
+
+编译器可以推断出方法返回值为 Pair\<Employeee>。
+
+#### 9.3. 虚拟机中的泛型类型信息
+
+利用反射分析泛型类。
+
+```java
+package util;
+
+import java.lang.reflect.*;
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class GenericReflection {
+
+    public static void main(String[] args) {
+        String name;
+        if (args.length > 0) name = args[0];
+        else {
+            try (Scanner in = new Scanner(System.in)) {
+                System.out.println("Enter class name (e.g. java.util.Collection): ");
+                name = in.next();
+            }
+        }
+
+        try {
+            Class<?> cl = Class.forName(name);
+            printClass(cl);
+            for (Method m : cl.getDeclaredMethods())
+                printMethod(m);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void printClass(Class<?> cl) {
+        System.out.print(cl);
+        printTypes(cl.getTypeParameters(), "<", ",", ">", true);
+        Type sc = cl.getGenericSuperclass();
+        if (sc != null) {
+            System.out.print(" extends ");
+            printType(sc, false);
+        }
+        printTypes(cl.getGenericInterfaces(), " implements ", ", ", "", false);
+        System.out.println();
+    }
+
+    public static void printMethod(Method m) {
+        String name = m.getName();
+        System.out.print(Modifier.toString(m.getModifiers()));
+        System.out.print(" ");
+        printTypes(m.getTypeParameters(), "<", ",", "> ", true);
+
+        printType(m.getGenericReturnType(), false);
+        System.out.print(" ");
+        System.out.print(name);
+        System.out.print("(");
+        printTypes(m.getGenericParameterTypes(), "", ", ", "", false);
+        System.out.println(")");
+    }
+
+    public static void printTypes(Type[] types, String pre, String sep, String suf, boolean isDefinition) {
+        if (pre.equals(" extends ") && Arrays.equals(types, new Type[]{Object.class})) return;
+        if (types.length > 0) System.out.print(pre);
+        for (int i = 0; i < types.length; i++) {
+            if (i > 0) System.out.print(sep);
+            printType(types[i], isDefinition);
+        }
+        if (types.length > 0) System.out.print(suf);
+    }
+
+    public static void printType(Type type, boolean isDefinition) {
+        if (type instanceof Class) {
+            Class<?> t = (Class<?>) type;
+            System.out.print(t.getName());
+        } else if (type instanceof TypeVariable) {
+            TypeVariable<?> t = (TypeVariable<?>) type;
+            System.out.print(t.getName());
+            if (isDefinition) {
+                printTypes(t.getBounds(), " extends ", "&", "", false);
+            }
+        } else if (type instanceof WildcardType) {
+            WildcardType t = (WildcardType) type;
+            System.out.print("?");
+            printTypes(t.getLowerBounds(), " extends", "&", "", false);
+            printTypes(t.getLowerBounds(), " super ", "&", "", false);
+        } else if (type instanceof ParameterizedType) {
+            ParameterizedType t = (ParameterizedType) type;
+            Type owner = t.getOwnerType();
+            if (owner != null) {
+                printType(owner, false);
+                System.out.print(".");
+            }
+            printType(t.getRawType(), false);
+            printTypes(t.getActualTypeArguments(), "<", ", ", ">", false);
+        } else if (type instanceof GenericArrayType) {
+            GenericArrayType t = (GenericArrayType) type;
+            System.out.print("");
+            printType(t.getGenericComponentType(), isDefinition);
+            System.out.print("[]");
+        }
+    }
+}
+```
 
 
 
