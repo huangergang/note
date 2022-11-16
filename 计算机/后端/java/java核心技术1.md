@@ -4094,19 +4094,333 @@ public class GenericReflection {
 
 ## 第九章
 
-### 1. 集合接口
+### 1. Java集合接口
 
-![](.\img\集合接口继承层次.png)
+​		Java最初版本只为最常用的数据结构提供了很少的一组类：Vector、Stack、HashTable、BitSet与Enumeration接口，其中的Enumeration接口提供类一种用于访问任意容器中各个元素的抽象机制。
 
-### 2. 实现类
+#### 1.1. 将集合的接口与实现分离
 
-#### 2.1. AbstractCollection
+​		Java集合类库将接口（interface）与实现（implementation）分离。
 
-![](img\AbstractCollection继承层次.png)
+>   Queue 的分离
 
-#### 2.2. AbstractMap
+队列接口指出可以在队列的尾部添加元素，在队列的头部删除元素，并且可以查找队列中元素的个数。
 
-![](img\AbstractMap.png)
+<img src="./img/Queue.png">
+
+Queue接口最简单的定义：
+
+```java
+public interface Queue<E> {
+    
+    boolean add(E e);
+    E remove();
+    int size();
+}
+```
+
+队列通常有两种实现方式：一种是循环数，另一种是使用链表。
+
+<img src="./img/Queue1.png">
+
+不同的实现通过实现Queue接口的类来表示。可以用接口类型存放集合的引用。
+
+```java
+Queue<String> queue = new ConcurrentLinkedQueue<>();    
+Queue<String> queue = new LinkedBlockingQueue<>();		
+```
+
+在API文档中，有一组以 Abstract 开头的类，这些类是为类库实现者设计的，想要实现自己的队列，可以通过扩展Abstract 类比实现 Queue 接口要轻松得多。
+
+#### 1.2. Conllection 
+
+集合类的基本接口是 Collection 接口。
+
+Collection 接口中的所有定义方法：
+
+```java
+public interface Collection<E> extends Iterable<E> {
+
+    int size();
+
+    boolean isEmpty();
+
+    boolean contains(Object o);
+
+    Iterator<E> iterator();
+
+    Object[] toArray();
+ 
+    <T> T[] toArray(T[] a);
+
+    default <T> T[] toArray(IntFunction<T[]> generator) {
+        return toArray(generator.apply(0));
+    }
+
+    boolean add(E e);
+
+    boolean remove(Object o);
+
+    boolean containsAll(Collection<?> c);
+
+    boolean addAll(Collection<? extends E> c);
+
+    boolean removeAll(Collection<?> c);
+
+    default boolean removeIf(Predicate<? super E> filter) {
+        Objects.requireNonNull(filter);
+        boolean removed = false;
+        final Iterator<E> each = iterator();
+        while (each.hasNext()) {
+            if (filter.test(each.next())) {
+                each.remove();
+                removed = true;
+            }
+        }
+        return removed;
+    }
+
+    boolean retainAll(Collection<?> c);
+
+    void clear();
+
+    boolean equals(Object o);
+
+    @Override
+    default Spliterator<E> spliterator() {
+        return Spliterators.spliterator(this, 0);
+    }
+ 
+    default Stream<E> stream() {
+        return StreamSupport.stream(spliterator(), false);
+    }
+
+    default Stream<E> parallelStream() {
+        return StreamSupport.stream(spliterator(), true);
+    }
+}
+```
+
+#### 1.3. 迭代器
+
+迭代器（Iterator）是对集合每个元素进行访问与操作的接口。Iterator接口包含4个方法：
+
+```java
+public interface Iterator<E> {
+    
+    boolean hasNext();
+    
+    E next();   
+    
+    default void remove() { throw new UnsupportedOperationException("remove"); }
+    
+    default void forEachRemaining(Consumer<? super E> action) {
+        Objects.requireNonNull(action);
+        while (hasNext())  action.accept(next());
+    }
+}
+```
+
+通过反复调用 next 方法，可以逐个访问集合中的元素。如果到集合的末尾，next 会抛出 NoSuchEmentException 异常。所以在 next 调用之前调用 hasNext 判断是否还存在元素。
+
+>   用迭代器查看集合所有元素
+
+```java
+Collection<String> c = List.of("Frank", "Tom", "Aim");
+
+Iterator<String> iter = c.iterator();
+while (iter.hasNext()) {
+    String e = iter.next();
+    System.out.println(e);
+}
+```
+
+>   forEach
+
+```java
+Collection<String> c = List.of("Frank", "Tom", "Aim");
+
+for (String e : c) {
+    System.out.println(e);
+}
+```
+
+>   forEach  lambda表达式  （Java SE 8）
+
+```java
+Collection<String> c = List.of("Frank", "Tom", "Aim");
+
+c.forEach(System.out::println);
+```
+
+forEach的实质还是迭代器。
+
+Java迭代器的查询操作与位置变更是紧密相连的，在调用 next 方法之后位置随之移动。next 方法和 remove 方法的调用具有相互依赖性。在调用 remove 之前没有调用 next 是不合法的。
+
+#### 1.4. 泛型实用方法
+
+ Collection 和 Iterator 都是泛型接口。
+
+>   API   java.util.Collection\<E>  1.2
+
+*   Iterator\<E> iterator()
+
+    返回一个用于访问集合中每个元素的迭代器。
+
+*   int size()
+
+    返回当前存储在集合中的元素个数。
+
+*   boolean isEmpty()
+
+    如果集合中没有元素，返回 true。
+
+*   boolean contains(Object obj)
+
+    如果集合中包含了一个与obj相等的对象，返回 true。
+
+*   boolean containsAll(Collection\<?> other)
+
+    如果这个集合包还 other 集合中的所有元素，返回 true。
+
+*   boolean add(E e)
+
+    将一个元素添加到集合中。如果由于这个调用改变了集合，返回 true。
+
+*   boolean addAll(Collection<? extends E> c)
+
+    将 other 集合中的所有元素添加到这个集合。如果由于这个调用改变了集合，返回 true。
+
+*   boolean remove(Object obj)
+
+    从这个集合中删除等于obj的对象。如果有匹配的对象被删除，返回 true。
+
+*   boolean removeAll(Colletion\<?> other)
+
+    从这个集合中删除 other 集合中存在的所有元素。如果这个调用改变了集合，返回 true。
+
+*    default boolean removeIf(Predicate<? super E> filter)
+
+    从这个集合删除 filter 返回 true 的所有元素。如果这个调用改变了集合，则返回 true。
+
+*   void clear()
+
+    从这个集合中删除所有的元素。
+
+*   boolean retainAll(Collection\<?> other)
+
+    从这个集合中删除所有与 other 集合中的元素不同的元素。如果这个调用改变了集合，则返回 true。
+
+*   Object[ ] toArray()
+
+    返回这个集合的对象数组。
+
+*   \<T> T[] toArray(T[] arrayToFill)
+
+    返回这个集合的对象数组。如果 arrayToFill 足够大，就将集合中的元素填入这个数组中。剩余空间填补null；否则，分配一个新数组，其成员类型与 arrayToFill 的成员类型相同，其长度等于集合的大小，并填补集合元素。
+
+
+>   API    java.util.Iterator\<E>   1.2
+
+*   boolean  hasNext()
+
+    如果存在访问元素，返回true。
+
+*   E  next()
+
+    返回将要反问的下一个对象。如果已经到达集合尾部，将抛出一个 NoSuchElementException。
+
+*   void remove()
+
+    删除上次访问的对象。这个方法必须紧跟在访问一个元素之后执行。如果上次访问之后，集合已经防身`发生了变化，这个方法将抛出一个 IllegalStateException。
+
+#### 1.5. 集合框架中的接口
+
+<img src="./img/Collection.png">
+
+集合框架有两个基本接口：Collection 和 Map。
+
+List是一个有序集合。元素会增加到容器的特定位置。可以采用两种方式访问元素：1. 迭代器。2.整数索引。
+
+ListIterator 接口是 Iterator 的一个子接口。它定义一个可以在迭代器位置前增加一个元素：
+
+```java
+void add(E elment);
+```
+
+Set接口等同于Collection接口，不过，集（Set）的add方法不允许增加重复元素。要适当定义集的 equals 方法：只要两个集包含相同的元素就认为是相等的，而不要求元素有相同的顺序。
+
+### 2. 具体集合
+
+除了以 Map 结尾的类之外，其他类都实现了 Collection 接口，而以 Map 结尾的类实现了 Map 接口。
+
+| 集合类型        | 描述                                                   |
+| --------------- | ------------------------------------------------------ |
+| ArrayList       | 一种可以动态增长和缩减的索引序列                       |
+| LinkedList      | 一种可以在任何位置进行高效地插入和删除操作的有序序列   |
+| ArrayDeque      | 一种用循环数组实现的双端队列                           |
+| HashSet         | 一种没有重复元素的无序序列                             |
+| TreeSet         | 一种有序集                                             |
+| EnumSet         | 一种包含枚举类型值的集                                 |
+| LinkedHashSet   | 一种可以记住元素产褥`插入次序的集                      |
+| PriorityQueue   | 一种允许高效删除最小元素的集合                         |
+| HashMap         | 一种存储键/值关联的数据结构                            |
+| TreeMap         | 一种键值有序排序的隐射表                               |
+| EnumMap         | 一种键值属于枚举类型的隐射表                           |
+| LinkedHashMAp   | 一种可以记住键/值项添加次序的隐射表                    |
+| WeakHashMap     | 一种其值无用武之地后可以被垃圾或收起回收器回收的映射表 |
+| IdentityHashMap | 一种可以用 == 而不是equals 比较键值的映射表            |
+
+<img src="./img/AbstractCollection.png">
+
+<img src="./img/AbstractMap.png">
+
+#### 2.1. 链表
+
+数组和数组列表在重加中间删除一个元素要付出很大的代价，每删除一个元素，之后的元素都要先数组前移动。
+
+链表有增删快的优点。在 Java 中，所有的链表实际上都是双向链表。
+
+Java 提供了一个 LinkedList 具体集合。
+
+链表与泛型集合之间有一个重要的区别。链表是一个有序集合（ordered collection），每个对象的位置十分重要。
+
+相比较集（Set）类型，其中的元素完全无序。因此，Iterator 接口中没有add 方法，而在其子接口 ListIterator，其中包含 add 方法。
+
+```java
+void add(E e)
+```
+
+这个方法不返回 true 值，它默认添加方法总会改变链表。
+
+另外ListIterator 接口有两个方法，可以反向遍历链表。
+
+```java
+E previous()
+boolean hasPrevious()
+```
+
+```java
+LinkedList<String> linkedList = new LinkedList<>();
+linkedList.add("Frank");
+linkedList.add("Tom");
+linkedList.add("Aim");
+
+ListIterator<String> iter = linkedList.listIterator();
+
+// 正向遍历
+while (iter.hasNext())
+    System.out.println(iter.next());
+// 反向遍历
+while (iter.hasPrevious())
+    System.out.println(iter.previous());
+```
+
+
+
+
+
+
 
 ### 3. 具体集合
 
@@ -4401,14 +4715,10 @@ void	trimToSize()                  // 将此 ArrayList 实例的容量修剪为�
 
 ### 4. 注意
 
-* List是一个有序集合。元素会增加到容器的特定位置。可以采用两种方式访问元素：1. 迭代器。2.整数索引。
-
-* java语言中，所有的链表实际上都是双向链表
-
 * 迭代器规范
   * 可以根据需要给容器附加许多迭代器，这些迭代器只能读取类表
   * 单独附加一个既能读又能写的迭代器
-  
+
 * 散列表为每一个对象计算一个整数，称为散列码。散列码是对象实例域产生的一个整数
 
 * java中散列表用链表数组实现
@@ -4420,7 +4730,7 @@ void	trimToSize()                  // 将此 ArrayList 实例的容量修剪为�
 * 树集，必须是可以比较的元素类型
   * 元素类型自身实现Comparable接口
   * 为树集构造器提供一个比较器----------Comparator
-  
+
 * 树的排序必须是全序-------任意两个元素完全可比
 
 * 双端队列不能在中间添加、删除元素，只能在头部和尾部。
