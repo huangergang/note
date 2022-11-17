@@ -4106,7 +4106,7 @@ public class GenericReflection {
 
 队列接口指出可以在队列的尾部添加元素，在队列的头部删除元素，并且可以查找队列中元素的个数。
 
-<img src="./img/Queue.png">
+<img src="./img/Queue.png" style="width:60%">
 
 Queue接口最简单的定义：
 
@@ -4416,13 +4416,466 @@ while (iter.hasPrevious())
     System.out.println(iter.previous());
 ```
 
+如果迭代器的集合被另一个迭代器修改了，或者是被该集合本身的方法修改了，就会抛出一个 ConcurrentModificationException 异常。为了避免并发修改的异常，请遵循下述简单规则：
+
+>    迭代器规范
+
+* 可以根据需要给容器附加许多迭代器，这些迭代器只能读取类表
+* 单独附加一个既能读又能写的迭代器
+
+>   API    java.util.List\<E>  1.2
+
+*   ListIterator\<E>  listIterator()
+
+    返回一个列表迭代器，用来访问列表中的元素。
+
+*   ListIterator\<E>  listIterator(int index)
+
+    返回一个列表迭代器，用来访问列表中的元素。这个元素是第一次调用next 返回的给定索引的元素。
+
+*   void add(int i, E element)
+
+    在给定位置添加一个元素。
+
+*   void addAll(int i, Collection\<?  extends  E> elements)
+
+    将某个集合中的所有元素添加到给定位置。
+
+*   E remove(int i)
+
+    删除给定位置的元素并返回这个元素。
+
+*   E get(int i)
+
+    获取给定位置的元素。
+
+*   E set(int i, E  element)
+
+    用新元素取代给定位置的元素，并返回原来那个元素。
+
+*   int indexOf(Object  element)
+
+    返回与指定元素相等的元素在列表中第一次出现的位置，如果没有这样的元素将返回-1。
+
+*   int  lastIndexOf(Object element)
+
+    返回与指定元素相等的元素在列表中最后一次出现的位置，如果没有这样的元素将返回-1。
+
+>   API  java.util.ListIterator\<E>  1.2
+
+*   void add(E newElement)
+
+    在当前位置添加一个元素。
+
+*   void set(E  newElement)
+
+    用新元素取代 next 或 previous 上次访问的元素。如果在next或previous上次调用之后类表被修改了，将抛出一个 IllegaStateException 异常。
+
+*   boolean  hasPrevious()
+
+    当返回迭代列表时，还有可访问元素，返回 true 。
+
+*   E previous()
+
+    返回前一个对象。如果已经到达列表头部，就抛出一个 NoSuchElementException 异常。
+
+*   int nextIndex()
+
+    返回下一次调用next 方法时将返回元素索引。
+
+*   int previousIndex()
+
+    返回下一次调用 previous 方法时将返回元素索引。
+
+>   API  java.util.LinkedList\<E>  1.2
+
+*   LinkedList()
+
+    构造一个空列表。
+
+*   LinkedList(Collection\<? extends E> elements)
+
+    构造一个链表，并将集合中所有的元素添加到这个链表中。
+
+*   void addFirst(E element)
+
+*   void addLast(E element)
+
+    将某个元素添加到列表的头部或尾部。
+
+*   E getFirst()
+
+*   E getLast()
+
+    返回列表头部或尾部元素。
+
+*   E removeFirst()
+
+*   E removeLast()
+
+    删除并返回列表头部或尾部的元素。
+
+
+
+#### 2.2. 数组列表
+
+ArrayList，一种可以动态增长和缩减的索引序列。
+
+由数组实现，扩容为原来的1.5倍，初始大小为10。特点：查询快，增删慢。
+
+ArrayList 方法不是同步， Vector 类的所有方法都是同步的，但是要在同步上花费大量时间。所以在不需要同步时，推荐用ArrayList。
+
+#### 2.3. 散列集
+
+链表和数组在查询某个指定元素，再不知道其位置时，需要从头到尾访问所有元素，非常耗时。
+
+散列表（hash table）可以快速查询所需对象。散列表为每一个对象计算一个整数，称为散列码。散列码是对象实例域产生的一个整数。更准确的说，具有不同数据域的对象将产生不同的散列码。
+
+Java中散列表用链表数组实现。每个列表称为桶（bucket）。
+
+<img src="./img/散列表.png" style="width:60%">
+
+要想查找表中的对象的位置，就要先计算它的散列码，然后与桶的总数取余，所得到的结果就是保存这个元素的桶的索引。当要插入元素，而又桶被占满，这种情况不可避免，这种现象被称为散列冲突（hash collistion）。这时，需要用新对象与桶中的所有对象进行比较，查看这个对象是否存在。如果散列码是合理且随机分布的，桶的数目也足够大，需要比较的次数就会很少。
+
+javaSE 8中，桶满时会从链表变成平衡二叉树。
+
+如果大致知道最终会有多少个元素要插入到散列表中，就可以设置桶数。通常将桶数设置为元素个数的 75% ~ 150%。标准类库使用的桶数是2的幂，默认值为16。
+
+如果散列表太满，就需要在散列（rehsashed）。如果对散列在散列，就需要创建一个桶数更多的表，并将所有元素插入到这个新表中，然后丢弃原来的表。装填因子（load factor）决定何时对散列表进行在散列。
+
+<hr>
+
+Java集合类提供了一个 HashSet 类，它实现了基于散列表的集。
+
+散列集迭代器将依次访问所有桶。由于散列将元素分散在表的各个位置上，所以访问几乎是随机的。只有不关心集合中元素的顺序时才应该使用 HashSet。
+
+>   API  java.util.HashSet\<E>  1.2
+
+*   HashSet()
+
+    构造一个空散列表
+
+*   HashSet(Collection<?  exthends  E>  elements)
+
+    构造一个散列集，并将集合中的所有元素添加到这个散列集中。
+
+*   HashSet(int initialCapacity)
+
+    构造一个空的具有指定容量的（桶数）的散列集。
+
+*   HashSet(int  initialCapacity, float  loadFactor)
+
+    构造一个具有指定容量和装填因子（一个0.0 ~ 1.0 之间的数值，确定散列表填充的百分比）的空散列。
+
+>   API  java.lang.Object()
+
+*   int   hashCode()
+
+    返回这个对象的散列码。散列码可以是任何整数，包括正数和负数。euqals 和 hashCode 的定义必须兼容，即：x.equals(y)  为 true，x.hashCode() 必须等于 y.hashCode()。
+
+
+
+#### 2.4. 树集
+
+树集是一个有序集合（sorted collection）。可以以任意顺序将元素插入到集合中。
+
+TreeSet排序是用树结构完成的（红黑树）。每次将一个元素添加到树中时，都会被放置在正确的排序位置上。迭代器总是以排好序的顺序访问每个元素。
+
+将一个元素添加到树中要比添加到散列中慢。
+
+要使用树集，必须能够比较元素。这些元素必须实现 Comparable 接口，或者构造集时必须提供一个 Comparator。
+
+>   API   java.util.TreeSet\<E>  1.2
+
+*   TreeSet()
+
+*   TreeSet(Comparator\<?  super  E> comparator)
+
+    构造一个空树集。
+
+*   TreeSet(Collection<?  extends E> elements)
+
+*   TreeSet(SortedSet\<E>  s)
+
+    构造一个树集，并增加一个集合或者有序集中的所有元素。
+
+>   API  java.util.SortedSet\<E>   1.2
+
+*   Comparator\<? super E>  comparator()
+
+    返回用于对元素进行排序的比较器。如果元素用 Comparable 接口的 compareTo 方法进行比较则返回 null。
+
+*   E first()
+
+*   E  last()
+
+    返回有序集中最小元素和最大元素。
+
+
+
+#### 2.5. 队列与双端队列
+
+有两个端头的队列，即双端队列。可以在头部和尾部同时添加或删除元素。不支持在队列中间添加元素。在Java SE 6 中引入 Deque 接口，并由 ArrayDeque 和LinkedList 类实现。
+
+>   API  java.util.Queue\<E>   5.0
+
+*   boolean  add(E element)
+
+*   boolean  offer(E element)
+
+    如果队列没有满，将给定的元素添加到这个双端队列的尾部并返回 true 。如果队列满了，第一个方法将抛出一个 IllegalStateException。第二个方法返回 false。
+
+*   E  remove()
+
+*   E  poll()
+
+    假如队列不空，删除并返回这个队列头部的元素。如果队列是空的，第一个方法抛出 NoSuchElementException，第二个方法返回 null。
+
+*   E element()
+
+*   E peek()
+
+    如果队列不空，返回这个队列头部的元素，但不删除。如果队列空，第一个方法将抛出一个 NoSuchElementException，而第二个方法返回 null 。
+
+>   API   java.util.Deque\<E>  6
+
+*   void  addFirst(E element)
+
+*   void  addLast(E element)
+
+*   boolean  offerFirst(E  element)
+
+*   boolean  offerlast(E element)
+
+    将给定的对象添加到双端队列的头部或尾部。如果队列满了，前面1两个方法将抛出一个 IllegalStateException，而后面类两个方法返回 false。
+
+*   E  removeFirst()
+
+*   E  removeLast()
+
+*   E  pollFirst()
+
+*   E  pollLast()
+
+    如果队列不空，删除并返回队列头部的元素。如果队列为空，前面两个方法将抛出一个 NoSuchElementException，而后面两个方法返回 null。
+
+*   E  getFirst()
+
+*   E  getLast()
+
+*   E  peekFirst()
+
+*   E  peekLast()
+
+    如果队列非空，返回队列头部元素，但不删除。如果队列空，前面两个方法将抛出一个 NoSuchElementException，而后面两个方法返回 null。
+
+#### 2.6. 优先队列
+
+优先队列（priority queue）中的元素可以按照任意的顺序插入，却总是按照排序的顺序进行检索。优先队列使用一种优雅高效的数据结构，称为堆（heap）。堆是一个可以自我调整的二叉树，对树执行添加（add）和删除（remove）操作，可以让最小的元素移到根，而不必花费时间对元素进行排序。
+
+>   API  java.util.PriorityQueue  5.0
+
+*   PriorityQueue()
+
+*   PriorityQueue(int  initialCapacity)
+
+    构造一个用于存放 Comparable 对象的优先级队列。
+
+*   PriorityQueue(int  initialCapacity, Comparator<?  super  E>  c)
+
+    构造一个优先队列，并用指定的比较器对元素进行排序。
+
+
+
+### 3. 映射
+
+映射用来存放键/值对。
+
+#### 3.1. 基本映射操作
+
+Java类库为映射提供了两个通用实现：HashMap 和 TreeMap。这两个类都实现了 Map 接口。
+
+散列映射对键进行散列，树映射用键的整体顺序对元素进行排序，并将其组织成搜索树。散列或比较函数只能作用于键。
+
+```java
+Map<String, Student> map = new HashMap<>();
+map.put("19480201", new Student("frank", 89.9));
+
+String id = "19480201";
+Student student = map.get(id);
+```
+
+检索一个对象，必须使用一个键。如果映射中没有给定键的对应值，get 将返回 null。可以使用getOrDefault返回一个默认值。
+
+键必须是唯一的。不能对同一个键存放两个值。
+
+如果对同一个键两次调用 put 方法，第二个值就会取代第一个值。并返回这个键存储的上一个值。
+
+>   API   java.util.Map\<K, V>
+
+*   V get(Object  key)
+
+    获取与键对应的值；返回与键对应的对象，如果在映射中没有这个对象则返回 null。
+
+*   default  V  getOrDefault(Object key, V defaultValue)
+
+    获得与键关联的值；返回与键关联的对象，或者如果未在映射中找到这个键，则返回defaultValue。
+
+*   V put(K key, V value)
+
+    将键与对应的值关系插入到映射中。如果这个键已经存在，新的对象将会取代与这个将对应的旧对象。这个方法将返回键的旧值。如果这个键以前没有出现则返回 null。键可以为 null，但不能为 null。
+
+*   void putAll(Map<?  extends K, ?  extheds V>  entries)
+
+    将给定映射中的所有条目添加到这个映射中。
+
+*   boolean  containsKey(Object  key)
+
+    如果在映射中已经有这个键，返回 true。
+
+*   boolean containsValue(Object  value)
+
+    如果映射中已经有这个值，返回 true。
+
+*   default  void  forEach(BiConsumer<?  super K, ?  super V>  action)   8
+
+    对这个映射中的所有键/ 值应用这个动作。
+
+>   API  java.util.HashMap<K, V>  1.2
+
+*   HashMap()
+
+*   HashMap(int  initialCapacity)
+
+*   HashMap(int  initialCapacity, float  loadFactor)
+
+    用给定的容量和装填因子构造一个空散列映射。默认为 0.75。
+
+>   API   java.util.TreeMap<K, V>  1.2
+
+*   TreeMap()
+
+    为实现 Comparable 接口的构建一个空的树映射。
+
+*   TreeMap(Comparstor<?  super K>  c)
+
+    构造一个树映射，并用一个指定的比较器对键进行排序。
+
+*   TreeMap(Map<? exthends K, ?  exthends  V>  entries)
+
+    构造一个树映射，将某个有序映射中所有条目添加到映射中，并使用给定的有序映射相同的比较器。
+
+>   API   java.util.SortedMap<K, V>  1.2
+
+*   Comparator<?  super  K> comparator()
+
+    返回对键进行排序的比较器。如果键使用 Comparable 接口的 compareTo 方法进行比较的，返回 null。
+
+*   K firstKey()
+
+*   K lastKey()
+
+    返回映射中最小元素和最大元素。
+
+#### 3.2. 更新映射项
+
+在更改键对应的值时，通常使用get方法回去原先值。
+
+```java
+Map<String, Integer> counts = new HashMap<>();
+
+String word = "Chinese";
+counts.put(word, counts.get(word) + 1);
+```
+
+当还没有添加到映射中时，get会抛出空指针异常。可以使用 getOrDefault方法。
+
+```java
+counts.put(word, counts.getOrDefault(word, 0) + 1);
+```
+
+另一种方法是首先调用 putIfAbsent 方法。
+
+```java
+counts.putIfAbsent(word, 0);
+counts.put(word, counts.get(word) + 1);
+```
+
+最好的方法，如果键原先不存在：
+
+```java
+counts.merge(word, 1, Integer::sum);
+```
+
+>   API  java.util.Map<K, V>  1.2
+
+*   default   V  merge(K  key, V  value,  BiFunction<?  super  V, ?  super  V, ? extends  V>  remappingFunction)    8
+
+    如果 key 与一个非 null 值 v 关联，将函数应用到 v 和 value，将 key 与结果关联，或着如果结果为 null，则删除结果为 null，则删除这个键。否则，将 key 与 value 关联，返回 get(key)。
+
+*   default  V  compute(K  key, BiFunction<?  super K, ?  super  V, ?  exthends  V>  remappingFuncion)  8
+
+    将函数应用到 key 和 get(key) 。将 key 与结果关联，或者如果结果为 null ，则删除这个键。返回 get(key)。
+
+*   default  V  computIfPresent(K  key, BiFunction<?  super  K,  ?  super  V, ?  extends  V>  remappingFunction)  8
+
+    如果 key 与一个非 null 值 v 关联，将函数应用到 key 和 v，将 key 与结果关联，或者如果结果为 null ，则删除这个键。返回 get(key)。
+
+*   default void replaceAll(BiFunction<?  super K, ?  super  V, ?  extends  V>  function)   8
+
+    在所有映射项上应用函数。将键与非null结果关联，对于非null结果，则将相应的键删除。
+
+#### 3.3. 映射视图
+
+集合框架不认为映射本身是一个集合。不过可以得到映射的视图。
+
+有3中视图：键集、值集合(不是一个集)以及键/值对集。
+
+```java
+Set<K> keySet()
+Collection<V> values()
+Set<Map.Entry<K, V>> entrySet()
+```
+
+keySet不是HashSet或者TreeSet，而是实现了Set接口的另外某个类的对象。
+
+如果在键集视图上调用迭代器的remove方法，实际上会从映射中删除这个键和与它关联的值。不过，能向键集视图增加元素。
+
+>   API  java.util.Map<K, V>  1.2
+
+*   Set<Map.Entry<K, V>> entrySet()
+
+    返回 Map.Entry 对象的一个集视图。可以从这个集中删除元素，它们将从映射中删除，但不能增加任何元素。
+
+*   Set\<K>  keySet()
+
+    返回映射中所有键的一个集视图。可以从这个集中删除元素，键和相关联的值将从映射中删除，但是不能增加任何元素。
+
+*   Collection\<V> values
+
+    返回映射中所有值的一个集合视图。可以从这个集合中删除元素，所删除的值及相应的键将从映射中删除，不过不能增加任何元素。
+
+>   API  java.util.Map.Entry\<K, V>  1.2
+
+*   K  getKey()
+
+*   V  getValue()
+
+    返回这一条目的键或值。
+
+*   V setValue(V  newValue)
+
+    将相关映射中的值改为新值，并返回原来的值。
+
+#### 3.4. 弱散列映射
 
 
 
 
 
 
-### 3. 具体集合
+
+### 3. 集合
 
 #### 3.1. ArrayList
 
@@ -4715,15 +5168,11 @@ void	trimToSize()                  // 将此 ArrayList 实例的容量修剪为�
 
 ### 4. 注意
 
-* 迭代器规范
-  * 可以根据需要给容器附加许多迭代器，这些迭代器只能读取类表
-  * 单独附加一个既能读又能写的迭代器
+* * 
+  
+* 
 
-* 散列表为每一个对象计算一个整数，称为散列码。散列码是对象实例域产生的一个整数
-
-* java中散列表用链表数组实现
-
-* javaSE 8中，桶满时会从链表变成平衡二叉树
+* 
 
 * 散列表太满，就需要再散列。装填因子决定何再散列。装填因子为0.75，表示75%的位置满了，就需要再散列。HashSet和HashMap可以在创建构造器时指定装填因子。
 
@@ -4785,11 +5234,11 @@ TODO
 
 ## 第十四章
 
-### 1.进程与线程
+### 1. 进程与线程
 
 进程拥有自己的一整套变量，而线程则共享数据。
 
-### 2.创建线程
+### 2. 创建线程
 
 1. 实现Runable接口，并把它丢到Thread构造器内
 
@@ -4840,7 +5289,7 @@ TODO
    }
    ```
 
-### 3.中断线程
+### 3. 中断线程
 
 **当线程的run方法执行方法体最后一条语句后，并经由执行return语句返回时，或者出现了方法中没有捕获的异常时，线程终止。**
 
@@ -4850,9 +5299,9 @@ interrupt方法可以用来请求终止线程。
 
 如果线程阻塞，就无法检测中断状态。
 
-### 4.线程状态
+### 4. 线程状态
 
-#### 4.1.线程6态
+#### 4.1. 线程6态
 
 - New（新创建）
 - Runable（可运行）
@@ -4867,7 +5316,7 @@ interrupt方法可以用来请求终止线程。
 
 当线程处于被阻塞或等待状态时，它暂时不活动。它不运行任何代码且消耗最少的资源。直到线程调度器重新激活它。细节取决于它是怎么达到非活动状态的。
 
-<img src="img\线程转换.png" />
+<img src="./img/ThreadTransfer.png" style="width:60%"/>
 
 ### 5.线程属性
 
