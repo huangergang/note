@@ -4869,6 +4869,48 @@ keySet不是HashSet或者TreeSet，而是实现了Set接口的另外某个类的
 
 #### 3.4. 弱散列映射
 
+WeakHashMap 使用弱引用（weak references）保存键。WeakReference 对象将引用保存到另一个对象中，在这里，就是散列键。
+
+#### 3.5. 链接散列集与映射
+
+LinkedHashSet 和 LinkedHashMap 类用来记住插入元素项的顺序。这样可以避免在散列表中的项从表面上看是随机的。当条目插入到表中时，就会并入到双向链表中。
+
+#### 3.6. 枚举集和映射
+
+EnumSet 是一个枚举元素类型元素集的高效实现。由于枚举类型只有有限个实例，所以EnumSet 内部用位序实现。EnumSet 类没有公共构造器。可以使用静态工厂方法构造这个集。
+
+```java
+enum Weekday {MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY}
+
+public static EnumSet<Weekday> getEnumSet() {
+    return EnumSet.allOf(Weekday.class);
+}
+```
+
+#### 3.7. 标识散列映射
+
+在类 IdentityHashMap 中，键的散列值不是用 hashCode 函数计算的，而是用 System.identityHashCode 方法计算的。
+
+在对两个对象进行比较时，IdentityHashMap 类使用 ==，而不实用 equals。
+
+
+
+> API   java.util.WeakHashMap<K, V>  1.2
+
+*   WeakHashMap()
+
+*   WeakHashMap(int  initialCapacity)
+
+*   WeakHashMap(int  initialCapacity,  float  loadFactor)
+
+    用给定的容量和填充因子构造一个空的散列映射。
+
+
+
+### 4. 视图与包装器
+
+
+
 
 
 
