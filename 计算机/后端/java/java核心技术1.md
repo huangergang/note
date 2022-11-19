@@ -4893,8 +4893,6 @@ public static EnumSet<Weekday> getEnumSet() {
 
 在对两个对象进行比较时，IdentityHashMap 类使用 ==，而不实用 equals。
 
-
-
 > API   java.util.WeakHashMap<K, V>  1.2
 
 *   WeakHashMap()
@@ -4909,15 +4907,474 @@ public static EnumSet<Weekday> getEnumSet() {
 
 ### 4. 视图与包装器
 
+keySet方法返回一个实现Set接口的类对象，这个类的方法对映射进行操作。这种集合称为视图。
+
+#### 4.1. 轻量级视图包装器
+
+Arrays 类的静态方法 asList 将返回一个包装了普通Java数组的 List 包装器。
+
+```java
+String[] strs = new String[100];
+
+List<String> list = Arrays.asList(strs);
+```
+
+返回的对象不是 ArraysList。它是一个视图对象，带有访问底层数组的 get 和 set 方法。 
+
+asList可接受可变数目的参数。
+
+```java
+List<String> names = Arrays.asList("frank", "tom", "aim");
+```
+
+另一个方法
+
+```java
+List<String> list3 = Collections.nCopies(10, "frank");
+```
+
+ 对于集合中每一个接口，还有一些方法可以生成空集、列表、映射。特别是，集的类型可以推导得出：
+
+```java
+Set<Object> objects = Collections.emptySet();
+```
+
+#### 4.2. 子范围
+
+可以为很多集合建立子范围（subrange）视图。通过subList方法。
+
+```java
+List<String> subList = list2.subList(2, 7);   // 范围 [2, 7)
+```
+
+Java  SE 6 引入 NavigableSet 接口赋予子范围操作更多的控制能力。
+
+#### 4.3. 不可修改的视图
+
+Collections 还有几个方法，用于产生集合的不可修改视图（unmodifiable views）。这写视图对现有集合增加了一个运行时的检查。如果发现视图对集合进行修改，就抛出一个异常，同时这个集合将保持未修改的状态。
+
+使用下面8中方法获取不可修改视图：
+
+```java
+Collections.unmodifiableCollection
+Collections.unmodifiableList
+Collections.unmodifiableSet
+Collections.unmodifiableSortedSet
+Collections.unmodifiableNavigableSet
+Collections.unmodifiableMap
+Collections.unmodifiableSortedMap
+Collections.unmodifiableNavigableMap
+```
+
+每个方法都定义于一个接口。
+
+当想要查看某部分代码，但又不触及某个集合的内容，可以进行如下操作：
+
+```java
+ArrayList<String> arrayList = new ArrayList<>();
+
+LookAt(Collections.unmodifiableList(arrayList));
+```
+
+#### 4.4. 同步视图
+
+类库的设计者使用视图老确保常规集合的线程安全，而不是实现线程安全的集合。例如，Collections类的静态方法 synchronizedMap 方法将任何一个映射转换成具有同步访问的 Map。
+
+```java
+Map<String, String> synchronizedMap = Collections.synchronizedMap(HashMapTest.map);
+```
+
+synchronizedMap 的get和set方法是同步的。
+
+#### 4.5. 受查视图
+
+受查视图用来对泛型类型发生的问题提供调试支持。
+
+```java
+ArrayList<String> arrayList = new ArrayList<>();  
+ArrayList list = arrayList;  
+list.add(new Date());    		 //  Error
+```
+
+这个错误的add命令在运行时检测不到。在将结果转换为 String 时，这个类会抛出异常。
+
+受查视图可以探测到这类问题。
+
+```java
+List<String> list1 = Collections.checkedList(arrayList, String.class);
+```
+
+视图的add方法将检测插入的对象是否属于给定的类。如果不属于给定类，就会立即抛出一个 ClassCastException。
+
+```java
+list1.add(new Date());  // throw ClassCastException
+```
+
+#### 4.6. 关于可选操作的说明
+
+视图有局限性，即可能只可以读，无法改变大小，只支持删除，而不支持插入。
 
 
 
+### 5. 算法
+
+​		泛型接口有一个很大的优点，即算法只需要实现一次。
+
+#### 5.1. 排序与混排
+
+Collections类中的sort方法可以对实现List接口的集合进行排序。这个方法假定列表元素实现了 Comparable 接口。
+
+```java
+ArrayList<String> arrayList = new ArrayList<>();
+
+Collections.sort(arrayList);
+```
+
+可以使用List接口的sort方法并传入一个 Comparator 对象。
+
+```java
+// 按字符长度从长到短
+arrayList.sort(Comparator.comparingDouble(String::length).reversed());
+```
+
+Collections类有一个算法shuffle，其功能与排序相反，即随机地排列列表中元素的顺序。
+
+```java
+Collections.shuffle(arrayList);
+```
+
+#### 5.2. 二分查找
+
+Collections的binarySearch实现了二分查找算法。注意，集合必须先排好序。要想查找某个元素，必须提供集合以及要查找的元素。如果集合没有采用 Comparable 接口的 compareTo 方法进行排序，就还要提供一个比较器对象。
+
+```java
+int key = Collections.binarySearch(arrayList, "高石武");
+System.out.println(key);
+```
+
+>   API   java.util.Collection  1.2
+
+*   static <T extends Comparable<?  super T>>  int  binarySearch(List\<T> elements, T key)
+
+*   static \<T>   int  binarySearch(List\<T> elements, T key, Comparator<? super T>  c)
+
+    从有序列表中搜索一个键，如果元素扩展了 AbsstractSequentialList 类，则采用线性查找，否则采用二分查找。这个算法的时间复杂度为 O(a(n) log n)。
+
+#### 5.3. 简单算法
+
+在Collection类中包含了简单有用的算法：
+
+查询集合中最大元素；将一个列表中的元素复制到另外一个列表中；用一个常量填充容器；逆置一个元素顺序。
+
+Java SE 8 增加了默认方法 Collection.removeIf和List.replaceAll，这两个方法需要提供一个 lambda 表达式来检测或转换元素。
+
+```java
+words.removeIf(w -> w.length() <= 3);   // 删除所有长度小于3的字符
+words.replaceAll(String::toLowerCase);  // 将所有字符改成小写
+```
+
+>   API   java.util.Collections    1.2
+
+*   static <T extends Comarable<?  super T>>  T  min(Collection\<T>  elements)
+
+*   static <T extends Comarable<?  super T>>  T  max(Collection\<T>  elements)
+
+*   static \<T> T  min(Collection\<T>  elements, Comparable<? super T>  c)
+
+*   static \<T> T  max(Collection\<T>  elements, Comparable<? super T>  c)
+
+    返回集合中最小的或最大的元素。
+
+*   static \<T>  void copy(List<? super T> to, List\<T> from)
+
+    将原列表中所有元素复制到目标列表的相应位置上。目标列表的长度至少与原列表一样。
+
+*   static \<T>  void fill(List<? super T> l, T value)
+
+    将列表中所有位置设置为相同的值。
+
+*   static \<T> boolean addAll(Colleaction<? super T> c, T...  values)  5.0
+
+    将所有的值添加到集合中。如果集合该变了，则返回true。
+
+*   static \<T> boolean replaceAll(List\<T> l, T oldValue, T newValue)  
+
+    用newValue取代所有值为oldValue的元素。
+
+*   static int indexOfSubList(List\<?> l,  List\<?> s)   1.4
+
+*   static int lastIndexOfSubList(List\<?> l,  List\<?> s)   1.4
+
+    返回l中第一个或者最后一个等于s子列表的索引。如果l中不存在等于s的子列表，则返回-1。例如，1为[s, t, a, r], s为[t, a, r],两个方法都将返回索引 1。
+
+*   sraric void swap(Lsit<?> l, int i, int j)
+
+    交换给定偏移量的两个元素。
+
+*   static void reverse(List\<?> l)
+
+    逆置列表中元素的顺序。
+
+*   static void rotate(Lsit<?> l, int d)
+
+    旋转列表中的元素，将索引i的条目移动到位置（i+d）% l.size()。
+
+*   static int freauency(Collection\<?> c, Object  o)     5.0
+
+    返回 c 中与对象中 o 相同的元素个数。
+
+*   boolean disjoint(Collection\<?>  c1, Colleaction<?> c2)     5.0
+
+    如果两个集合没有共同的元素，则返回 true。
+
+>   API  java.util.Collection\<T>  1.2
+
+*   default boolean removeIf(Predicate<?  super E>  filter)   8
+
+    删除所有匹配的元素。
+
+>   API  java.util.Lsit\<E>  1.2
+
+*   default void replaceAll(UnaryOperator\<E>   op)   8  
+
+    对这个列表的所有元素应用这个操作。
+
+#### 5.4. 批操作
+
+很多操作会"成批"复制或删除元素。
+
+```java
+coll1.removeAll(coll2);   // 从coll1中删除coll2中出现的所有元素
+coll1.retainAll(coll2);   // 从coll1中所有未在coll2中出现的元素
+
+HashMap<String, String> map = new HashMap<>();
+map.put("甘肃", "兰州");
+map.put("湖北", "武汉");
+map.put("陕西", "西安");
+map.put("河北", "石家庄");
+map.put("四川", "成都");
+// 删除映射的键
+Set<String> key = new HashSet<>();
+key.add("甘肃");
+key.add("湖北");
+
+map.keySet().removeAll(key);
+```
 
 
 
+#### 5.5. 集合与数组的转换
+
+Arrays.asList方法把一个数组转换为集合。
+
+```java
+String[] names = {"frank", "aim", "tom", "alan"};
+HashSet<String> set = new HashSet<>(Arrays.asList(names));
+set.forEach(System.out::println);
+```
+
+从集合得到一个数组。
+
+```java
+Object[] objects = set.toArray();    // toArray方法默认返回一个Object数组
+
+String[] strings = set.toArray(new String[0]);  // 为toArray方法提供一个所需类型且长度为0的数组
+
+String[] strings1 = set.toArray(new String[set.size() + 4]);  // 指定数组长度
+```
+
+#### 5.6. 编写自己的算法
+
+如果编写自己的算法（实际上，是以集合作为参数的任何方法），应该尽可能地使用接口，而不是使用具体的实现。
 
 
-### 3. 集合
+
+### 6. 遗留的集合
+
+从 Java 第一版以来，在集合框架出现之前已经存在大量"遗留的"容器类。
+
+<img src="./img/集合遗留类.png" style="width:78%">
+
+#### 6.1. Hashtable 类
+
+ Hashtable类和HashMap类的作用一样，它们有相同的接口。Hashtable与Vector的方法都是同步的。如果对同步性与遗留代码没有任何要求，就应该使用 HashMap。如果要并发访问就使用 ConcurrentHashMap。
+
+#### 6.2. 枚举
+
+遗留集合使用 Enumeration 接口对元素进行遍历。与Iterator接口十分相似。
+
+```java
+Hashtable<String, String> hashtable = new Hashtable<>();
+hashtable.put("甘肃", "兰州");
+hashtable.put("湖南", "长沙");
+hashtable.put("福建", "福州");
+
+Enumeration<String> elements = hashtable.elements();
+while (elements.hasMoreElements()) System.out.println(elements.nextElement());
+```
+
+
+
+>   API   java.util.Enumeration\<E>
+
+*   boolean hasMoreElements()
+
+    如果还有更多元素，则返回true。
+
+*   E nextElement()
+
+    返回被检测的下一个元素。
+
+>   API  java.util.Hashtbale<K, V>  1.0
+
+*   Enumeration\<K>  keys()
+
+    返回一个遍历散列表中键的枚举对象。
+
+*   Enumeration\<K>  elements()
+
+    返回一个遍历散列表中元素的枚举对象。
+
+>   API   java.util.Vector\<E>   1.0
+
+*   Enumeration\<E>  elements()
+
+    返回遍历向量中元素的枚举对象。
+
+#### 6.3. 属性映射
+
+属性映射（properties map）是一个类型非常特殊的映射结构：
+
+*   键和值都是字符串。
+*   表可以保存到一个文件中，也可以从文件中加载。
+*   使用一个默认的辅助表。
+
+Java平台实现类为 Properties。
+
+>   API   java.util.Properties   1.0
+
+*   Properties()
+
+    创建一个空的属性映射。
+
+*   Properties(Properties defaults)
+
+    创建一个带有一组默认值的空的属性映射。
+
+*   String getProperty(String key)
+
+    获得属性的对应关系；返回与键对应的字符串。如果在映射中不存在，返回默认表中与这个键对应的字符串。
+
+*   String getProperty(String key, String defaultValue)
+
+    获得在键没有找到时具有的默认值属性；它将返回与键对应的字符串，如果在映射中不存在，就返回默认的字符串。
+
+*   void load(InputStream in)
+
+    从 InputStream 加载属性。
+
+*   void store(OutputStream out, String commentString)
+
+    把属性映射存储到 OutputStream 。
+
+#### 6.4. 栈
+
+>   API  java.util.Stack\<E item>
+
+*   E  push(E  item)
+
+    将 item 压入栈并返回 item。
+
+*   E  pop()
+
+    弹出并返回栈顶的 item。如果栈为空，不可以调用此方法。
+
+*   E  peek()
+
+    返回栈顶元素，但弹出。如果栈为空，不可以调用此方法。
+
+#### 6.5. 位集
+
+Java平台的 BitSet 类用于存放一个位序列。它可以高效地存储为序列（如，标志）。由于位集将位包装在字节里，所以，使用位集要比使用 Boolean 对象的 ArrayList 更加高效。
+
+BitSet 类提供了一个便于读取、设置或清除各个位的接口。
+
+>   API    java.util.BitSet   1.0
+
+*   BitSet(int  initCapacity)
+
+    创建一个位集。
+
+*   int length()
+
+    返回位集的 "逻辑长度" , 即 1 加上位集的最高设置位索引。
+
+*   boolean get(int bit)
+
+    获取一个位。
+
+*   void set(int bit)
+
+    设置一个位。
+
+*   void clear(int bit)
+
+    清除一个位。
+
+*   void and(BitSet set)
+
+    这个位集与另一个位集进行逻辑 "AND"。
+
+*   void or(BitSet set)
+
+    这个位集与另一个位集进行逻辑 "OR"。
+
+*   void xor(BitSet set)
+
+    这个位集与另一个位集进行逻辑 "XOR"。
+
+*   void andNot(BitSet set)
+
+    清除这个位集中对应另一个位集中设置的所有位。
+
+位集的应用：
+
+​		采用 "Eratorthenes筛子" 算法查找素数。
+
+```java
+public class Sieve {
+
+    public static void main(String[] args) {
+        int n = 2000000;
+        long start = System.currentTimeMillis();
+        BitSet b = new BitSet(n + 1);
+        int count = 0;
+        int i;
+        for (i = 2; i <= n; i++) b.set(i);
+        i = 2;
+        while (i * i <= n) {
+            if (b.get(i)) {
+                count++;
+                int k = 2 * i;
+                while (k <= n) {
+                    b.clear(k);
+                    k += i;
+                }
+            }
+            i++;
+        }
+        while (i <= n) {
+            if (b.get(i)) count++;
+            i++;
+        }
+        long end = System.currentTimeMillis();
+        System.out.println(count + " primes");
+        System.out.println((end - start) + " milliseconds");
+    }
+}
+```
+
+### 7. 常用集合
 
 #### 3.1. ArrayList
 
@@ -5207,50 +5664,6 @@ void	trimToSize()                  // 将此 ArrayList 实例的容量修剪为�
 
 //        treeMap.forEach((k, y) -> System.out.println(k +"   " + y));
 ```
-
-### 4. 注意
-
-* * 
-  
-* 
-
-* 
-
-* 散列表太满，就需要再散列。装填因子决定何再散列。装填因子为0.75，表示75%的位置满了，就需要再散列。HashSet和HashMap可以在创建构造器时指定装填因子。
-
-* 树集，必须是可以比较的元素类型
-  * 元素类型自身实现Comparable接口
-  * 为树集构造器提供一个比较器----------Comparator
-
-* 树的排序必须是全序-------任意两个元素完全可比
-
-* 双端队列不能在中间添加、删除元素，只能在头部和尾部。
-
-* 优先队列（PrioityQueue），元素可以按任意顺序插入，按排列顺序检索
-
-* HashMap、TreeMap散列和比较只能作用与键
-
-* 键必须是唯一的，不能对一个键存放两个值。
-
-* IdentityHashMap，键的散列值不是由hashcode函数计算，在两个对象进行比较时用==，而不是equals
-
-* 类库设计者使用视图机制确保集合的线程安全，而不是实现线程安全的集合
-
-* 视图有局限性，即可能只可以读，无法改变大小，只支持删除，而不支持插入
-
-* 数组转集合
-
-  ```JAVA
-  HashSet<String> set = new HashSet<>(Arrays.asList(array));
-  ```
-
-* 集合转数组
-
-  ```JAVA
-  Object[] arr = set.toArray();
-  ```
-
-* Collections为集合操作实现了很多算法
 
 
 
