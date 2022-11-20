@@ -5689,11 +5689,13 @@ TODO
 
 ## 第十四章
 
-### 1. 进程与线程
+​		多线程程序在较低的层次上扩展了多任务的概念：一个程序同时执行多个任务。通常，每一个任务称为一个线程（thread），它是线程控制的简称。可以同时运行在一个以上线程的程序称为多线程程序（multithreaded）。
+
+线程与进程的区别：
 
 进程拥有自己的一整套变量，而线程则共享数据。
 
-### 2. 创建线程
+### 1. 创建线程
 
 1. 实现Runable接口，并把它丢到Thread构造器内
 
@@ -5703,7 +5705,7 @@ TODO
    	while (true) {
    		System.out.println(Thread.currentThread().getName() + "-----" + number++);
    		}
-   },"frank");
+   },"frank"); 
    t1.start();
    ```
 
