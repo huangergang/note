@@ -33,17 +33,21 @@ while (it.hasNext()) {
 con.forEach(System.out::println);
 ```
 
-> 流和迭代的差异
->
-> * 流并不存储元素。这些元素可能存储在底层的集合中，或者是按需生成的。
-> * 流的操作不会修改其数据源。
-> * 流的操作是尽可能惰性执行的。
+流和迭代的差异
 
-> 流的操作过程
->
-> 1. 创建一个流。
-> 2. 指定将初始流转换为其他流的中间操作，可以包含多个步骤。
-> 3. 应用终止操作，从而产生结果。
+* 流并不存储元素。这些元素可能存储在底层的集合中，或者是按需生成的。
+* 流的操作不会修改其数据源。
+* 流的操作是尽可能惰性执行的。
+
+<hr>
+
+>   流的操作过程
+
+1. 创建一个流。
+2. 指定将初始流转换为其他流的中间操作，可以包含多个步骤。
+3. 应用终止操作，从而产生结果。
+
+<hr>
 
 俩个区别
 
@@ -52,16 +56,16 @@ Stream<Person> stream = peoples.stream();
 Stream<Person> personStream = peoples.parallelStream();  // parallelStream可以让流库以并行的方式执行过滤和计算
 ```
 
-### 2. 创建流
+### 2. 流的创建
 
-1.Collection接口的stream方法可以将任意一个集合转换为一个流。
+1.   Collection接口的stream方法可以将任意一个集合转换为一个流。
 
 ```java
 Collection<String> collection = new HashSet<>();
 Stream<String> stream = collection.stream();
 ```
 
-2.使用静态的Stream.of方法。
+2.   使用静态的Stream.of方法。
 
 ```java
 Stream<String> stringStream = Stream.of("jack",
@@ -71,7 +75,7 @@ Stream<String> stringStream = Stream.of("jack",
                                         "jason");
 ```
 
-3.使用Arrays.stream(array,from,to)方法可以从[from,to)的元素创建一个流。
+3.   使用Arrays.stream(array,from,to)方法可以从[from,to)的元素创建一个流。
 
 ```java
 String[] arr = {"jack",
@@ -82,13 +86,13 @@ String[] arr = {"jack",
 Stream<String> stringStream = Arrays.stream(arr,0,3);
 ```
 
-4.使用静态的Stram.empty()方法创建不包含任何元素的流。
+4.   使用静态的Stram.empty()方法创建不包含任何元素的流。
 
 ```java
 Stream stream = Stream.empty();
 ```
 
-5.使用Stram.generate()创建无限流。
+5.   使用Stram.generate()创建无限流。
 
 ```java
 Stream<String> stringStream = Stream.generate(()->"infinite...");
@@ -98,12 +102,11 @@ Stream<String> stringStream = Stream.generate(()->"infinite...");
 Stream<Double> randomStream = Stream.generate(Math::random);
 ```
 
-6.使用Stram.iterate()创建无限流。
-
-接受一个种子值，以及一个函数（是一个UnaryOperaion<T>）,并且会反复地将该函数应用到之前的结果上。
+6.   使用Stram.iterate()创建无限流。接受一个种子值，以及一个函数（是一个UnaryOperaion<T>）,并且会反复地将该函数应用到之前的结果上。
 
 ```java
-Stream<BigInteger> integerStream = Stream.iterate(BigInteger.ZERO, n -> n.add(BigInteger.TEN));
+Stream<BigInteger> integers = Stream.iterate(BigInteger.ZERO, n -> n.add(BigInteger.ONE));
+integers.forEach(System.out::println);
 ```
 
 ### 3. filter、map、flatmap
@@ -112,7 +115,7 @@ filter转换会产生一个流，它的元素与某种条件向匹配。filter�
 
 ```java
 Stream<String> stream = Stream.of("a","b","c","d");
-stream.filter(s->s.hashCode()>97).forEach(System.out::println);
+stream.filter(s -> s.hashCode() > 97).forEach(System.out::println);
 ```
 
 map会有一个函数应用到每个元素上，返回一个流。
@@ -142,42 +145,48 @@ public static void main(String[] args) throws IOException{
         w.forEach(System.out::print);
         System.out.print("]");
     });
-    
 }
 ```
 
 ```java
-stream.flatMap(w->letters(w)).forEach(System.out::print);
+stream.flatMap(w -> letters(w)).forEach(System.out::print);
 ```
 
 ### 4. 抽取和连接
 
->```java
->Stream<T> limit(long maxSize)    // 产生一个流，从开始到maxSize结束，如果maxSize大于流内元素的长度，则返回全部元素组成的流
->```
->
->```java
->Stream<T> skip(long n)           // 产生一个流，它的元素是当前流中出出了前n个元素之外的所有元素
->```
->
->```java
->static <T> Stream<T> concat(Stream<? extends T> a,Stream<? extends T> b)  // 产生一个流，它的元素是a的元素后跟b的元素 
->```
+>   API  java.util.stream.Stream  8
+
+*   Stream<T> limit(long maxSize)   
+
+    产生一个流，从开始到maxSize结束，如果maxSize大于流内元素的长度，则返回全部元素组成的流。
+
+*   Stream<T> skip(long n)           
+
+    产生一个流，它的元素是当前流中出出了前n个元素之外的所有元素。
+
+*   static <T> Stream<T> concat(Stream<? extends T> a,Stream<? extends T> b)
+
+    产生一个流，它的元素是a的元素后跟b的元素。 
 
 ### 5. 流的转换
 
->```java
->Stream<T> distinct()   // 产生一个流，包含当前流的不同元素
->```
->
->```java
->Stream<T> sorted()     // 产生一个流，对元素进行排序，要求元素类型实现了Comparable接口
->Stream<T> sorted(Comparator<? super T) comparator)   // 产生一个流，按比较器的方式排序
->```
->
->```java
->Stream<T> peek(Consumer<? super T> action)         // 产生一个流，它与当前流中的元素相同，在获取其中每个元素时，会将其传递给action
->```
+>   API  java.util.stream.Stream  8
+
+*   Stream<T> distinct()
+
+    产生一个流，包含当前流的不同元素。
+
+*   Stream<T> sorted()     
+
+    产生一个流，对元素进行排序，要求元素类型实现了Comparable接口。
+
+*   Stream<T> sorted(Comparator<? super T) comparator)  
+
+     产生一个流，按比较器的方式排序。
+
+*   Stream<T> peek(Consumer<? super T> action)
+
+    产生一个流，它与当前流中的元素相同，在获取其中每个元素时，会将其传递给action。
 
 排序翻转
 
@@ -192,10 +201,35 @@ list.stream()
 
 这些操作都是终结操作。
 
-```java
-Optional<T> max(Comparator<? super T> comparator)  // 产生流的最大元素，返回Optional包装随想对象，若流为空，产生一个空的Optional对象
-Optional<T> min(Comparator<? super T> comparator)  // 产生流的最小元素，返回Optional包装随想对象，若流为空，产生一个空的Optional对象
-```
+>   API  java.util.stream.Stream  8
+
+*   Optional<T> max(Comparator<? super T> comparator)
+
+    产生流的最大元素，返回Optional包装随想对象，若流为空，产生一个空的Optional对象。
+
+*   Optional<T> min(Comparator<? super T> comparator)
+
+    产生流的最小元素，返回Optional包装随想对象，若流为空，产生一个空的Optional对象。
+
+*   Optional<T> finalFirst()
+
+    产生流的第一个元素，若流为空，产生一个空的Optional对象。
+
+*   Optional<T> finalAny() 
+
+    产生流的任意一个元素，若流为空，产生一个空的Optional对象。
+
+*   boolean anyMatch(Predicate<? super T> predicate)    
+
+    流中任意元素匹配时，返回true。
+
+*   boolean allMatch(Predicate<? super T> predicate)
+
+    流中全部元素匹配时，返回true。
+
+*   boolean noneMatch(Predicate<? super T> predicate)
+
+     流中没有任何元素匹配时，返回true。
 
 ```java
 List<String> list = List.of("jack", "frank", "aim", "bob");
@@ -205,17 +239,6 @@ Optional<String> min = list.stream()
  						   .min(Comparator.comparing(String::length));
 System.out.println(max);
 System.out.println(min);
-```
-
-```java
-Optional<T> finalFirst()      // 产生流的第一个元素，若流为空，产生一个空的Optional对象
-Optional<T> finalAny()        // 产生流的任意一个元素，若流为空，产生一个空的Optional对象
-```
-
-```java
-boolean anyMatch(Predicate<? super T> predicate)    // 流中任意元素匹配时，返回true
-boolean allMatch(Predicate<? super T> predicate)    // 流中全部元素匹配时，返回true
-boolean noneMatch(Predicate<? super T> predicate)   // 流中没有任何元素匹配时，返回true
 ```
 
 List中存在一个以a开头的人名。

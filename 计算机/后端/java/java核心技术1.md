@@ -438,7 +438,7 @@ map.forEach((k, v) -> {
 String.format方法创建一个格式化字符串，而不打印输出。
 
 ```java
-String message = String.format("hello, my name is %s price is %.2f$", "Tom",33.5);
+String message = String.format("hello, my name is %s price is %.2f$", "Tom", 33.5);
 ```
 
 
@@ -514,7 +514,7 @@ for
 ```java
 for(表达式1;表达式2;表达式3){
     	
-    表达式4;         	// 执行顺序
+    表达式4;         	//  执行顺序
     				  //  表达式1 --> 表达式2 --> 表达式4 --> 表达式3
 }
 ```
@@ -526,7 +526,7 @@ int a = 0; // 表达式1
 while(表达式2){
 
     // 表达式4            
-    					 // 执行顺序
+    					 //  执行顺序
     				     //  表达式1 --> 表达式2 --> 表达式4 --> 表达式3
 	a++;  // 表达式3
 }
@@ -538,7 +538,7 @@ do-while 的第一次循环不用进行比较
 int b = 10;  // 表达式1
 do {
     System.out.println(b); // 表达式4
-                          		       // 执行顺序
+                          		       //  执行顺序
     				  				   //  表达式1 --> 表达式2 --> 表达式4 --> 表达式3
     b--;  // 表达式3
 } while (b > 0);   // 表达式2
@@ -572,10 +572,8 @@ switch语句中的case标签可以是：
 ```java
 // 把字符串拆分多个字符输出
 String name="String";
-for (char i:name.toCharArray()         // for  each
-     ) {
-    System.out.println(i);
-}
+for (char i : name.toCharArray())         // for  each   
+   	 System.out.println(i);
 ```
 
 **中断控制流程语句**
@@ -1299,7 +1297,7 @@ Manager feank = (Manager) new Employee();
 
 >   图为AbstractCollection集合继承链：
 
-<img src=".\img\AbstractCollection继承层次.png" />
+<img src=".\img\AbstractCollection.png" />
 
 **java不支持多继承。**
 
@@ -2217,7 +2215,6 @@ interface Comter {
     static void hello() {	   // 静态实现方法
         System.out.println(A);
     }
-
 }
 ```
 
@@ -2272,7 +2269,6 @@ public class Test  implements Hello,Hello2{
     public static void main(String[] args) {
         new Test().hello();         // 控制台打印hello2
     }
-
 }
 ```
 
@@ -5695,20 +5691,20 @@ TODO
 
 进程拥有自己的一整套变量，而线程则共享数据。
 
+共享变量使线程之间的通信比进程之间的通信更有效、更容易。创建、撤销一个线程比启动新进程的开销要小得多。
+
 ### 1. 创建线程
 
 1. 实现Runable接口，并把它丢到Thread构造器内
 
    ```JAVA
    Thread t1 = new Thread(() -> {
-   	int number = 0;
-   	while (true) {
-   		System.out.println(Thread.currentThread().getName() + "-----" + number++);
-   		}
-   },"frank"); 
+       int number = 0;
+       while (true)  System.out.println(Thread.currentThread().getName() + "-----" + number++);
+   }, "frank");
    t1.start();
    ```
-
+   
 2. 继承Thread类并重写run方法
 
    ```JAVA

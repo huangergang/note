@@ -59,7 +59,7 @@ public class Test {
          // 2. 获取JavaBean的实例
         User user = (User) application.getBean("user");  
 
-        user.test();S
+        user.test();
     }
 }
 ```
