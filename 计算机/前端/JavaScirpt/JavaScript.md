@@ -789,7 +789,6 @@ IE的事件流叫做事件冒泡，即事件开始时由最具体的元素接受
 			<button type="button" onclick="test()">点击</button>
 	</body>
 </html>
-
 ```
 
 <button>事件的传播顺序，从小到大。

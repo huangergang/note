@@ -1414,8 +1414,6 @@ public class Interceptor01 implements HandlerInterceptor {
         System.out.println("afterCompletion.....");
 
     }
-
-
 }
 ```
 
@@ -1453,7 +1451,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class Interceptor02 extends HandlerInterceptorAdapter {
-
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -1915,8 +1912,6 @@ public class FileController {
         }
         return "result";
     }
-
-
 }
 ```
 
@@ -2765,7 +2760,6 @@ public class BaseController {
     public String exc(HttpServletRequest request, HttpServletResponse response, Exception ex) {
 
         request.setAttribute("ex", ex);
-
 
         return "error";
     }

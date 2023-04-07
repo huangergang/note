@@ -1,6 +1,6 @@
 # Spring IOC
 
-## 1. Spring框架
+## 1. Spring 框架
 
 ### 1.1. 引入依赖
 
@@ -1115,7 +1115,6 @@ public class CglibInterceptor implements MethodInterceptor {
         this.target = target;
     }
 
-    
     // 获取代理类
     public Object getProxy() {
 

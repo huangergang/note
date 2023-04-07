@@ -49,9 +49,9 @@ desc student;
 ### 3.6. 显示创建库和表时的MySQL语句
 
 ~~~ SQL
-show create database;
+show create database [databse_name];
 # 
-show create table;
+show create table [table_name];
 ~~~
 
 ### 3.7. 显示授予用户的安全权限
@@ -91,14 +91,14 @@ select * from student;
 ### 4.4. 检索某列的唯一字段值
 
 ~~~ SQL
-select  distinct name from student;
+select distinct name from student;
 ~~~
 
 ### 4.5. 限制检索行数
 
 ~~~ SQL
 select name from student
-limit 5;    # 显示不超过5行
+limit 5;    # 显示不超过5行，顺序
 ~~~
 
 ### 4.6. 完全限定表名

@@ -1898,8 +1898,7 @@ Field、Method、Constructor三个类有一个getModifiers的方法，它返回�
 
 ```java
 Method[] methods = Double.class.getMethods();
-for (Method m :
-     methods) {
+for (Method m : methods) {
     System.out.printf("Name: %-22s",m.getName());
     System.out.printf("Modifier: %-22s",Modifier.toString(m.getModifiers()));
     System.out.println();

@@ -164,7 +164,6 @@ TODO
 
 ```java
 public class SpringJdbcTest01{
-
     
     @Test
     public void testJdbc() {
@@ -180,7 +179,6 @@ public class SpringJdbcTest01{
         Integer integer = jdbcTemplate.queryForObject(sql, Integer.class);
 
         System.out.println("总记录数：" + integer);
-
 }
 ```
 
@@ -553,8 +551,6 @@ public class SpringJdbcAddTest extends BaseTest{
         int row = accountDao.addAccount(account);
 
         System.out.println("添加账户，受影响的行数：" + row);
-
-
     }
 
     @Test
@@ -571,15 +567,14 @@ public class SpringJdbcAddTest extends BaseTest{
     @Test
     public void testAddAccounts(){
         List<Account> accouns = List.of(
-                new Account("账户4","光大银行",345.5,"私房钱",2),
-                new Account("账户5","农业银行",1500.0,"低保",4),
-                new Account("账户6","建设银行",3500.0,"工资",4)
+            new Account("账户4","光大银行",345.5,"私房钱",2),
+            new Account("账户5","农业银行",1500.0,"低保",4),
+            new Account("账户6","建设银行",3500.0,"工资",4)
         );
         int rows = accountDao.addAccounts(accouns);
 
         System.out.println("添加账户，受影响的行数："+ rows);
     }
-
 
 }
 ```

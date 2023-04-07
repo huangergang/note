@@ -1,6 +1,6 @@
 # SpringBoot  one
 
-## 1. Spring框架发展史
+## 1. Spring 框架发展史
 
 ### 1.1. Spring 1.x 时代
 
@@ -23,7 +23,7 @@
 
 ## 2. Spring 5.x 应用零配置开发
 
-​		Spring 框架从 5.x 版本推荐使用注解形式对 java 应用程序进行开发与配置，并且可以完全代替原始的 XML + 注解形式的开发，在使用注解形式进行项目开发与环境配置时，Spring 狂简提供了针对环境配置与业务bean开发相关注解。
+​		Spring 框架从 5.x 版本推荐使用注解形式对 java 应用程序进行开发与配置，并且可以完全代替原始的 XML + 注解形式的开发，在使用注解形式进行项目开发与环境配置时，Spring 框架提供了针对环境配置与业务bean开发相关注解。
 
 ### 2.1. 注解
 
@@ -173,7 +173,6 @@ public class AccountDao {
         System.out.println("AccountDao ...");
     }
 }
-
 ```
 
 #### 2.3.2. 修改IocConfig 配置类
@@ -187,13 +186,11 @@ public class AccountDao {
 @ComponentScan("com.bean")
 public class IocConfig02 {
 
-
     // @Bean注解：通常用于整合第三方的Bean对象，比如：数据源、第三方组件等
     @Bean  // 将方法的返回值交给IOC维护
     public AccountDao accountDao() {
         return new AccountDao();
     }
-
 }
 ```
 
@@ -242,7 +239,6 @@ user.password=12345678
 @Configuration
 @PropertySource(value = {"classpath:db.properties", "classpath:user.properties"})
 public class IocConfig03 {
-
 
     @Value("${driver}")
     private String driver;
@@ -323,7 +319,7 @@ public class Test03 {
 
 ### 2.5. 组合注解与元注解
 
-​		Spring从 2.x 版本开始引入注解支持（目的是 jdk 1.5 中退出注解功能），通过引入注解来消除大量 xml 配置，Spring 引入注解主要用来注入 bean 以及 aop 切面相关配置，但由于注解大量使用，就会造成大量重复注解代码出现，代码出现了重复，Spring为了消除重复注解，在元注解上引入了组合注解，其实可以理解为代码的重构，拥有 @Component 注解功能，即使配置类本身也是一个被 IOC 维护的单例 Bean。
+​		Spring从 2.x 版本开始引入注解支持（目的是 jdk 1.5 中推出注解功能），通过引入注解来消除大量 xml 配置，Spring 引入注解主要用来注入 bean 以及 aop 切面相关配置，但由于注解大量使用，就会造成大量重复注解代码出现，代码出现了重复，Spring为了消除重复注解，在元注解上引入了组合注解，其实可以理解为代码的重构，拥有 @Component 注解功能，即使配置类本身也是一个被 IOC 维护的单例 Bean。
 
 #### 2.5.1. 自定义组合注解
 
@@ -533,7 +529,6 @@ public class HelloController {
     public String hello(){
         return "hello spring-boot";
     }
-
 
 }
 ```
@@ -949,7 +944,13 @@ spring:
 
 #### 8.1.1. 配置打包命令
 
-​		idea 下配置`clean compile package -Dmaven.test.skip=true`执行打包命令，target 目录得到待部署的项目文件。
+idea 下配置
+
+```mvn
+maven clean compile package -Dmaven.test.skip=true
+```
+
+执行打包命令，target 目录得到待部署的项目文件。
 
 <img src=".\img\springboot-jar.png">
 
