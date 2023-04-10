@@ -341,4 +341,3 @@ is_vip
 delete from studentinfo where stuno =5010;
 alter table studentinfo AUTO_INCREMENT=5006; 		# 设置从多少开始自增 
 ```
-
