@@ -1488,7 +1488,7 @@ public class Interceptor02 extends HandlerInterceptorAdapter {
                  如果有多个拦截满足拦截的要求，则会根据配置的先后顺序执行
  				 先配置的拦截器的方法先执行 
     -->
-<mvc:interceptors>
+<mvc:interceptors>	
     <mvc:interceptor>
         <mvc:mapping path="/**"/>
         <bean class="com.xxxx.interceptor.Interceptor01"/>

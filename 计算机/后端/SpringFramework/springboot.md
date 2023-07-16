@@ -42,7 +42,7 @@
 #### 2.1.2. 注入Bean 注解
 
 ```properties
-@AutoWired: Spring 官方提供注解
+@Autowired: Spring 官方提供注解
 
 @Inject: JSR-330 提供注解（标准制定方）
 
@@ -273,6 +273,7 @@ public class IocConfig03 {
 
 ```java
 @Service
+@PropertySource(value = {"classpath:db.properties"})
 public class UserService {
 
     @Autowired

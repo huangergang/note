@@ -84,7 +84,7 @@ public class FirstSample {
 编译过程
 
 ```bash
-$ javac Tesrt.java    # javac将Test.java文件转换成字节码（.class 文件）
+$ javac Test.java     # javac将Test.java文件转换成字节码（.class 文件）
 
 $ java Test           #  字节码文件由jvm执行
 ```
@@ -713,9 +713,9 @@ int[] ints = Arrays.copyOf(arry, arry.length);   // 重新为数据分配空间�
 二维数组
 
 ```java
-int[][] arr = {{1, 2, 4}, {4, 5, 6}, {7, 8, 9}};
+int[][] arr = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
 
-int[][] arr = new int[][]{{1, 2, 4}, {4, 5, 6}, {7, 8, 9}};
+int[][] arr = new int[][]{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
 ```
 
 
@@ -3073,6 +3073,7 @@ public class Test{
         throw new MyException("This is my exception");
     }
 }
+
 class MyException extends IOException {
     public MyException() {
     }

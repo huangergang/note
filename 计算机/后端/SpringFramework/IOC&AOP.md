@@ -859,7 +859,7 @@ Sping bean初始化的两种方式：
 
 ```java
 import org.springframework.beans.factory.InitializingBean;
-
+   
 public class User implements InitializingBean {
 
     @Override
@@ -1015,7 +1015,7 @@ public class ProxySubject implements Subject {
 ​	动态代理的两种实现方式：
 
 ```java
-1. JDK   动态代理
+1. JDK    动态代理
 2. CGLIB  动态代理
 ```
 

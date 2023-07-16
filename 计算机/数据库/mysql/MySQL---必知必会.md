@@ -41,17 +41,17 @@ show tables;
 ### 3.5. 显示表的所有字段信息
 
 ~~~ SQL
-show columns from student;
+show columns from <表名>;
 # 或者
-desc student;
+desc <表名>;
 ~~~
 
 ### 3.6. 显示创建库和表时的MySQL语句
 
 ~~~ SQL
-show create database [databse_name];
+show create database <数据库名>;
 # 
-show create table [table_name];
+show create table <表名>;
 ~~~
 
 ### 3.7. 显示授予用户的安全权限
@@ -73,13 +73,13 @@ show warnings;
 ### 4.1. 检索一张表的某一列
 
 ~~~ SQL
-select name from student;
+select <字段名> from <表名>;
 ~~~
 
 ### 4.2. 检索多个列
 
 ~~~ SQL
-select id,name,sex,grade from student;
+select id,name,sex,grade from <表名>;
 ~~~
 
 ### 4.3. 检索所有列
@@ -97,8 +97,7 @@ select distinct name from student;
 ### 4.5. 限制检索行数
 
 ~~~ SQL
-select name from student
-limit 5;    # 显示不超过5行，顺序
+select name from student limit 5;    # 显示不超过5行，顺序
 ~~~
 
 ### 4.6. 完全限定表名
